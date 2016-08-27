@@ -1,0 +1,12 @@
+<#@ template language="C#" debug="True" #>
+<#@ output extension="cs" #>
+<#@ include file="MainGenerator.tt" #>
+<#
+// <copyright file="Entry.tt" company="Microsoft">
+//  Copyright © Microsoft. All Rights Reserved.
+// </copyright>
+   string CurrentPath = Path.GetDirectoryName(Host.TemplateFile);
+
+   new MainGenerator(CurrentPath).Run();
+
+#>

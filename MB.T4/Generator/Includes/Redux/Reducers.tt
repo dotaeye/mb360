@@ -1,0 +1,136 @@
+﻿
+<#+
+    // <copyright file="ImplService.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class Reducers : BaseTemplate
+    {
+
+
+        public Reducers(T4ModelInfo model):base(model)
+        {  
+        }
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public override string FileName
+        {
+            get
+            { 
+                return string.Format("{0}.js", this.CamelCaseName);
+            }
+        }
+
+        public override string ModuleName
+        {
+            get
+            { 
+                return _model.Name;
+            }
+        }
+
+
+        public override string SavePath
+        {
+            get
+            { 
+                return "\\src\\reducers";
+            }
+        }
+
+		public string UpperName
+        {
+            get
+            { 
+                return _model.Name.ToUpper();
+            }
+        }
+
+		public string CamelCaseName
+        {
+            get
+            { 
+                return _model.Name.Substring(0, 1).ToLower() + _model.Name.Substring(1);
+            }
+        }
+
+		public string LowerName
+        {
+            get
+            { 
+                return _model.Name.ToLower();
+            }
+        }
+
+
+        public override string TransformText()
+        {
+            base.TransformText();
+#>
+
+import * as <#=CamelCaseName#>Types from '../contants/<#=CamelCaseName#>';
+
+const initialState = {
+};
+
+export default function <#=CamelCaseName#>(state = initialState, action = {}) {
+	switch (action.type) {
+		case <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>:
+		case <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>:
+		case <#=CamelCaseName#>Types.CREATE_<#=UpperName#>:
+		case <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>:
+		case <#=CamelCaseName#>Types.DELETE_<#=UpperName#>:
+			return {
+				...state,
+				loading: true
+			};
+		case <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>_FAIL:
+		case <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>_FAIL:
+		case <#=CamelCaseName#>Types.CREATE_<#=UpperName#>_FAIL:
+		case <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>_FAIL:
+		case <#=CamelCaseName#>Types.DELETE_<#=UpperName#>_FAIL:
+			return {
+				...state,
+				loading: false,
+				error: action.error
+			};
+		case <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				list: action.result
+			};
+		case <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				entity: action.result
+			};
+		case <#=CamelCaseName#>Types.CREATE_<#=UpperName#>_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				entity: action.result
+			};
+		case <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				entity: action.result
+			};
+		case <#=CamelCaseName#>Types.DELETE_<#=UpperName#>_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				entity: action.result
+			};
+		default:
+			return state;
+  }
+}
+
+<#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }                      #>

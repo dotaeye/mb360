@@ -1,0 +1,60 @@
+﻿<#+
+    // <copyright file="BaseTemplate.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class BaseTemplate : CSharpTemplate
+    {
+
+        protected T4ModelInfo _model;
+
+
+        protected IEnumerable<Type> _types;
+
+
+        public BaseTemplate(){
+        }
+        
+        public BaseTemplate(T4ModelInfo model)
+        {
+            _model = model;
+        }
+
+
+        public BaseTemplate(IEnumerable<Type> types){
+            _types = types;
+        }
+
+
+        public override string TransformText()
+        {
+            base.TransformText();
+
+            return this.GenerationEnvironment.ToString();
+        }
+
+        public virtual string FileName
+        {
+            get
+            {              
+                return _model.Name;
+            }
+        }
+
+        public virtual string ModuleName
+        {
+            get
+            {              
+                return _model.Name;
+            }
+        }
+
+        public virtual string SavePath
+        {
+            get
+            {              
+                return _model.Name;
+            }
+        }
+    }
+#>

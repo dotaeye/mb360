@@ -1,0 +1,93 @@
+﻿
+<#+
+    // <copyright file="AutoMapperStartupTask.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class MappingExtensions : BaseTemplate
+    {
+
+        public MappingExtensions(IEnumerable<Type> types):base(types)
+        {  
+        }
+
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public override string FileName
+        {
+            get
+            { 
+                return "MappingExtensions.cs";
+            }
+        }
+
+        public override string ModuleName
+        {
+            get
+            { 
+                return _model.Name;
+            }
+        }
+
+        public override string SavePath
+        {
+            get
+            { 
+                return "\\AutoMapper";
+            }
+        }
+
+        public void RenderPropertry(){
+            WriteLine(" ");
+            foreach(Type modelType in _types)
+            {
+                T4ModelInfo minfo = new T4ModelInfo(modelType, true);
+                WriteLine(string.Format("             public static {0}DTO ToModel(this {0} entity)",minfo.Name));
+                WriteLine("             {");
+                WriteLine(string.Format("                  return Mapper.Map<{0}, {0}DTO>(entity);",minfo.Name));
+                WriteLine("             }");
+                WriteLine(" ");
+
+                WriteLine(string.Format("             public static {0} ToEntity(this {0}DTO dto)",minfo.Name));
+                WriteLine("             {");
+                WriteLine(string.Format("                  return Mapper.Map<{0}DTO, {0}>(dto);",minfo.Name));
+                WriteLine("             }");
+                WriteLine(" ");
+
+                WriteLine(string.Format("             public static {0} ToEntity(this {0}DTO dto,{0} entity )",minfo.Name));
+                WriteLine("             {");
+                WriteLine("                  return Mapper.Map(dto, entity);");
+                WriteLine("             }");
+                WriteLine(" ");
+       
+            }
+        }
+
+        public override string TransformText()
+        {
+            base.TransformText();
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using AutoMapper;
+using MB.Data.Models;
+using MB.Data.DTO;
+
+namespace MB.Data.AutoMapper
+{
+    public static class MappingExtensions
+    {
+        <#+
+            RenderPropertry();
+        #>
+
+    }
+}
+<#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }
+#>

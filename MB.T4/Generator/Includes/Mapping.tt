@@ -1,0 +1,70 @@
+﻿
+<#+
+    // <copyright file="ImplService.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class Mapping : BaseTemplate
+    {
+
+
+        public Mapping(T4ModelInfo model):base(model)
+        {  
+        }
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public override string FileName
+        {
+            get
+            { 
+                return string.Format("{0}Profile.cs", _model.Name);
+            }
+        }
+
+        public override string ModuleName
+        {
+            get
+            { 
+                return _model.Name;
+            }
+        }
+
+        public override string SavePath
+        {
+            get
+            { 
+                return "\\Mapping";
+            }
+        }
+
+        public override string TransformText()
+        {
+            base.TransformText();
+#>
+using System.Linq;
+using SQ.Core.Data;
+using MB.Data.Models;
+using System.Threading.Tasks;
+
+namespace MB.Data.Mapping
+{
+	public interface I<#= _model.Name #>Service
+    {
+		Task<int> DeleteAsync(<#= _model.Name #> entity);
+
+        IPagedList<<#= _model.Name #>> GetPageList(int pageIndex, int pageSize);
+
+        Task<int> InsertAsync(<#= _model.Name #> entity);
+
+        Task<int> UpdateAsync(<#= _model.Name #> entity);
+
+        IQueryable<<#= _model.Name #>> GetAll();
+
+        Task<<#= _model.Name #>> FindOneAsync(int Id);	
+    }
+}
+<#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }                      #>

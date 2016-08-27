@@ -1,0 +1,62 @@
+﻿
+<#+
+    // <copyright file="DTOs.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class Validators : BaseTemplate
+    {
+
+
+        public Validators(T4ModelInfo model):base(model)
+        {  
+        }
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public override string FileName
+        {
+            get
+            { 
+                return string.Format("{0}Validator.cs", _model.Name);
+            }
+        }
+
+        public override string ModuleName
+        {
+            get
+            { 
+                return _model.Name;
+            }
+        }
+
+        public override string SavePath
+        {
+            get
+            { 
+                return "\\Validator";
+            }
+        }
+
+        public override string TransformText()
+        {
+            base.TransformText();
+#>
+using FluentValidation;
+using MB.Data.DTO;
+
+namespace MB.Data.Validator
+{
+    public class <#=_model.Name #>Validator : AbstractValidator<<#=_model.Name #>DTO>
+    {
+        public <#=_model.Name #>Validator()
+        {
+			RuleFor(<#= _model.Name #> => <#= _model.Name #>.Name).NotEmpty().WithMessage("{PropertyName} is required");
+        }
+    }
+}
+
+<#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }                      #>

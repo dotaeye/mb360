@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{11C9A6EA-A483-4C2D-B5DA-8EE3399D302A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MB.T4</RootNamespace>
+    <AssemblyName>MB.T4</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Generator\Entry1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Entry.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\BaseTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaseTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\Controller.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Controller.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\DTOs.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DTOs.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\ImplService.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ImplService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\IService.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\Mapping.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Mapping.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\MappingExtensions.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MappingExtensions.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\Profile.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Profile.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\Redux\Actions.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Actions.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\Redux\Contants.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Contants.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\Redux\Reducers.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reducers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Includes\Validators.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Validators.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\MainGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SQ.Core\SQ.Core\SQ.Core.csproj">
+      <Project>{f65b55f6-3aac-4a20-a38d-b5b6a3d1a321}</Project>
+      <Name>SQ.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MB.Data\MB.Data.csproj">
+      <Project>{8effaddd-cdac-4c27-b97d-ff4c0355c5d8}</Project>
+      <Name>MB.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Generator\Entry.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Entry1.cs</LastGenOutput>
+      <LastOutputs>
+..\code\AutoMapper\DepartmentProfile.cs
+..\code\AutoMapper\JobProfile.cs
+..\code\AutoMapper\UserActivitiesProfile.cs
+..\code\AutoMapper\UserPermissionProfile.cs
+..\code\AutoMapper\UserRoleProfile.cs
+..\code\Controllers\DepartmentController.cs
+..\code\Controllers\JobController.cs
+..\code\Controllers\UserActivitiesController.cs
+..\code\Controllers\UserPermissionController.cs
+..\code\Controllers\UserRoleController.cs
+..\code\DTO\DepartmentDTO.cs
+..\code\DTO\JobDTO.cs
+..\code\DTO\UserActivitiesDTO.cs
+..\code\DTO\UserPermissionDTO.cs
+..\code\DTO\UserRoleDTO.cs
+..\code\Impl\DepartmentService.cs
+..\code\Impl\JobService.cs
+..\code\Impl\UserActivitiesService.cs
+..\code\Impl\UserPermissionService.cs
+..\code\Impl\UserRoleService.cs
+..\code\Service\IDepartmentService.cs
+..\code\Service\IJobService.cs
+..\code\Service\IUserActivitiesService.cs
+..\code\Service\IUserPermissionService.cs
+..\code\Service\IUserRoleService.cs
+..\code\src\actions\department.js
+..\code\src\actions\job.js
+..\code\src\actions\userActivities.js
+..\code\src\actions\userPermission.js
+..\code\src\actions\userRole.js
+..\code\src\contants\department.js
+..\code\src\contants\job.js
+..\code\src\contants\userActivities.js
+..\code\src\contants\userPermission.js
+..\code\src\contants\userRole.js
+..\code\src\reducers\department.js
+..\code\src\reducers\job.js
+..\code\src\reducers\userActivities.js
+..\code\src\reducers\userPermission.js
+..\code\src\reducers\userRole.js
+..\code\Validator\DepartmentValidator.cs
+..\code\Validator\JobValidator.cs
+..\code\Validator\UserActivitiesValidator.cs
+..\code\Validator\UserPermissionValidator.cs
+..\code\Validator\UserRoleValidator.cs
+.\Entry1.cs
+</LastOutputs>
+    </Content>
+    <Content Include="Generator\Includes\BaseTemplate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BaseTemplate.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\Controller.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Controller.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\DTOs.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DTOs.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\ImplService.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ImplService.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\IService.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IService.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\Mapping.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Mapping.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\MappingExtensions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MappingExtensions.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\Profile.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Profile.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\Redux\Actions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Actions.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\Redux\Contants.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Contants.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\Redux\Reducers.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Reducers.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\Includes\Validators.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Validators.cs</LastGenOutput>
+    </Content>
+    <Content Include="Generator\MainGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MainGenerator.cs</LastGenOutput>
+      <LastOutputs>.\MainGenerator.cs</LastOutputs>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

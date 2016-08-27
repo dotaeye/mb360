@@ -1,0 +1,88 @@
+﻿<#@ template language="C#" debug="True" #>
+<#@ output extension="cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="F:\HomeWork\SQ.Core\SQ.Core\bin\Debug\SQ.Core.dll" #>
+<#@ import namespace="System.IO" #>
+<#@ Import Namespace="System.Linq" #>
+<#@ Import Namespace="System.Text" #>
+<#@ import namespace="System.Reflection" #>
+<#@ Import Namespace="System.Collections.Generic" #>
+<#@ Import Namespace="SQ.Core" #>
+<#@ Import Namespace="SQ.Core.Data" #>
+<#@ Import Namespace="SQ.Core.T4" #>
+<#@ Import Namespace="SQ.Core.DTO" #>
+<#@ Import Namespace="SQ.Core.Infrastructure" #>
+<#@ include file="T4Toolbox.tt" #>
+<#@ include file="Includes\BaseTemplate.tt" #>
+<#@ include file="Includes\Controller.tt" #>
+<#@ include file="Includes\DTOs.tt" #>
+<#@ include file="Includes\Validators.tt" #>
+<#@ include file="Includes\ImplService.tt" #>
+<#@ include file="Includes\IService.tt" #>
+<#@ include file="Includes\Profile.tt" #>
+<#@ include file="Includes\MappingExtensions.tt" #>
+<#@ include file="Includes\Redux\Actions.tt" #>
+<#@ include file="Includes\Redux\Contants.tt" #>
+<#@ include file="Includes\Redux\Reducers.tt" #>
+<#+
+    // <copyright file="MainGenerator.tt" company="Microsoft">
+    //  Copyright © Microsoft. All Rights Reserved.
+    // </copyright>
+
+    public class MainGenerator : Generator
+    {
+        public IEnumerable<BaseTemplate> Templates{get;  set;}
+
+        public IEnumerable<Type> ModelTypes {get;set;}
+
+        public string SolutionPath {get;set;}
+
+        public string ProjectPath {get;set;}
+  
+        public MainGenerator(string currentPath)
+        {
+            //System.Diagnostics.Debugger.Launch(); 
+         
+            ProjectPath =currentPath.Substring(0, currentPath.IndexOf(@"\Generator"));
+            SolutionPath = currentPath.Substring(0, currentPath.IndexOf(@"\MB.T4"));
+            string modelFile= Path.Combine(SolutionPath, @"MB.Data\bin\Debug\MB.Data.dll");
+ 
+            Assembly assembly = Assembly.LoadFrom(modelFile);
+            Type baseType = typeof(BaseEntity);
+            ModelTypes = assembly.GetTypes().Where(m => baseType.IsAssignableFrom(m) && !m.IsAbstract);
+        
+            this.Templates = InitlizeTemplates(ModelTypes);
+        }
+    
+        private IEnumerable<BaseTemplate> InitlizeTemplates(IEnumerable<Type> modelTypes)
+        {        
+            foreach(Type modelType in modelTypes)
+            {
+                T4ModelInfo model = new T4ModelInfo(modelType, true);
+				
+                yield return new Controller(model);
+                yield return new DTOs(model);
+				yield return new Validators(model);
+                yield return new IService(model);
+				yield return new Profile(model);
+                yield return new Actions(model);
+                yield return new Contants(model);
+				yield return new Reducers(model);
+                yield return new ImplService(model);
+				
+          
+            }
+            //yield return new MappingExtensions(modelTypes);
+            //yield return new RegisterIOC(modelTypes);
+        }
+        protected override void RunCore()
+        {
+            foreach(BaseTemplate tempalte in this.Templates)
+            {
+                tempalte.Output.Encoding = Encoding.UTF8;
+                var path =  string.Format(@"{0}\code\{1}", ProjectPath,tempalte.SavePath);
+                tempalte.RenderToFile(Path.Combine(path, tempalte.FileName));
+            }
+        }
+    }
+#>

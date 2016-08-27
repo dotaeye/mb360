@@ -1,0 +1,122 @@
+﻿
+<#+
+    // <copyright file="IService.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class ImplService : BaseTemplate
+    {
+
+
+        public ImplService(T4ModelInfo model):base(model)
+        {  
+        }
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public override string FileName
+        {
+            get
+            { 
+                return string.Format("{0}Service.cs", _model.Name);
+            }
+        }
+
+        public override string ModuleName
+        {
+            get
+            { 
+                return _model.Name;
+            }
+        }
+
+        public override string SavePath
+        {
+            get
+            { 
+                return "\\Impl";
+            }
+        }
+
+        public override string TransformText()
+        {
+            base.TransformText();
+#>
+using System;
+using System.Linq;
+using SQ.Core.Data;
+using MB.Data.Service;
+using MB.Data.Models;
+using System.Threading.Tasks;
+
+namespace MB.Data.Impl
+{
+	public class <#= _model.Name #>Service : I<#= _model.Name #>Service
+    {
+		   #region Fields
+
+        private readonly IRepository<<#= _model.Name #>> _<#= _model.Name #>Repository;
+
+        #endregion
+
+        #region Ctor
+
+        public <#= _model.Name #>Service(IRepository<<#= _model.Name #>> <#= _model.Name #>Repository
+           )
+        {
+            this._<#= _model.Name #>Repository = <#= _model.Name #>Repository;
+
+        }
+        #endregion
+
+        public async Task<int> DeleteAsync(<#= _model.Name #> entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException("<#= _model.Name #>");
+
+            entity.Deleted = true;
+           return await UpdateAsync(entity);
+        }
+
+        public async Task<<#= _model.Name #>> FindOneAsync(int Id)
+        {
+            if (Id == 0)
+                return null;
+
+            var entity = await _<#= _model.Name #>Repository.GetByIdAsync(Id);
+            return entity;
+        }
+
+        public IQueryable<<#= _model.Name #>> GetAll()
+        {
+            return _<#= _model.Name #>Repository.Table;
+        }
+
+        public IPagedList<<#= _model.Name #>> GetPageList(int pageIndex, int pageSize)
+        {
+            var query = _<#= _model.Name #>Repository.Table;
+            query = query.OrderByDescending(a => a.Id);
+            var result = new PagedList<<#= _model.Name #>>(query, pageIndex, pageSize);
+            return result;
+        }
+
+        public async Task<int> InsertAsync(<#= _model.Name #> entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException("<#= _model.Name #>");
+            return await _<#= _model.Name #>Repository.InsertAsync(entity);
+        }
+
+        public async Task<int> UpdateAsync(<#= _model.Name #> entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException("<#= _model.Name #>");
+
+            return await _<#= _model.Name #>Repository.UpdateAsync(entity);
+        }
+    }
+}
+<#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }                      #>

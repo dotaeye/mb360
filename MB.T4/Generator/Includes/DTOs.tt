@@ -1,0 +1,84 @@
+﻿
+<#+
+    // <copyright file="DTOs.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class DTOs : BaseTemplate
+    {
+
+
+        public DTOs(T4ModelInfo model):base(model)
+        {  
+        }
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public override string FileName
+        {
+            get
+            { 
+                return string.Format("{0}DTO.cs", _model.Name);
+            }
+        }
+
+        public override string ModuleName
+        {
+            get
+            { 
+                return _model.Name;
+            }
+        }
+
+        public override string SavePath
+        {
+            get
+            { 
+                return "\\DTO";
+            }
+        }
+
+        public void RenderPropertry(){
+            WriteLine(" ");
+            foreach(var prop in _model.Properties){
+                var dtoAttributes = prop.GetCustomAttributes(typeof(DTOAttribute), true);
+                var allow = dtoAttributes.Length == 1 ? ((DTOAttribute)dtoAttributes[0]).Allow : true;
+				var foreignKeyPropertyName=dtoAttributes.Length == 1 ? ((DTOAttribute)dtoAttributes[0]).ForeignKeyPropertyName : string.Empty;
+                var isVirtual = prop.GetGetMethod().IsVirtual;
+				if(!string.IsNullOrEmpty(foreignKeyPropertyName)){
+				 WriteLine(string.Format("       public string {0}  {{ get; set; }} ", foreignKeyPropertyName));
+				}
+                else if(allow&&!isVirtual){
+                    WriteLine(string.Format("       public {0} {1}  {{ get; set; }} ", GetTypeName(prop.PropertyType.Name) , prop.Name));
+                }
+            }
+        }
+
+
+        public string GetTypeName(string cSharpType)
+        {
+            if(_model.TypeDic.Count(x=>x.Key==cSharpType)>0){
+                return _model.TypeDic.Single(x=>x.Key==cSharpType).Value;
+            }              
+            return cSharpType;
+        }
+
+
+        public override string TransformText()
+        {
+            base.TransformText();
+#>
+using System;
+using MB.Data.Models;
+
+namespace MB.Data.DTO
+{
+	public class <#=            _model.Name #>DTO
+    {
+        <#+            RenderPropertry();#>
+    }
+}
+<#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }                      #>

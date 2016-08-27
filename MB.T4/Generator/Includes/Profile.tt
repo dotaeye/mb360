@@ -1,0 +1,107 @@
+﻿
+<#+
+    // <copyright file="ImplService.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class Profile : BaseTemplate
+    {
+
+
+        public Profile(T4ModelInfo model):base(model)
+        {  
+        }
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public override string FileName
+        {
+            get
+            { 
+                return string.Format("{0}Profile.cs", _model.Name);
+            }
+        }
+
+        public override string ModuleName
+        {
+            get
+            { 
+                return _model.Name;
+            }
+        }
+
+        public override string SavePath
+        {
+            get
+            { 
+                return "\\AutoMapper";
+            }
+        }
+
+		 public void RenderMapDto(){
+            WriteLine(" ");
+			WriteLine(string.Format("			CreateMap<{0}, {0}DTO>()",_model.Name));
+            foreach(var prop in _model.Properties){
+                var dtoAttributes = prop.GetCustomAttributes(typeof(DTOAttribute), true);
+				var isVirtual = prop.GetGetMethod().IsVirtual;
+				if(dtoAttributes.Length>0){
+					var foreignKeyPropertyName=((DTOAttribute)dtoAttributes[0]).ForeignKeyPropertyName;
+					var foreignKeyEntityName=((DTOAttribute)dtoAttributes[0]).ForeignKeyEntityName;
+					if(!string.IsNullOrEmpty(foreignKeyPropertyName)){
+						  WriteLine(string.Format("					.ForMember(dto => dto.{0}, o => o.MapFrom(entity => entity.{1}.{2}))",foreignKeyPropertyName, prop.Name,foreignKeyEntityName));
+					}
+				}
+            }
+        }
+
+		 public void RenderMapEntity(){
+            WriteLine(" ");
+			WriteLine(string.Format("			CreateMap<{0}DTO, {0}>()",_model.Name));
+
+            foreach(var prop in _model.Properties){
+				var isVirtual = prop.GetGetMethod().IsVirtual;
+				var dtoAttributes = prop.GetCustomAttributes(typeof(DTOAttribute), true);
+				var ignore = dtoAttributes.Length == 1 ? ((DTOAttribute)dtoAttributes[0]).Ignore : false;
+				if(isVirtual || ignore){
+					WriteLine(string.Format("					.ForMember(entity => entity.{0}, o => o.Ignore())",prop.Name));
+				}
+            }
+        }
+		
+        public string GetTypeName(string cSharpType)
+        {
+            if(_model.TypeDic.Count(x=>x.Key==cSharpType)>0){
+                return _model.TypeDic.Single(x=>x.Key==cSharpType).Value;
+            }              
+            return cSharpType;
+        }
+
+        public override string TransformText()
+        {
+            base.TransformText();
+#>
+using AutoMapper;
+using SQ.Core.AutoMapper;
+using MB.Data.Models;
+using MB.Data.DTO;
+
+namespace MB.Data.AutoMapper
+{
+	public class <#= _model.Name #>Profile : BaseProfile
+    {
+        public <#= _model.Name #>Profile() : base("<#= _model.Name #>Profile")
+        {
+        }
+
+		protected override void CreateMaps()
+        {
+			<#+            RenderMapDto();#>;
+
+			<#+            RenderMapEntity();#>;
+        }
+    }
+}
+<#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }                      #>

@@ -1,0 +1,192 @@
+﻿
+<#+
+    // <copyright file="Controller.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class Controller : BaseTemplate
+    {
+
+
+        public Controller(T4ModelInfo model):base(model)
+        {  
+        }
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public override string FileName
+        {
+            get
+            { 
+                return string.Format("{0}Controller.cs", _model.Name);
+            }
+        }
+
+        public override string ModuleName
+        {
+            get
+            { 
+                return _model.Name;
+            }
+        }
+
+        public override string SavePath
+        {
+            get
+            { 
+                return "\\Controllers";
+            }
+        }
+
+        public void RenderPropertry(){
+            WriteLine(" ");
+            foreach(var prop in _model.Properties){
+                WriteLine(string.Format("            model.{0}=entity.{0};",prop.Name));
+            }
+        }
+
+
+
+        public override string TransformText()
+        {
+            base.TransformText();
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Net.Http;
+using System.Data.Entity;
+using System.Web.Http;
+using System.Web.Http.Description;
+using Microsoft.AspNet.Identity;
+using MB.Data.Service;
+using MB.Data.DTO;
+using MB.Data.AutoMapper;
+using MB.Data.Models;
+using AutoMapper.QueryableExtensions;
+using System.Threading.Tasks;
+using SQ.Core.Data;
+
+namespace MB.Controllers
+{
+    [RoutePrefix("api/<#= _model.Name #>")]
+    public class <#= _model.Name #>Controller : ApiController
+    {
+        private I<#= _model.Name #>Service <#= _model.Name #>Service;
+        public <#= _model.Name #>Controller(
+            I<#= _model.Name #>Service _<#= _model.Name #>Service
+          )
+        {
+            this.<#= _model.Name #>Service = _<#= _model.Name #>Service;
+        }
+
+        [Route("")]
+        public ApiListResult<<#= _model.Name #>DTO> Get([FromUri] AntPageOption option = null)
+        {
+             var query = <#= _model.Name #>Service.GetAll().Where(x => !x.Deleted).ProjectTo<<#= _model.Name #>DTO>();
+            if (option != null)
+            {
+                if (!string.IsNullOrEmpty(option.SortField))
+                {
+                    //for example
+                    if (option.SortField == "id")
+                    {
+                        if (option.SortOrder == PageSortTyoe.DESC)
+                        {
+                            query = query.OrderByDescending(x => x.Id);
+                        }
+                        else
+                        {
+                            query = query.OrderBy(x => x.Id);
+                        }
+                    }
+                }
+
+                if (option.Page > 0 && option.Results > 0)
+                {
+                    if (string.IsNullOrEmpty(option.SortField))
+                    {
+                        query = query.OrderBy(x => x.Id);
+                    }
+                }
+            }
+            else
+            {
+                query = query.OrderBy(x => x.Id);
+            }
+            var count = query.Count();
+            var result = query.Paging<<#= _model.Name #>DTO>(option.Page - 1, option.Results, count);
+            return new ApiListResult<<#= _model.Name #>DTO>(result, result.PageIndex, result.PageSize, count);
+        }
+
+        [Route("{id:int}")]
+        [ResponseType(typeof(<#= _model.Name #>DTO))]
+        public async Task<IHttpActionResult> GetById(int id)
+        {
+            <#= _model.Name #>DTO <#= _model.Name #> = await <#= _model.Name #>Service.GetAll().Where(x => x.Id == id&&!x.Deleted).ProjectTo<<#= _model.Name #>DTO>().FirstOrDefaultAsync();
+            if (<#= _model.Name #> == null)
+            {
+                return NotFound();
+            }
+            return Ok(<#= _model.Name #>);
+        }
+
+        [Route("")]
+        [HttpPost]
+        [ResponseType(typeof(<#= _model.Name #>DTO))]
+        public async Task<IHttpActionResult> Create([FromBody]<#= _model.Name #>DTO <#= _model.Name #>Dto)
+        {
+		    if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var entity = <#= _model.Name #>Dto.ToEntity();
+            entity.CreateUserId = User.Identity.GetUserId();
+            entity.CreateTime = DateTime.Now;
+            await <#= _model.Name #>Service.InsertAsync(entity);
+            return Ok(entity.ToModel());
+        }
+
+
+        [Route("")]
+        [HttpPut]
+        [ResponseType(typeof(<#= _model.Name #>DTO))]
+        public async Task<IHttpActionResult> Update([FromBody]<#= _model.Name #>DTO <#= _model.Name #>Dto)
+        {
+			if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+			var entity = await <#= _model.Name #>Service.FindOneAsync(<#= _model.Name #>Dto.Id);
+            entity = <#= _model.Name #>Dto.ToEntity(entity);
+            entity.LastUserId = User.Identity.GetUserId();
+            entity.LastTime = DateTime.Now;
+            await <#= _model.Name #>Service.UpdateAsync(entity);
+            return Ok(entity.ToModel());
+        }
+
+        [Route("{id:int}")]
+        [HttpDelete]
+        [ResponseType(typeof(<#= _model.Name #>DTO))]
+        public async Task<IHttpActionResult> Delete(int id)
+        {
+            <#= _model.Name #> entity = await <#= _model.Name #>Service.FindOneAsync(id);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            await <#= _model.Name #>Service.DeleteAsync(entity);
+
+            return Ok(entity.ToModel());
+        }
+
+    }
+}
+
+<#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }
+#>

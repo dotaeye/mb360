@@ -1,0 +1,87 @@
+﻿
+<#+
+    // <copyright file="ImplService.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class Contants : BaseTemplate
+    {
+
+
+        public Contants(T4ModelInfo model):base(model)
+        {  
+        }
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public override string FileName
+        {
+            get
+            { 
+                return string.Format("{0}.js", this.CamelCaseName);
+            }
+        }
+
+        public override string ModuleName
+        {
+            get
+            { 
+                return _model.Name;
+            }
+        }
+
+
+        public override string SavePath
+        {
+            get
+            { 
+                return "\\src\\contants";
+            }
+        }
+
+		public string UpperName
+        {
+            get
+            { 
+                return _model.Name.ToUpper();
+            }
+        }
+
+		public string CamelCaseName
+        {
+            get
+            { 
+                return _model.Name.Substring(0, 1).ToLower() + _model.Name.Substring(1);
+            }
+        }
+
+
+        public override string TransformText()
+        {
+            base.TransformText();
+#>
+
+export const GET_ALL_<#=UpperName#> = 'GET_ALL_<#=UpperName#>';
+export const GET_ALL_<#=UpperName#>_SUCCESS = 'GET_ALL_<#=UpperName#>_SUCCESS';
+export const GET_ALL_<#=UpperName#>_FAIL = 'GET_ALL_<#=UpperName#>_FAIL';
+
+export const GET_ONE_<#=UpperName#> = 'GET_ONE_<#=UpperName#>';
+export const GET_ONE_<#=UpperName#>_SUCCESS = 'GET_ONE_<#=UpperName#>_SUCCESS';
+export const GET_ONE_<#=UpperName#>_FAIL = 'GET_ONE_<#=UpperName#>_FAIL';
+
+export const CREATE_<#=UpperName#> = 'CREATE_<#=UpperName#>';
+export const CREATE_<#=UpperName#>_SUCCESS = 'CREATE_<#=UpperName#>_SUCCESS';
+export const CREATE_<#=UpperName#>_FAIL = 'CREATE_<#=UpperName#>_FAIL';
+
+export const UPDATE_<#=UpperName#> = 'UPDATE_<#=UpperName#>';
+export const UPDATE_<#=UpperName#>_SUCCESS = 'UPDATE_<#=UpperName#>_SUCCESS';
+export const UPDATE_<#=UpperName#>_FAIL = 'UPDATE_<#=UpperName#>_FAIL';
+
+export const DELETE_<#=UpperName#> = 'DELETE_<#=UpperName#>';
+export const DELETE_<#=UpperName#>_SUCCESS = 'DELETE_<#=UpperName#>_SUCCESS';
+export const DELETE_<#=UpperName#>_FAIL = 'DELETE_<#=UpperName#>_FAIL';
+
+<#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }                      #>

@@ -1,0 +1,179 @@
+
+.box-sizing(@sizing) {
+  -webkit-box-sizing: @sizing;
+  -moz-box-sizing: @sizing;
+  box-sizing: @sizing;
+}
+
+/*Trangle*/
+.trangle(@width: 8px, @pram1: transparent, @pram2: transparent, @pram3: transparent, @pram4: transparent){
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: @width;
+  border-color: @pram1 @pram2 @pram3 @pram4;
+}
+
+/*text overflow shown ...*/
+.text-autocut{
+  overflow: hidden;
+  white-space: nowrap;
+  -webkit-text-overflow:ellipsis;
+  -khtml-text-overflow: ellipsis;
+  -icab-text-overflow: ellipsis;
+  -moz-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+
+.border-radius(@radius) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.border-top-radius(@radius){
+  -webkit-border-top-left-radius: @radius;
+  -webkit-border-top-right-radius: @radius;
+  -moz-border-radius-topleft: @radius;
+  -moz-border-radius-topright: @radius;
+  border-top-left-radius:@radius;
+  border-top-right-radius: @radius;
+}
+
+.border-bottom-radius(@radius){
+  -webkit-border-bottom-left-radius: @radius;
+  -webkit-border-bottom-right-radius: @radius;
+  -moz-border-radius-bottomleft: @radius;
+  -moz-border-radius-bottomright: @radius;
+  border-bottom-left-radius:@radius;
+  border-bottom-right-radius: @radius;
+}
+
+/*custom border radius for four corner*/
+.border-radius-custom (@topleft: 5px, @topright: 5px, @bottomleft: 5px, @bottomright: 5px) {
+  -webkit-border-radius: @topleft @topright @bottomright @bottomleft;
+  -moz-border-radius: @topleft @topright @bottomright @bottomleft;
+  border-radius: @topleft @topright @bottomright @bottomleft;
+}
+
+.box-shadow(@shadow) {
+  -webkit-box-shadow: @shadow;
+  -moz-box-shadow: @shadow;
+  box-shadow: @shadow;
+}
+
+.box-shadow(@shadow,@shadow2) {
+  -webkit-box-shadow: @shadow,@shadow2;
+  -moz-box-shadow: @shadow,@shadow2;
+  box-shadow: @shadow,@shadow2;
+}
+
+/*Inner-shadow*/
+.inner-shadow(@param1,@param2,@param3,@opacity){
+  -webkit-box-shadow:inset @param1 @param2 @param3 rgba(0, 0, 0, @opacity);
+  -moz-box-shadow:inset @param1 @param2 @param3 rgba(0, 0, 0, @opacity);
+  box-shadow:inset @param1 @param2 @param3 rgba(0, 0, 0, @opacity);
+}
+
+.text-shadow(@shadow) {
+  -webkit-text-shadow: @shadow;
+  -moz-text-shadow: @shadow;
+  text-shadow: @shadow;
+}
+
+.transform(@transform) {
+  -webkit-transform: @transform;
+  -moz-transform: @transform;
+  -o-transform: @transform;
+  transform: @transform;
+}
+.transform-origin(@origin){
+  -webkit-transform-origin: @origin;
+  -moz-transform-origin: @origin;
+  -o-transform-origin: @origin;
+  transform-origin: @origin;
+}
+.transition(@transition) {
+  -webkit-transition: @transition;
+  -moz-transition: @transition;
+  -o-transition: @transition;
+  transition: @transition;
+}
+
+.transition(@transition,@transition2) {
+  -webkit-transition: @transition,@transition2;
+  -moz-transition: @transition,@transition2;
+  -o-transition: @transition,@transition2;
+  transition: @transition,@transition2;
+}
+.transition(@transition,@transition2,@transition3) {
+  -webkit-transition: @transition,@transition2,@transition3;
+  -moz-transition: @transition,@transition2,@transition3;
+  -o-transition: @transition,@transition2,@transition3;
+  transition: @transition,@transition2,@transition3;
+}
+.transition(@transition,@transition2,@transition3,@transition4) {
+  -webkit-transition: @transition,@transition2,@transition3,@transition4;
+  -moz-transition: @transition,@transition2,@transition3,@transition4;
+  -o-transition: @transition,@transition2,@transition3,@transition4;
+  transition: @transition,@transition2,@transition3,@transition4;
+}
+//.transition(@prop: all,@time: 1s, @ease: ease-in-out ,@delay:.5s){
+//  -webkit-transition: @prop @time @ease @delay;
+//  -moz-transition: @prop @time @ease @delay;
+//  -o-transition: @prop @time @ease @delay;
+//  transition: @prop @time @ease @delay;
+//}
+
+.gradient(@origin: top, @startColor, @endColor){
+  background-color:@startColor/2 + @endColor/2;
+  //filter:~"progid:DXImageTransform.Microsoft.gradient(startColorstr='@{startColor}', endColorstr='@{endColor}')";  //for IE6
+  background-image: -webkit-linear-gradient(@origin, @startColor, @endColor);
+  background-image:-moz-linear-gradient(@origin, @startColor, @endColor);
+  background-image: -o-linear-gradient(@origin, @startColor, @endColor);
+  background-image: -ms-linear-gradient(@origin, @startColor, @endColor);
+  background-image: linear-gradient(@origin, @startColor, @endColor);
+}
+
+/*Transform*/
+.transform (@rotate: 90deg, @scale: 1, @skew: 1deg, @translate: 10px) {
+  -webkit-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+  -moz-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+  -o-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+  -ms-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+  transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+}
+
+.user-select(@select) {
+  -webkit-user-select: @select;
+  -moz-user-select: @select;
+  -ms-user-select: @select;
+  user-select: @select;
+}
+
+.background-clip(@clip) {
+  -webkit-background-clip: @clip;
+  -moz-background-clip: @clip;
+  background-clip: @clip;
+}
+
+.overflow-scrolling(@touch) {
+  -webkit-overflow-scrolling: @touch;
+  -moz-overflow-scrolling: @touch;
+  overflow-scrolling: @touch;
+}
+
+.tap-highlight-color(@color) {
+  -webkit-tap-highlight-color: @color;
+  -moz-tap-highlight-color: @color;
+  tap-highlight-color: @color;
+}
+
+.flex-align(@position){
+  -ms-flex-item-align: @position;
+  -webkit-align-self: @position;
+  align-self: @position;
+}
+
+

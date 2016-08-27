@@ -1,0 +1,15 @@
+{
+    "presets":["es2015","react"],
+    "plugins": [
+        "add-module-exports",
+        "transform-export-extensions",
+        "transform-async-to-generator",
+        "transform-class-properties",
+        "transform-object-rest-spread",
+        ["transform-es2015-classes", {
+          "loose": true
+        }],
+        "transform-proto-to-assign",
+        "antd"
+    ]
+}
