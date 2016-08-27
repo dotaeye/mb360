@@ -7,54 +7,63 @@
 import * as departmentTypes from '../contants/department';
 
 const initialState = {
+	entity:{}
 };
 
 export default function department(state = initialState, action = {}) {
 	switch (action.type) {
-		case authTypes.GET_ALL_DEPARTMENT:
-		case authTypes.GET_ONE_DEPARTMENT:
-		case authTypes.CREATE_DEPARTMENT:
-		case authTypes.UPDATE_DEPARTMENT:
-		case authTypes.DELETE_DEPARTMENT:
+		case departmentTypes.GET_ALL_DEPARTMENT:
+		case departmentTypes.GET_ONE_DEPARTMENT:
+		case departmentTypes.GET_DEPARTMENT_CASCADER:
+		case departmentTypes.CREATE_DEPARTMENT:
+		case departmentTypes.UPDATE_DEPARTMENT:
+		case departmentTypes.DELETE_DEPARTMENT:
 			return {
 				...state,
 				loading: true
 			};
-		case authTypes.GET_ALL_DEPARTMENT_FAIL:
-		case authTypes.GET_ONE_DEPARTMENT_FAIL:
-		case authTypes.CREATE_DEPARTMENT_FAIL:
-		case authTypes.UPDATE_DEPARTMENT_FAIL:
-		case authTypes.DELETE_DEPARTMENT_FAIL:
+		case departmentTypes.GET_ALL_DEPARTMENT_FAIL:
+		case departmentTypes.GET_ONE_DEPARTMENT_FAIL:
+		case departmentTypes.GET_DEPARTMENT_CASCADER_FAIL:
+		case departmentTypes.CREATE_DEPARTMENT_FAIL:
+		case departmentTypes.UPDATE_DEPARTMENT_FAIL:
+		case departmentTypes.DELETE_DEPARTMENT_FAIL:
 			return {
 				...state,
 				loading: false,
 				error: action.error
 			};
-		case authTypes.GET_ALL_DEPARTMENT_SUCCESS:
+		case departmentTypes.GET_ALL_DEPARTMENT_SUCCESS:
 			return {
 				...state,
 				loading: false,
 				list: action.result
 			};
-		case authTypes.GET_ONE_DEPARTMENT_SUCCESS:
+		case departmentTypes.GET_ONE_DEPARTMENT_SUCCESS:
 			return {
 				...state,
 				loading: false,
 				entity: action.result
 			};
-		case authTypes.CREATE_DEPARTMENT_SUCCESS:
+		case departmentTypes.GET_DEPARTMENT_CASCADER_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				cascader: action.result
+			};
+		case departmentTypes.CREATE_DEPARTMENT_SUCCESS:
 			return {
 				...state,
 				loading: false,
 				entity: action.result
 			};
-		case authTypes.UPDATE_DEPARTMENT_SUCCESS:
+		case departmentTypes.UPDATE_DEPARTMENT_SUCCESS:
 			return {
 				...state,
 				loading: false,
 				entity: action.result
 			};
-		case authTypes.DELETE_DEPARTMENT_SUCCESS:
+		case departmentTypes.DELETE_DEPARTMENT_SUCCESS:
 			return {
 				...state,
 				loading: false,

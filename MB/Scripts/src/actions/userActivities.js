@@ -18,7 +18,7 @@ export function getAll() {
 export function getById(id) {
   return {
     types: [userActivitiesTypes.GET_ONE_USERACTIVITIES, userActivitiesTypes.GET_ONE_USERACTIVITIES_SUCCESS, userActivitiesTypes.GET_ONE_USERACTIVITIES_FAIL],
-    promise: (client) => client.get('/userActivities'+id,{
+    promise: (client) => client.get('/userActivities/'+id,{
       token: true
     })
   };

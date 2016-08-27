@@ -22,7 +22,7 @@ namespace MB.Data.AutoMapper
         {
 
             CreateMap<UserRole, UserRoleDTO>()
-                .ForMember(dto => dto.Permission, e => e.MapFrom(src => src.UserPermissions.Select(x => x.Id).ToList()));
+                .ForMember(dto => dto.Permission, e => e.Ignore());
 
 
             CreateMap<UserRoleDTO, UserRole>()

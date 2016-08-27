@@ -84,7 +84,7 @@ export function getAll(params) {
 export function getById(id) {
   return {
     types: [<#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>, <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>_SUCCESS, <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>_FAIL],
-    promise: (client) => client.get('/<#=CamelCaseName#>'+id,{
+    promise: (client) => client.get('/<#=CamelCaseName#>/'+id,{
       token: true
     })
   };

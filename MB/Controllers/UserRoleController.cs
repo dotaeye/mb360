@@ -40,7 +40,7 @@ namespace MB.Controllers
         [Route("")]
         public ApiListResult<UserRoleDTO> Get([FromUri] AntPageOption option = null)
         {
-             var query = UserRoleService.GetAll().Include(x=>x.UserPermissions).Where(x => !x.Deleted).ProjectTo<UserRoleDTO>();
+             var query = UserRoleService.GetAll().Where(x => !x.Deleted).ProjectTo<UserRoleDTO>();
             if (option != null)
             {
                 if (!string.IsNullOrEmpty(option.SortField))

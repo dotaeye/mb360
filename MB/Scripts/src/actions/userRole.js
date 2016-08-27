@@ -9,9 +9,9 @@ import * as userRoleTypes from '../contants/userRole';
 export function getAll(params) {
   return {
     types: [userRoleTypes.GET_ALL_USERROLE, userRoleTypes.GET_ALL_USERROLE_SUCCESS, userRoleTypes.GET_ALL_USERROLE_FAIL],
-    promise: (client) => client.get('/userRole',{
+    promise: (client) => client.get('/userRole', {
       token: true,
-	  params
+      params
     })
   };
 }
@@ -19,7 +19,7 @@ export function getAll(params) {
 export function getById(id) {
   return {
     types: [userRoleTypes.GET_ONE_USERROLE, userRoleTypes.GET_ONE_USERROLE_SUCCESS, userRoleTypes.GET_ONE_USERROLE_FAIL],
-    promise: (client) => client.get('/userRole'+id,{
+    promise: (client) => client.get('/userRole/' + id, {
       token: true
     })
   };
@@ -30,7 +30,7 @@ export function create(data) {
     types: [userRoleTypes.CREATE_USERROLE, userRoleTypes.CREATE_USERROLE_SUCCESS, userRoleTypes.CREATE_USERROLE_FAIL],
     promise: (client) => client.post('/userRole', {
       data: data,
-	  token: true
+      token: true
     })
   };
 }
@@ -41,7 +41,7 @@ export function update(data) {
     types: [userRoleTypes.UPDATE_USERROLE, userRoleTypes.UPDATE_USERROLE_SUCCESS, userRoleTypes.UPDATE_USERROLE_FAIL],
     promise: (client) => client.put('/userRole', {
       data: data,
-	  token: true
+      token: true
     })
   };
 }
@@ -49,8 +49,8 @@ export function update(data) {
 export function remove(id) {
   return {
     types: [userRoleTypes.DELETE_USERROLE, userRoleTypes.DELETE_USERROLE_SUCCESS, userRoleTypes.DELETE_USERROLE_FAIL],
-    promise: (client) => client.del('/userRole/'+id, {
-		token: true
+    promise: (client) => client.del('/userRole/' + id, {
+      token: true
     })
   };
 }

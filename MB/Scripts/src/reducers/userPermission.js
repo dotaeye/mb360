@@ -7,63 +7,64 @@
 import * as userPermissionTypes from '../contants/userPermission';
 
 const initialState = {
-	loaded:false
+  loaded: false,
+  entity: {}
 };
 
 export default function userPermission(state = initialState, action = {}) {
-	switch (action.type) {
-		case userPermissionTypes.GET_ALL_USERPERMISSION:
-		case userPermissionTypes.GET_ONE_USERPERMISSION:
-		case userPermissionTypes.CREATE_USERPERMISSION:
-		case userPermissionTypes.UPDATE_USERPERMISSION:
-		case userPermissionTypes.DELETE_USERPERMISSION:
-			return {
-				...state,
-				loading: true
-			};
-		case userPermissionTypes.GET_ALL_USERPERMISSION_FAIL:
-		case userPermissionTypes.GET_ONE_USERPERMISSION_FAIL:
-		case userPermissionTypes.CREATE_USERPERMISSION_FAIL:
-		case userPermissionTypes.UPDATE_USERPERMISSION_FAIL:
-		case userPermissionTypes.DELETE_USERPERMISSION_FAIL:
-			return {
-				...state,
-				loading: false,
-				error: action.error
-			};
-		case userPermissionTypes.GET_ALL_USERPERMISSION_SUCCESS:
-			return {
-				...state,
-				loading: false,
-				loaded: true,
-				list: action.result
-			};
-		case userPermissionTypes.GET_ONE_USERPERMISSION_SUCCESS:
-			return {
-				...state,
-				loading: false,
-				entity: action.result
-			};
-		case userPermissionTypes.CREATE_USERPERMISSION_SUCCESS:
-			return {
-				...state,
-				loading: false,
-				entity: action.result
-			};
-		case userPermissionTypes.UPDATE_USERPERMISSION_SUCCESS:
-			return {
-				...state,
-				loading: false,
-				entity: action.result
-			};
-		case userPermissionTypes.DELETE_USERPERMISSION_SUCCESS:
-			return {
-				...state,
-				loading: false,
-				entity: action.result
-			};
-		default:
-			return state;
+  switch (action.type) {
+    case userPermissionTypes.GET_ALL_USERPERMISSION:
+    case userPermissionTypes.GET_ONE_USERPERMISSION:
+    case userPermissionTypes.CREATE_USERPERMISSION:
+    case userPermissionTypes.UPDATE_USERPERMISSION:
+    case userPermissionTypes.DELETE_USERPERMISSION:
+      return {
+        ...state,
+        loading: true
+      };
+    case userPermissionTypes.GET_ALL_USERPERMISSION_FAIL:
+    case userPermissionTypes.GET_ONE_USERPERMISSION_FAIL:
+    case userPermissionTypes.CREATE_USERPERMISSION_FAIL:
+    case userPermissionTypes.UPDATE_USERPERMISSION_FAIL:
+    case userPermissionTypes.DELETE_USERPERMISSION_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.error
+      };
+    case userPermissionTypes.GET_ALL_USERPERMISSION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        list: action.result
+      };
+    case userPermissionTypes.GET_ONE_USERPERMISSION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        entity: action.result
+      };
+    case userPermissionTypes.CREATE_USERPERMISSION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        entity: action.result
+      };
+    case userPermissionTypes.UPDATE_USERPERMISSION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        entity: action.result
+      };
+    case userPermissionTypes.DELETE_USERPERMISSION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        entity: action.result
+      };
+    default:
+      return state;
   }
 }
 

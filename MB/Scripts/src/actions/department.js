@@ -6,11 +6,22 @@
 
 import * as departmentTypes from '../contants/department';
 
-export function getAll() {
+export function getAll(params) {
   return {
     types: [departmentTypes.GET_ALL_DEPARTMENT, departmentTypes.GET_ALL_DEPARTMENT_SUCCESS, departmentTypes.GET_ALL_DEPARTMENT_FAIL],
-    promise: (client) => client.get('/department',{
-      token: true
+    promise: (client) => client.get('/department', {
+      token: true,
+      params
+    })
+  };
+}
+
+export function getCascader(params) {
+  return {
+    types: [departmentTypes.GET_DEPARTMENT_CASCADER, departmentTypes.GET_DEPARTMENT_CASCADER_SUCCESS, departmentTypes.GET_DEPARTMENT_CASCADER_FAIL],
+    promise: (client) => client.get('/department/cascader', {
+      token: true,
+      params
     })
   };
 }
@@ -18,7 +29,7 @@ export function getAll() {
 export function getById(id) {
   return {
     types: [departmentTypes.GET_ONE_DEPARTMENT, departmentTypes.GET_ONE_DEPARTMENT_SUCCESS, departmentTypes.GET_ONE_DEPARTMENT_FAIL],
-    promise: (client) => client.get('/department'+id,{
+    promise: (client) => client.get('/department/' + id, {
       token: true
     })
   };
@@ -26,29 +37,29 @@ export function getById(id) {
 
 export function create(data) {
   return {
-    types: [department.CREATE_DEPARTMENT, department.CREATE_DEPARTMENT_SUCCESS, department.CREATE_DEPARTMENT_FAIL],
+    types: [departmentTypes.CREATE_DEPARTMENT, departmentTypes.CREATE_DEPARTMENT_SUCCESS, departmentTypes.CREATE_DEPARTMENT_FAIL],
     promise: (client) => client.post('/department', {
       data: data,
-	  token: true
+      token: true
     })
   };
 }
 
-export function update(id, data) {
+export function update(data) {
   return {
-    types: [department.UPDATE_DEPARTMENT, department.UPDATE_DEPARTMENT_SUCCESS, department.UPDATE_DEPARTMENT_FAIL],
-    promise: (client) => client.put('/department/'+id, {
+    types: [departmentTypes.UPDATE_DEPARTMENT, departmentTypes.UPDATE_DEPARTMENT_SUCCESS, departmentTypes.UPDATE_DEPARTMENT_FAIL],
+    promise: (client) => client.put('/department', {
       data: data,
-	  token: true
+      token: true
     })
   };
 }
 
 export function remove(id) {
   return {
-    types: [department.DELETE_DEPARTMENT, department.DELETE_DEPARTMENT_SUCCESS, department.DELETE_DEPARTMENT_FAIL],
-    promise: (client) => client.delete('/department/'+id, {
-		token: true
+    types: [departmentTypes.DELETE_DEPARTMENT, departmentTypes.DELETE_DEPARTMENT_SUCCESS, departmentTypes.DELETE_DEPARTMENT_FAIL],
+    promise: (client) => client.delete('/department/' + id, {
+      token: true
     })
   };
 }

@@ -21,8 +21,7 @@ var UserPermission = React.createClass({
       pagination: {
         pageSize: 10,
         current: 1
-      },
-      record: {}
+      }
     };
   },
 
@@ -41,13 +40,13 @@ var UserPermission = React.createClass({
     const pager = this.state.pagination;
     pager.current = pagination.current;
     this.setState({
-      pagination: pager,
+      pagination: pager
     });
     this.props.userPermissionActions.getAll({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
-      sortOrder: sorter.order,
+      sortOrder: sorter.order
     });
   },
   onAdd(){
@@ -60,11 +59,17 @@ var UserPermission = React.createClass({
   },
 
   onEdit(record){
-    this.setState({
-      visible: true,
-      edit: true,
-      title: '编辑权限',
-      record
+    this.props.userPermissionActions.getById(record.id).then((err)=> {
+      if (err) {
+        message.error('获取权限数据失败！请刷新页面尝试。');
+      }
+      else {
+        this.setState({
+          visible: true,
+          edit: true,
+          title: '编辑权限'
+        });
+      }
     });
   },
 
@@ -98,16 +103,16 @@ var UserPermission = React.createClass({
   },
 
   onModalSubmit(){
-    const { edit, record }=this.state;
+    const { edit }=this.state;
     const { update, create} =this.props.userPermissionActions;
-
+    const { entity }= this.props.userPermission;
     this.props.form.validateFields((errors, formdata) => {
       if (!!errors) {
         console.log('Errors in form!!!');
         return;
       }
       if (edit) {
-        formdata.id = record.id;
+        formdata.id = entity.id;
         update(formdata).then((err)=> {
           if (err) {
             message.error('更新数据失败。');
@@ -143,20 +148,20 @@ var UserPermission = React.createClass({
       title: 'Id',
       dataIndex: 'id',
       sorter: true,
-      width: '20%',
+      width: '20%'
     }, {
       title: '名称',
-      dataIndex: 'name',
+      dataIndex: 'name'
     }, {
       title: '控制器',
-      dataIndex: 'controller',
+      dataIndex: 'controller'
     }, {
       title: 'Action',
-      dataIndex: 'action',
-    },  {
+      dataIndex: 'action'
+    }, {
       title: '分组',
-      dataIndex: 'group',
-    },{
+      dataIndex: 'group'
+    }, {
       title: '是否为API',
       dataIndex: 'isApi',
       render: isApi=>isApi ? '是' : '否'
@@ -173,11 +178,12 @@ var UserPermission = React.createClass({
         </span>
       )
     }];
-    const { userPermission:{ loading, error, list }} = this.props;
-    const { record, title, visible }=this.state;
+    const { userPermission:{ loading, list, entity }} = this.props;
+    const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.pageCount : 0})
     const { getFieldProps } = this.props.form;
+    const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
       wrapperCol: {span: 20}
@@ -206,8 +212,8 @@ var UserPermission = React.createClass({
               label="名称"
               >
               <Input  {...getFieldProps('name', {
-                initialValue: record.name,
-                rules:[{required: true, message: '请输入名称'}]
+                  initialValue: record.name,
+                  rules: [{required: true, message: '请输入名称'}]
                 }
               )} type="text"/>
             </FormItem>
@@ -217,7 +223,7 @@ var UserPermission = React.createClass({
               >
               <Input  {...getFieldProps('controller', {
                 initialValue: record.controller,
-                rules:[{required: true, message: '请输入控制器'}]
+                rules: [{required: true, message: '请输入控制器'}]
               })} type="text"/>
             </FormItem>
             <FormItem
@@ -226,7 +232,7 @@ var UserPermission = React.createClass({
               >
               <Input  {...getFieldProps('action', {
                 initialValue: record.action,
-                rules:[{required: true, message: '请输入Action'}]
+                rules: [{required: true, message: '请输入Action'}]
               })} type="text"/>
             </FormItem>
             <FormItem
@@ -235,7 +241,7 @@ var UserPermission = React.createClass({
               >
               <Select  {...getFieldProps('group', {
                 initialValue: record.group,
-                rules:[{required: true, message: '请选择权限分组'}]
+                rules: [{required: true, message: '请选择权限分组'}]
               })} >
                 <Option value="权限管理">权限管理</Option>
                 <Option value="角色管理">角色管理</Option>
@@ -270,6 +276,7 @@ function mapDispatchToProps(dispatch) {
 
 const statics = {
   path: 'userpermission',
+  menuGroup: 'system',
   breadcrumb: [{
     title: '系统设置'
   }, {

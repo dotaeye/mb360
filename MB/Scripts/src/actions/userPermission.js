@@ -19,7 +19,7 @@ export function getAll(params) {
 export function getById(id) {
   return {
     types: [userPermissionTypes.GET_ONE_USERPERMISSION, userPermissionTypes.GET_ONE_USERPERMISSION_SUCCESS, userPermissionTypes.GET_ONE_USERPERMISSION_FAIL],
-    promise: (client) => client.get('/userPermission'+id,{
+    promise: (client) => client.get('/userPermission/'+id,{
       token: true
     })
   };

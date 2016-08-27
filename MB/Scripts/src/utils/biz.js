@@ -9,7 +9,7 @@ export function getGroupSelectData(data, groupBy) {
   _.map(temp, (groupItems, groupKey)=> {
     let groupItem = {
       name: groupKey,
-      items: []
+      children: []
     };
     groupItem.items = groupItems.map(x=> {
       return {
@@ -18,6 +18,36 @@ export function getGroupSelectData(data, groupBy) {
       }
     });
     groups.push(groupItem);
-  })
+  });
   return groups;
+}
+
+export function hasError(error) {
+  if (_.isArray(error)) {
+    return _.some(error)
+  }
+  return error;
+}
+
+
+export function setCascadeValues(options, value, results) {
+  results.push(value.toString());
+  let option = getSelectedOption(options, value);
+  if (option && option.parentId) {
+    setCascadeValues(options, option.parentId, results)
+  }
+}
+
+function getSelectedOption(options, value) {
+  for (let i = 0; i < options.length; i++) {
+    if (options[i].value == value) {
+      return options[i];
+    } else {
+      if (options[i].children && options[i].children.length > 0) {
+        return getSelectedOption(options[i].children, value);
+      } else {
+        return null;
+      }
+    }
+  }
 }

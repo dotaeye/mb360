@@ -42,7 +42,9 @@ var Aside = React.createClass({
               </Menu.Item>
             </MenuItemGroup>
             <MenuItemGroup title="组织架构">
-              <Menu.Item key="3">部门管理</Menu.Item>
+              <Menu.Item key="department">
+                <Link to='department'>部门管理</Link>
+              </Menu.Item>
               <Menu.Item key="4">职位管理</Menu.Item>
             </MenuItemGroup>
           </SubMenu>

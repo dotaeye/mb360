@@ -9,8 +9,9 @@ import {
   Login,
   Register,
   Profile,
-  userPermission,
-  userRole,
+  UserPermission,
+  UserRole,
+  Department,
   NotFound
 } from './containers';
 
@@ -44,9 +45,11 @@ export default (store) => {
 
       <IndexRoute component={Home} onEnter={requireLogin} />
 
-      <Route path='userpermission' component={userPermission} onEnter={requireLogin} />
+      <Route path='userpermission' component={UserPermission} onEnter={requireLogin} />
 
-      <Route path='userrole' component={userRole} onEnter={requireLogin} />
+      <Route path='userrole' component={UserRole} onEnter={requireLogin} />
+
+      <Route path='department' component={Department} onEnter={requireLogin} />
 
       <Route path='login' component={Login}/>
 

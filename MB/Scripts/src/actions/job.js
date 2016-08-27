@@ -18,7 +18,7 @@ export function getAll() {
 export function getById(id) {
   return {
     types: [jobTypes.GET_ONE_JOB, jobTypes.GET_ONE_JOB_SUCCESS, jobTypes.GET_ONE_JOB_FAIL],
-    promise: (client) => client.get('/job'+id,{
+    promise: (client) => client.get('/job/'+id,{
       token: true
     })
   };

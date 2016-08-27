@@ -9,15 +9,19 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Microsoft.AspNet.Identity;
 using MB.Data.Service;
 using MB.Data.DTO;
 using MB.Data.AutoMapper;
 using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
-using System.Threading.Tasks;
+
+using SQ.Core.UI;
+using SQ.Core.Data;
 
 namespace MB.Controllers
 {
@@ -33,16 +37,94 @@ namespace MB.Controllers
         }
 
         [Route("")]
-        public IQueryable<DepartmentDTO> Get()
+        public ApiListResult<DepartmentDTO> Get([FromUri] AntPageOption option = null)
         {
-            return DepartmentService.GetAll().Where(x=>!x.Deleted).ProjectTo<DepartmentDTO>();
+            var query = DepartmentService.GetAll().Where(x => !x.Deleted).ProjectTo<DepartmentDTO>();
+            if (option != null)
+            {
+                if (!string.IsNullOrEmpty(option.SortField))
+                {
+                    //for example
+                    if (option.SortField == "code")
+                    {
+                        if (option.SortOrder == PageSortTyoe.DESC)
+                        {
+                            query = query.OrderByDescending(x => x.Code);
+                        }
+                        else
+                        {
+                            query = query.OrderBy(x => x.Code);
+                        }
+                    }
+                }
+
+                if (option.Page > 0 && option.Results > 0)
+                {
+                    if (string.IsNullOrEmpty(option.SortField))
+                    {
+                        query = query.OrderBy(x => x.Code);
+                    }
+                }
+            }
+            else
+            {
+                query = query.OrderBy(x => x.Code);
+            }
+            var count = query.Count();
+            var result = query.Paging<DepartmentDTO>(option.Page - 1, option.Results, count);
+            return new ApiListResult<DepartmentDTO>(result, result.PageIndex, result.PageSize, count);
         }
+
+        [Route("cascader/{id:int=0}")]
+        public List<Cascader> GetDepartmentCascader(int Id)
+        {
+            var cascader = new List<Cascader>();
+            GenerateCascader(null, Id, cascader);
+            return cascader;
+        }
+
+
+        private void GenerateCascader(int? Id, int currentId, List<Cascader> cascader)
+        {
+            var query = DepartmentService.GetAll().Where(x => x.Id != currentId);
+            if (Id.HasValue)
+            {
+                query = query.Where(x => x.ParentId == Id.Value);
+            }
+            else
+            {
+                query = query.Where(x => x.ParentId.Equals(null));
+            }
+
+
+
+            var departments = query.ToList();
+
+            foreach (var depart in departments)
+            {
+                var item = new Cascader()
+                {
+                    Label = depart.Name,
+                    Value = depart.Id.ToString(),
+                    ParentId = depart.ParentId.HasValue ? depart.ParentId.Value.ToString() : null
+                };
+
+                cascader.Add(item);
+
+                if (DepartmentService.GetAll().Any(x => x.ParentId == depart.Id && x.Id != currentId))
+                {
+                    item.Children = new List<Cascader>();
+                    GenerateCascader(depart.Id, currentId, item.Children);
+                }
+            }
+        }
+
 
         [Route("{id:int}")]
         [ResponseType(typeof(DepartmentDTO))]
         public async Task<IHttpActionResult> GetById(int id)
         {
-            DepartmentDTO Department = await DepartmentService.GetAll().Where(x => x.Id == id&&!x.Deleted).ProjectTo<DepartmentDTO>().FirstOrDefaultAsync();
+            DepartmentDTO Department = await DepartmentService.GetAll().Where(x => x.Id == id && !x.Deleted).ProjectTo<DepartmentDTO>().FirstOrDefaultAsync();
             if (Department == null)
             {
                 return NotFound();
@@ -55,26 +137,31 @@ namespace MB.Controllers
         [ResponseType(typeof(DepartmentDTO))]
         public async Task<IHttpActionResult> Create([FromBody]DepartmentDTO DepartmentDto)
         {
-		    if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             var entity = DepartmentDto.ToEntity();
+            entity.CreateUserId = User.Identity.GetUserId();
+            entity.CreateTime = DateTime.Now;
             await DepartmentService.InsertAsync(entity);
             return Ok(entity.ToModel());
         }
 
 
-        [Route("{id:int}")]
+        [Route("")]
         [HttpPut]
         [ResponseType(typeof(DepartmentDTO))]
-        public async Task<IHttpActionResult> Update(int id, [FromBody]DepartmentDTO DepartmentDto)
+        public async Task<IHttpActionResult> Update([FromBody]DepartmentDTO DepartmentDto)
         {
-			if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var entity = DepartmentDto.ToEntity();
+            var entity = await DepartmentService.FindOneAsync(DepartmentDto.Id);
+            entity = DepartmentDto.ToEntity(entity);
+            entity.LastUserId = User.Identity.GetUserId();
+            entity.LastTime = DateTime.Now;
             await DepartmentService.UpdateAsync(entity);
             return Ok(entity.ToModel());
         }
@@ -93,7 +180,6 @@ namespace MB.Controllers
 
             return Ok(entity.ToModel());
         }
-
     }
 }
 

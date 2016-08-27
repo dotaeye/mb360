@@ -14,7 +14,7 @@ const GroupCheckList = React.createClass({
   onGroupItemChange(gIndex, values){
     const currentGroup = this.props.groups[gIndex];
     const { value }=this.state;
-    currentGroup.items.forEach(item=> {
+    currentGroup.children.forEach(item=> {
       if (value.indexOf(item.value) != -1) {
         if (values.indexOf(item.value) == -1) {
           value.splice(value.indexOf(item.value), 1);
@@ -54,7 +54,7 @@ const GroupCheckList = React.createClass({
     return (
       <div className='group-check-list'>
         {groups.map((group, gIndex)=> {
-          const groupValues = _.map(group.items, 'value');
+          const groupValues = _.map(group.children, 'value');
           const selectedValues = [];
           groupValues.forEach(val=> {
             if (value.indexOf(val) > -1) {
