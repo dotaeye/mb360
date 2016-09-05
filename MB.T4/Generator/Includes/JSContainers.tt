@@ -1,20 +1,90 @@
+﻿
+<#+
+    // <copyright file="ImplService.tt" company="">
+    //  Copyright © . All Rights Reserved.
+    // </copyright>
+
+    public class JSContainers : BaseTemplate
+    {
+
+
+        public JSContainers(T4ModelInfo model):base(model)
+        {  
+        }
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public override string FileName
+        {
+            get
+            { 
+                return string.Format("{0}.js", this.CamelCaseName);
+            }
+        }
+
+        public override string ModuleName
+        {
+            get
+            { 
+                return _model.Name;
+            }
+        }
+
+
+        public override string SavePath
+        {
+            get
+            { 
+                return "\\src\\containers";
+            }
+        }
+
+		public string UpperName
+        {
+            get
+            { 
+                return _model.Name.ToUpper();
+            }
+        }
+
+		public string CamelCaseName
+        {
+            get
+            { 
+                return _model.Name.Substring(0, 1).ToLower() + _model.Name.Substring(1);
+            }
+        }
+
+		public string LowerName
+        {
+            get
+            { 
+                return _model.Name.ToLower();
+            }
+        }
+
+
+        public override string TransformText()
+        {
+            base.TransformText();
+#>
+
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
-import * as userPermissionActions from '../actions/userPermission'
-import { ProfileForm } from '../components';
+import * as <#=CamelCaseName#>Actions from '../actions/<#=CamelCaseName#>'
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;
 const confirm = Modal.confirm;
 const Option = Select.Option;
 
-var UserPermission = React.createClass({
+var <#=ModuleName#> = React.createClass({
 
-  displayName: 'UserPermission',
+  displayName: '<#=ModuleName#>',
 
   getInitialState() {
     return {
@@ -26,7 +96,7 @@ var UserPermission = React.createClass({
   },
 
   fetchData(page){
-    this.props.userPermissionActions.getAll({
+    this.props.<#=CamelCaseName#>Actions.getAll({
       results: this.state.pagination.pageSize,
       page: page || this.state.pagination.current
     });
@@ -42,7 +112,7 @@ var UserPermission = React.createClass({
     this.setState({
       pagination: pager
     });
-    this.props.userPermissionActions.getAll({
+    this.props.<#=CamelCaseName#>Actions.getAll({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
@@ -53,21 +123,21 @@ var UserPermission = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加权限',
+      title: '添加<#=ModuleName#>',
       record: {}
     });
   },
 
   onEdit(record){
-    this.props.userPermissionActions.getById(record.id).then((err)=> {
+    this.props.<#=CamelCaseName#>Actions.getById(record.id).then((err)=> {
       if (err) {
-        message.error('获取权限数据失败！请刷新页面尝试。');
+        message.error('获取<#=ModuleName#>数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑权限'
+          title: '编辑<#=ModuleName#>'
         });
       }
     });
@@ -75,11 +145,11 @@ var UserPermission = React.createClass({
 
   onRemove(record){
     const self = this;
-    const { userPermission:{ list }} = this.props;
+    const { <#=CamelCaseName#>:{ list }} = this.props;
     let source = list.data;
-    const remove = this.props.userPermissionActions.remove;
+    const remove = this.props.<#=CamelCaseName#>Actions.remove;
     confirm({
-      title: '确认删除该权限？',
+      title: '确认删除该<#=ModuleName#>？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -104,8 +174,8 @@ var UserPermission = React.createClass({
 
   onModalSubmit(){
     const { edit }=this.state;
-    const { update, create} =this.props.userPermissionActions;
-    const { entity }= this.props.userPermission;
+    const { update, create} =this.props.<#=CamelCaseName#>Actions;
+    const { entity }= this.props.<#=CamelCaseName#>;
     this.props.form.validateFields((errors, formdata) => {
       if (!!errors) {
         console.log('Errors in form!!!');
@@ -152,20 +222,7 @@ var UserPermission = React.createClass({
     }, {
       title: '名称',
       dataIndex: 'name'
-    }, {
-      title: '控制器',
-      dataIndex: 'controller'
-    }, {
-      title: 'Action',
-      dataIndex: 'action'
-    }, {
-      title: '分组',
-      dataIndex: 'group'
-    }, {
-      title: '是否为API',
-      dataIndex: 'isApi',
-      render: isApi=>isApi ? '是' : '否'
-    }, {
+    },{
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -178,7 +235,7 @@ var UserPermission = React.createClass({
         </span>
       )
     }];
-    const { userPermission:{ loading, list, entity }} = this.props;
+    const { <#=CamelCaseName#>:{ loading, list, entity }} = this.props;
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
@@ -192,7 +249,7 @@ var UserPermission = React.createClass({
       <div className='container'>
         <div className='ant-list-header' data-flex="dir:right">
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加权限</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加<#=ModuleName#></Button>
           </div>
         </div>
         <Table
@@ -217,42 +274,6 @@ var UserPermission = React.createClass({
                 }
               )} type="text"/>
             </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="控制器"
-              >
-              <Input  {...getFieldProps('controller', {
-                initialValue: record.controller,
-                rules: [{required: true, message: '请输入控制器'}]
-              })} type="text"/>
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="Action"
-              >
-              <Input  {...getFieldProps('action', {
-                initialValue: record.action,
-                rules: [{required: true, message: '请输入Action'}]
-              })} type="text"/>
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="分组"
-              >
-              <Select  {...getFieldProps('group', {
-                initialValue: record.group,
-                rules: [{required: true, message: '请选择权限分组'}]
-              })} >
-                <Option value="权限管理">权限管理</Option>
-                <Option value="角色管理">角色管理</Option>
-              </Select>
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="是否为API"
-              >
-              <Checkbox {...getFieldProps('isApi', {initialValue: record.isApi, valuePropName: 'checked'})}/>
-            </FormItem>
           </Form>
         </Modal>
       </div>
@@ -263,14 +284,14 @@ var UserPermission = React.createClass({
 function mapStateToProps(state) {
   return {
     auth: state.auth,
-    userPermission: state.userPermission
+    <#=CamelCaseName#>: state.<#=CamelCaseName#>
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     authActions: bindActionCreators(authActions, dispatch),
-    userPermissionActions: bindActionCreators(userPermissionActions, dispatch)
+    <#=CamelCaseName#>Actions: bindActionCreators(<#=CamelCaseName#>Actions, dispatch)
   }
 }
 
@@ -280,11 +301,14 @@ const statics = {
   breadcrumb: [{
     title: '系统设置'
   }, {
-    title: '权限管理'
+    title: '<#=ModuleName#>管理'
   }]
 };
 
-UserPermission = createForm()(UserPermission);
+<#=ModuleName#> = createForm()(<#=ModuleName#>);
 
-export default connectStatic(statics)(connect(mapStateToProps, mapDispatchToProps)(UserPermission))
-
+export default connectStatic(statics)(connect(mapStateToProps, mapDispatchToProps)(<#=ModuleName#>))
+<#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }                      #>

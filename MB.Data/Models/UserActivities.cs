@@ -5,7 +5,7 @@ using SQ.Core.DTO;
 
 namespace MB.Data.Models
 {
-
+    [DTOIgnore]
     public partial class UserActivities : BaseEntity
     {
         public Nullable<System.DateTime> Time { get; set; }

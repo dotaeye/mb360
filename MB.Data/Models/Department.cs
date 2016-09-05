@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
+    [DTOIgnore]
     public partial class Department : BaseEntity
     {
         public Department()

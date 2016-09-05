@@ -4,11 +4,13 @@ import auth from './auth';
 import userPermission from './userPermission';
 import userRole from './userRole';
 import department from './department';
+import job from './job';
 
 export default combineReducers({
     form,
     auth,
     userPermission,
     userRole,
-    department
+    department,
+    job
 });

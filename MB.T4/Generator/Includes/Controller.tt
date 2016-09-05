@@ -51,6 +51,7 @@
         {
             base.TransformText();
 #>
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +86,7 @@ namespace MB.Controllers
         [Route("")]
         public ApiListResult<<#= _model.Name #>DTO> Get([FromUri] AntPageOption option = null)
         {
-             var query = <#= _model.Name #>Service.GetAll().Where(x => !x.Deleted).ProjectTo<<#= _model.Name #>DTO>();
+            var query = <#= _model.Name #>Service.GetAll().Where(x => !x.Deleted).ProjectTo<<#= _model.Name #>DTO>();
             if (option != null)
             {
                 if (!string.IsNullOrEmpty(option.SortField))
@@ -125,7 +126,7 @@ namespace MB.Controllers
         [ResponseType(typeof(<#= _model.Name #>DTO))]
         public async Task<IHttpActionResult> GetById(int id)
         {
-            <#= _model.Name #>DTO <#= _model.Name #> = await <#= _model.Name #>Service.GetAll().Where(x => x.Id == id&&!x.Deleted).ProjectTo<<#= _model.Name #>DTO>().FirstOrDefaultAsync();
+            <#= _model.Name #>DTO <#= _model.Name #> = await <#= _model.Name #>Service.GetAll().Where(x => x.Id == id && !x.Deleted).ProjectTo<<#= _model.Name #>DTO>().FirstOrDefaultAsync();
             if (<#= _model.Name #> == null)
             {
                 return NotFound();
@@ -138,11 +139,13 @@ namespace MB.Controllers
         [ResponseType(typeof(<#= _model.Name #>DTO))]
         public async Task<IHttpActionResult> Create([FromBody]<#= _model.Name #>DTO <#= _model.Name #>Dto)
         {
-		    if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             var entity = <#= _model.Name #>Dto.ToEntity();
+
             entity.CreateUserId = User.Identity.GetUserId();
             entity.CreateTime = DateTime.Now;
             await <#= _model.Name #>Service.InsertAsync(entity);
@@ -155,11 +158,12 @@ namespace MB.Controllers
         [ResponseType(typeof(<#= _model.Name #>DTO))]
         public async Task<IHttpActionResult> Update([FromBody]<#= _model.Name #>DTO <#= _model.Name #>Dto)
         {
-			if (!ModelState.IsValid)
+
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-			var entity = await <#= _model.Name #>Service.FindOneAsync(<#= _model.Name #>Dto.Id);
+            var entity = await <#= _model.Name #>Service.FindOneAsync(<#= _model.Name #>Dto.Id);
             entity = <#= _model.Name #>Dto.ToEntity(entity);
             entity.LastUserId = User.Identity.GetUserId();
             entity.LastTime = DateTime.Now;
@@ -184,6 +188,9 @@ namespace MB.Controllers
 
     }
 }
+
+
+
 
 <#+
             return this.GenerationEnvironment.ToString();

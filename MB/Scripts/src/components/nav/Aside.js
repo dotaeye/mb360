@@ -45,7 +45,9 @@ var Aside = React.createClass({
               <Menu.Item key="department">
                 <Link to='department'>部门管理</Link>
               </Menu.Item>
-              <Menu.Item key="4">职位管理</Menu.Item>
+              <Menu.Item key="job">
+                <Link to='job'>职位管理</Link>
+              </Menu.Item>
             </MenuItemGroup>
           </SubMenu>
           <SubMenu key="sub2"

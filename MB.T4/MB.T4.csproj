@@ -85,6 +85,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Profile.tt</DependentUpon>
     </Compile>
+    <Compile Include="Generator\Includes\JSContainers.cs">
+      <DependentUpon>JSContainers.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Generator\Includes\Redux\Actions.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -128,47 +133,38 @@
       <LastGenOutput>Entry1.cs</LastGenOutput>
       <LastOutputs>
 ..\code\AutoMapper\DepartmentProfile.cs
-..\code\AutoMapper\JobProfile.cs
 ..\code\AutoMapper\UserActivitiesProfile.cs
 ..\code\AutoMapper\UserPermissionProfile.cs
 ..\code\AutoMapper\UserRoleProfile.cs
 ..\code\Controllers\DepartmentController.cs
-..\code\Controllers\JobController.cs
 ..\code\Controllers\UserActivitiesController.cs
 ..\code\Controllers\UserPermissionController.cs
 ..\code\Controllers\UserRoleController.cs
 ..\code\DTO\DepartmentDTO.cs
-..\code\DTO\JobDTO.cs
 ..\code\DTO\UserActivitiesDTO.cs
 ..\code\DTO\UserPermissionDTO.cs
 ..\code\DTO\UserRoleDTO.cs
 ..\code\Impl\DepartmentService.cs
-..\code\Impl\JobService.cs
 ..\code\Impl\UserActivitiesService.cs
 ..\code\Impl\UserPermissionService.cs
 ..\code\Impl\UserRoleService.cs
 ..\code\Service\IDepartmentService.cs
-..\code\Service\IJobService.cs
 ..\code\Service\IUserActivitiesService.cs
 ..\code\Service\IUserPermissionService.cs
 ..\code\Service\IUserRoleService.cs
 ..\code\src\actions\department.js
-..\code\src\actions\job.js
 ..\code\src\actions\userActivities.js
 ..\code\src\actions\userPermission.js
 ..\code\src\actions\userRole.js
 ..\code\src\contants\department.js
-..\code\src\contants\job.js
 ..\code\src\contants\userActivities.js
 ..\code\src\contants\userPermission.js
 ..\code\src\contants\userRole.js
 ..\code\src\reducers\department.js
-..\code\src\reducers\job.js
 ..\code\src\reducers\userActivities.js
 ..\code\src\reducers\userPermission.js
 ..\code\src\reducers\userRole.js
 ..\code\Validator\DepartmentValidator.cs
-..\code\Validator\JobValidator.cs
 ..\code\Validator\UserActivitiesValidator.cs
 ..\code\Validator\UserPermissionValidator.cs
 ..\code\Validator\UserRoleValidator.cs
@@ -207,6 +203,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Profile.cs</LastGenOutput>
     </Content>
+    <Content Include="Generator\Includes\JSContainers.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>JSContainers.cs</LastGenOutput>
+    </Content>
     <Content Include="Generator\Includes\Redux\Actions.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Actions.cs</LastGenOutput>
@@ -231,6 +231,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

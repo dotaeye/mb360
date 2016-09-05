@@ -15,6 +15,7 @@
 <#@ include file="T4Toolbox.tt" #>
 <#@ include file="Includes\BaseTemplate.tt" #>
 <#@ include file="Includes\Controller.tt" #>
+<#@ include file="Includes\JSContainers.tt" #>
 <#@ include file="Includes\DTOs.tt" #>
 <#@ include file="Includes\Validators.tt" #>
 <#@ include file="Includes\ImplService.tt" #>
@@ -58,9 +59,12 @@
         {        
             foreach(Type modelType in modelTypes)
             {
+				var isIgnore = modelType.GetCustomAttributes(typeof(DTOIgnore), true);
+				if(isIgnore.Length>0) continue;
                 T4ModelInfo model = new T4ModelInfo(modelType, true);
-				
+
                 yield return new Controller(model);
+                yield return new JSContainers(model);
                 yield return new DTOs(model);
 				yield return new Validators(model);
                 yield return new IService(model);

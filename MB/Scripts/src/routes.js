@@ -12,6 +12,7 @@ import {
   UserPermission,
   UserRole,
   Department,
+  Job,
   NotFound
 } from './containers';
 
@@ -50,6 +51,8 @@ export default (store) => {
       <Route path='userrole' component={UserRole} onEnter={requireLogin} />
 
       <Route path='department' component={Department} onEnter={requireLogin} />
+
+      <Route path='job' component={Job} onEnter={requireLogin} />
 
       <Route path='login' component={Login}/>
 

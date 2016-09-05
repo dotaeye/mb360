@@ -69,64 +69,68 @@
             base.TransformText();
 #>
 
+
 import * as <#=CamelCaseName#>Types from '../contants/<#=CamelCaseName#>';
 
 const initialState = {
+  loaded: false,
+  entity: {}
 };
 
 export default function <#=CamelCaseName#>(state = initialState, action = {}) {
-	switch (action.type) {
-		case <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>:
-		case <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>:
-		case <#=CamelCaseName#>Types.CREATE_<#=UpperName#>:
-		case <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>:
-		case <#=CamelCaseName#>Types.DELETE_<#=UpperName#>:
-			return {
-				...state,
-				loading: true
-			};
-		case <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>_FAIL:
-		case <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>_FAIL:
-		case <#=CamelCaseName#>Types.CREATE_<#=UpperName#>_FAIL:
-		case <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>_FAIL:
-		case <#=CamelCaseName#>Types.DELETE_<#=UpperName#>_FAIL:
-			return {
-				...state,
-				loading: false,
-				error: action.error
-			};
-		case <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>_SUCCESS:
-			return {
-				...state,
-				loading: false,
-				list: action.result
-			};
-		case <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>_SUCCESS:
-			return {
-				...state,
-				loading: false,
-				entity: action.result
-			};
-		case <#=CamelCaseName#>Types.CREATE_<#=UpperName#>_SUCCESS:
-			return {
-				...state,
-				loading: false,
-				entity: action.result
-			};
-		case <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>_SUCCESS:
-			return {
-				...state,
-				loading: false,
-				entity: action.result
-			};
-		case <#=CamelCaseName#>Types.DELETE_<#=UpperName#>_SUCCESS:
-			return {
-				...state,
-				loading: false,
-				entity: action.result
-			};
-		default:
-			return state;
+  switch (action.type) {
+    case <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>:
+    case <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>:
+    case <#=CamelCaseName#>Types.CREATE_<#=UpperName#>:
+    case <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>:
+    case <#=CamelCaseName#>Types.DELETE_<#=UpperName#>:
+      return {
+        ...state,
+        loading: true
+      };
+    case <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>_FAIL:
+    case <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>_FAIL:
+    case <#=CamelCaseName#>Types.CREATE_<#=UpperName#>_FAIL:
+    case <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>_FAIL:
+    case <#=CamelCaseName#>Types.DELETE_<#=UpperName#>_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.error
+      };
+    case <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        list: action.result
+      };
+    case <#=CamelCaseName#>Types.GET_ONE_<#=UpperName#>_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        entity: action.result
+      };
+    case <#=CamelCaseName#>Types.CREATE_<#=UpperName#>_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        entity: action.result
+      };
+    case <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        entity: action.result
+      };
+    case <#=CamelCaseName#>Types.DELETE_<#=UpperName#>_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        entity: action.result
+      };
+    default:
+      return state;
   }
 }
 

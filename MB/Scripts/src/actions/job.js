@@ -6,11 +6,12 @@
 
 import * as jobTypes from '../contants/job';
 
-export function getAll() {
+export function getAll(params) {
   return {
     types: [jobTypes.GET_ALL_JOB, jobTypes.GET_ALL_JOB_SUCCESS, jobTypes.GET_ALL_JOB_FAIL],
     promise: (client) => client.get('/job',{
-      token: true
+      token: true,
+      params
     })
   };
 }
@@ -26,30 +27,31 @@ export function getById(id) {
 
 export function create(data) {
   return {
-    types: [job.CREATE_JOB, job.CREATE_JOB_SUCCESS, job.CREATE_JOB_FAIL],
+    types: [jobTypes.CREATE_JOB, jobTypes.CREATE_JOB_SUCCESS, jobTypes.CREATE_JOB_FAIL],
     promise: (client) => client.post('/job', {
       data: data,
-	  token: true
+	    token: true
     })
   };
 }
 
-export function update(id, data) {
+export function update(data) {
   return {
-    types: [job.UPDATE_JOB, job.UPDATE_JOB_SUCCESS, job.UPDATE_JOB_FAIL],
-    promise: (client) => client.put('/job/'+id, {
+    types: [jobTypes.UPDATE_JOB, jobTypes.UPDATE_JOB_SUCCESS, jobTypes.UPDATE_JOB_FAIL],
+    promise: (client) => client.put('/job', {
       data: data,
-	  token: true
+	    token: true
     })
   };
 }
 
-export function delete(id) {
+export function remove(id) {
   return {
-    types: [job.DELETE_JOB, job.DELETE_JOB_SUCCESS, job.DELETE_JOB_FAIL],
-    promise: (client) => client.delete('/job/'+id, {
+    types: [jobTypes.DELETE_JOB, jobTypes.DELETE_JOB_SUCCESS, jobTypes.DELETE_JOB_FAIL],
+    promise: (client) => client.del('/job/'+id, {
 		token: true
     })
   };
 }
+
 

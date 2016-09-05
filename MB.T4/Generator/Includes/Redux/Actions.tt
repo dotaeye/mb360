@@ -76,7 +76,7 @@ export function getAll(params) {
     types: [<#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>, <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>_SUCCESS, <#=CamelCaseName#>Types.GET_ALL_<#=UpperName#>_FAIL],
     promise: (client) => client.get('/<#=CamelCaseName#>',{
       token: true,
-	  params
+      params
     })
   };
 }
@@ -95,7 +95,7 @@ export function create(data) {
     types: [<#=CamelCaseName#>Types.CREATE_<#=UpperName#>, <#=CamelCaseName#>Types.CREATE_<#=UpperName#>_SUCCESS, <#=CamelCaseName#>Types.CREATE_<#=UpperName#>_FAIL],
     promise: (client) => client.post('/<#=CamelCaseName#>', {
       data: data,
-	  token: true
+	    token: true
     })
   };
 }
@@ -105,7 +105,7 @@ export function update(data) {
     types: [<#=CamelCaseName#>Types.UPDATE_<#=UpperName#>, <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>_SUCCESS, <#=CamelCaseName#>Types.UPDATE_<#=UpperName#>_FAIL],
     promise: (client) => client.put('/<#=CamelCaseName#>', {
       data: data,
-	  token: true
+	    token: true
     })
   };
 }
@@ -118,6 +118,7 @@ export function remove(id) {
     })
   };
 }
+
 
 <#+
             return this.GenerationEnvironment.ToString();
