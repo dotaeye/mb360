@@ -22,6 +22,7 @@ export default (store) => {
     function checkAuth() {
       const { auth: { token, permission }} = store.getState();
       let hasPermission = permission.find(x=>x.controller==controller&&x.action==action);
+      hasPermission=true;
       if (!token || !hasPermission ) {
         // oops, not logged in, so can't be here!
         replace('/login');

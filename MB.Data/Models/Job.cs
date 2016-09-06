@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
-
+    [DTOIgnore]
     public partial class Job : BaseEntity
     {
         public string Name { get; set; }

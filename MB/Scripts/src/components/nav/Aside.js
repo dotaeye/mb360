@@ -17,12 +17,38 @@ var Aside = React.createClass({
     });
   },
 
-  hasMenu(controller,action){
+  setMenu(menus){
     const { permission }=this.props;
-    return permission.find(x=>x.controller==controller&&x.action==x.action);
+    menus.forEach(menu=>{
+      if(permission.filter(x=>x.controller==menu.controller && x.action==menu.action).length>0){
+        menu.show = true;
+      }
+    })
   },
 
   render(){
+    var systemMenus=[{
+      controller:'userpermission',
+      action:'index',
+      title:'权限管理'
+    },
+    {
+      controller:'userrole',
+      action:'index',
+      title:'角色管理'
+    },
+    {
+      controller:'department',
+      action:'index',
+      title:'部门管理'
+    },
+    {
+      controller:'job',
+      action:'index',
+      title:'职位管理'
+    }];
+
+    this.setMenu(systemMenus);
     return (
       <aside className="ant-layout-sider">
         <Menu
@@ -38,24 +64,13 @@ var Aside = React.createClass({
                             <span className="nav-text">系统设置</span>
                         </span>
                     }>
-              {this.hasMenu('userpermission','index')&&(
-               <Menu.Item key="userpermission">
-                 <Link to='userpermission'>权限管理</Link>
-               </Menu.Item>)}
-             
-              {this.hasMenu('userrole','index')&&(
-              <Menu.Item key="userrole">
-                <Link to='userrole'>角色管理</Link>
-              </Menu.Item>)}
-
-                {this.hasMenu('department','index')&&(
-              <Menu.Item key="department">
-               <Link to='department'>部门管理</Link>
-              </Menu.Item>)}
-                {this.hasMenu('job','index')&&(
-                            <Menu.Item key="job">
-                             <Link to='job'>职位管理</Link>
-                            </Menu.Item>)}
+              {systemMenus.filter(m=>m.show).map(m=>{
+                return (
+                  <Menu.Item key={m.controller}>
+                    <Link to={m.controller}>{m.title}</Link>
+                  </Menu.Item>
+                  )
+              })}
           </SubMenu>
         </Menu>
       </aside>
