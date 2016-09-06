@@ -1,5 +1,4 @@
 ﻿
-
 using System;
 using SQ.Core.Data;
 using SQ.Core.DTO;
@@ -7,17 +6,18 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
-    [DTOIgnore]
-    public partial class UserPermission : BaseEntity
+    public class CarCate : BaseEntity
     {
+        public CarCate()
+        {
+            this.ChildCarCate = new HashSet<CarCate>();
+        }
+
         public string Name { get; set; }
 
-        public string Controller { get; set; }
-        public string Action { get; set; }
+        public int? ParentId { get; set; }
 
-        public string Group { get; set; }
-
-        public bool IsApi { get; set; }
+        public string Code { get; set; }
 
         [DTO(false, true)]
         public string CreateUserId { get; set; }
@@ -34,7 +34,9 @@ namespace MB.Data.Models
         [DTO(false, true)]
         public bool Deleted { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public virtual CarCate ParentCarCate { get; set; }
+
+        public virtual ICollection<CarCate> ChildCarCate { get; set; }
 
     }
 }

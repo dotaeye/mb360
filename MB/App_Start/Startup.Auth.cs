@@ -9,7 +9,7 @@ using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using MB.Providers;
-using MB.Models;
+using MB.Data;
 
 namespace MB
 {
@@ -23,7 +23,7 @@ namespace MB
         public void ConfigureAuth(IAppBuilder app)
         {
             // 将数据库上下文和用户管理器配置为对每个请求使用单个实例
-            app.CreatePerOwinContext(ApplicationDbContext.Create);
+            app.CreatePerOwinContext(AppContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
 
             // 使应用程序可以使用 Cookie 来存储已登录用户的信息

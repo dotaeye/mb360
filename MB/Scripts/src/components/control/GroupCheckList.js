@@ -70,7 +70,7 @@ const GroupCheckList = React.createClass({
                   onChange={this.onGroupSelectAll.bind(this,gIndex, groupValues)} checked={isGroupChecked}>{group.name}</Checkbox></label>
 
               <div className='group-check-select'>
-                <CheckboxGroup options={group.items}
+                <CheckboxGroup options={group.children}
                                value={selectedValues}
                                onChange={this.onGroupItemChange.bind(this,gIndex)}/>
               </div>

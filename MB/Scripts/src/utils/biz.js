@@ -11,12 +11,14 @@ export function getGroupSelectData(data, groupBy) {
       name: groupKey,
       children: []
     };
-    groupItem.items = groupItems.map(x=> {
+    groupItem.children = groupItems.map(x=> {
       return {
         label: x.name,
         value: x.id
       }
     });
+
+
     groups.push(groupItem);
   });
   return groups;

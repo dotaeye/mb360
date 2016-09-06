@@ -10,8 +10,7 @@ import * as authActions from '../actions/auth'
 var App = React.createClass({
 
   propTypes: {
-    user: PropTypes.object,
-    permissions: PropTypes.array
+    user: PropTypes.object
   },
 
   onRefresh(path){
@@ -19,13 +18,14 @@ var App = React.createClass({
   },
 
   render(){
+    const { auth: {permission}}=this.props;
     const child = React.cloneElement(this.props.children, {key: new Date().getTime()});
     const { path, noLayout, breadcrumb, menuGroup } = child.type;
     return (
       <div id='app'>
         {!noLayout ? (
           <div className='ant-layout'>
-            <Aside current={path} open={menuGroup}/>
+            <Aside current={path} open={menuGroup} permission={permission}/>
             <Header onRefresh={this.onRefresh.bind(null,path)} breadcrumb={breadcrumb}/>
 
             <div className="ant-layout-container">

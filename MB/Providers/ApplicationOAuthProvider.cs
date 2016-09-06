@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using MB.Models;
+using MB.Data.Models;
 
 namespace MB.Providers
 {
@@ -38,7 +38,9 @@ namespace MB.Providers
             }
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
                OAuthDefaults.AuthenticationType);
-            AuthenticationProperties properties = CreateProperties(user.UserName);
+            oAuthIdentity.AddClaim(new Claim("userName", user.UserName));
+            oAuthIdentity.AddClaim(new Claim("userRoleId", user.UserRoleId.ToString()));
+            AuthenticationProperties properties = CreateProperties(user);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
         }
@@ -79,11 +81,12 @@ namespace MB.Providers
             return Task.FromResult<object>(null);
         }
 
-        public static AuthenticationProperties CreateProperties(string userName)
+        public static AuthenticationProperties CreateProperties(ApplicationUser user)
         {
             IDictionary<string, string> data = new Dictionary<string, string>
             {
-                { "userName", userName }
+                { "userName", user.UserName },
+                { "userRoleId",user.UserRoleId.ToString()}
             };
             return new AuthenticationProperties(data);
         }

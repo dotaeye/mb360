@@ -28,6 +28,16 @@ export function register(data) {
   };
 }
 
+
+export function loadPermission() {
+  return {
+    types: [authTypes.LOAD_PERMISSION, authTypes.LOAD_PERMISSION_SUCCESS, authTypes.LOAD_PERMISSION_FAIL],
+    promise: (client) => client.get('/account/loadpermission', {
+      token: true
+    })
+  };
+}
+
 export function loadAuthToken(token) {
   return {
     type: authTypes.LOAD_AUTH_TOKEN,

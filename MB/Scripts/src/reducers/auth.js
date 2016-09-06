@@ -1,7 +1,8 @@
 import * as authTypes from '../contants/auth';
 
 const initialState = {
-  loaded: false
+  loaded: false,
+  permission: []
 };
 
 export default function auth(state = initialState, action = {}) {
@@ -38,6 +39,11 @@ export default function auth(state = initialState, action = {}) {
         ...state,
         loading: false,
         saveProfileError: action.error
+      };
+    case authTypes.LOAD_PERMISSION_SUCCESS:
+      return {
+        ...state,
+        permission: action.result
       };
     case authTypes.LOAD_AUTH_TOKEN:
       let token = action.result;
@@ -85,7 +91,7 @@ export default function auth(state = initialState, action = {}) {
         token: null,
         loginError: action.error
       };
-   case authTypes.CLEAR_LOGIN_ERROR:
+    case authTypes.CLEAR_LOGIN_ERROR:
       return {
         ...state,
         loginError: null

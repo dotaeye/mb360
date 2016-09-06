@@ -1,23 +1,23 @@
-﻿
-
-using System;
+﻿using System;
 using SQ.Core.Data;
 using SQ.Core.DTO;
 using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
-    [DTOIgnore]
-    public partial class UserPermission : BaseEntity
+    public class Manufacturer : BaseEntity
     {
+        /// <summary>
+        /// Gets or sets the name
+        /// </summary>
         public string Name { get; set; }
 
-        public string Controller { get; set; }
-        public string Action { get; set; }
+        /// <summary>
+        /// Gets or sets the description
+        /// </summary>
+        public string Description { get; set; }
 
-        public string Group { get; set; }
-
-        public bool IsApi { get; set; }
+        public string ImageUrl { get; set; }
 
         [DTO(false, true)]
         public string CreateUserId { get; set; }
@@ -33,8 +33,5 @@ namespace MB.Data.Models
 
         [DTO(false, true)]
         public bool Deleted { get; set; }
-
-        public virtual ICollection<UserRole> UserRoles { get; set; }
-
     }
 }

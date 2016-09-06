@@ -1,7 +1,7 @@
 ﻿<#@ template language="C#" debug="True" #>
 <#@ output extension="cs" #>
 <#@ Assembly Name="System.Core" #>
-<#@ Assembly Name="F:\HomeWork\SQ.Core\SQ.Core\bin\Debug\SQ.Core.dll" #>
+<#@ Assembly Name="C:\inetpub\SQ.Core\SQ.Core\bin\Debug\SQ.Core.dll" #>
 <#@ import namespace="System.IO" #>
 <#@ Import Namespace="System.Linq" #>
 <#@ Import Namespace="System.Text" #>
@@ -28,6 +28,7 @@
 <#+
     // <copyright file="MainGenerator.tt" company="Microsoft">
     //  Copyright © Microsoft. All Rights Reserved.
+	//  Assembly Name="F:\HomeWork\SQ.Core\SQ.Core\bin\Debug\SQ.Core.dll"
     // </copyright>
 
     public class MainGenerator : Generator

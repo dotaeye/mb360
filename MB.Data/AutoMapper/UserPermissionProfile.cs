@@ -29,9 +29,7 @@ namespace MB.Data.AutoMapper
 					.ForMember(entity => entity.LastUserId, o => o.Ignore())
 					.ForMember(entity => entity.LastTime, o => o.Ignore())
 					.ForMember(entity => entity.Deleted, o => o.Ignore())
-					.ForMember(entity => entity.UserRoles, o => o.Ignore())
-					.ForMember(entity => entity.ApplicationUsers, o => o.Ignore())
-;
+					.ForMember(entity => entity.UserRoles, o => o.Ignore());
         }
     }
 }

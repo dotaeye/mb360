@@ -1,6 +1,7 @@
 import React from 'react';
+import _ from 'lodash';
 import {IndexRoute, Route} from 'react-router';
-import { loadAuthToken } from './actions/auth';
+import { loadAuthToken,loadPermission } from './actions/auth';
 import configs from './configs';
 import baseStorage from './utils/baseStorage';
 import {
@@ -17,20 +18,28 @@ import {
 } from './containers';
 
 export default (store) => {
-  const requireLogin = (nextState, replace, cb) => {
+  const requireLogin = (controller, action ,nextState, replace, cb) => {
     function checkAuth() {
-      const { auth: { token }} = store.getState();
-      if (!token) {
+      const { auth: { token, permission }} = store.getState();
+      let hasPermission = permission.find(x=>x.controller==controller&&x.action==action);
+      if (!token || !hasPermission ) {
         // oops, not logged in, so can't be here!
         replace('/login');
       }
       cb();
     }
+
     const { auth: { loaded }} = store.getState();
     if (!loaded) {
       const authToken = baseStorage.getStorage(configs.storage).get(configs.authToken);
-      store.dispatch(loadAuthToken(authToken));
-      checkAuth();
+      if(authToken){
+        store.dispatch(loadPermission()).then(()=>{
+          store.dispatch(loadAuthToken(authToken));
+          checkAuth();
+        })
+      }else{
+        checkAuth();
+      }
     } else {
       checkAuth();
     }
@@ -44,21 +53,21 @@ export default (store) => {
 
       { /* Routes requiring login */ }
 
-      <IndexRoute component={Home} onEnter={requireLogin} />
+      <IndexRoute component={Home} onEnter={requireLogin.bind(null,'home','index')} />
 
-      <Route path='userpermission' component={UserPermission} onEnter={requireLogin} />
+      <Route path='userpermission' component={UserPermission} onEnter={requireLogin.bind(null,'userpermission','index')} />
 
-      <Route path='userrole' component={UserRole} onEnter={requireLogin} />
+      <Route path='userrole' component={UserRole} onEnter={requireLogin.bind(null,'userpermission','index')} />
 
-      <Route path='department' component={Department} onEnter={requireLogin} />
+      <Route path='department' component={Department} onEnter={requireLogin.bind(null,'userpermission','index')} />
 
-      <Route path='job' component={Job} onEnter={requireLogin} />
+      <Route path='job' component={Job} onEnter={requireLogin.bind(null,'userpermission','index')} />
 
       <Route path='login' component={Login}/>
 
       <Route path='register' component={Register}/>
 
-      <Route path='profile' component={Profile} onEnter={requireLogin}/>
+      <Route path='profile' component={Profile} onEnter={requireLogin.bind(null,'userpermission','index')}/>
 
       { /* Catch all route */ }
       <Route path='*' component={NotFound} status={404}/>

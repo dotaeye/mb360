@@ -243,8 +243,11 @@ var UserPermission = React.createClass({
                 initialValue: record.group,
                 rules: [{required: true, message: '请选择权限分组'}]
               })} >
+                <Option value="后台权限">后台权限</Option>
                 <Option value="权限管理">权限管理</Option>
                 <Option value="角色管理">角色管理</Option>
+                <Option value="部门管理">部门管理</Option>
+                <Option value="职位管理">职位管理</Option>
               </Select>
             </FormItem>
             <FormItem

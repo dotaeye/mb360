@@ -18,7 +18,7 @@ const Login = React.createClass({
 
   componentWillReceiveProps(nextProps){
     if(!this.props.auth.token && nextProps.auth.token){
-      browserHistory.push('/');
+      browserHistory.push('/admin');
     }
     if(nextProps.auth.loginError){
       message.error(nextProps.auth.loginError.error_description);

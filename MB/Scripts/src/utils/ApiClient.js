@@ -26,7 +26,7 @@ class _ApiClient {
             let bearerToken = token.access_token;
             request.set('Authorization', 'Bearer ' + bearerToken)
           }else{
-            reject(new Error('401，您没有权限，或登陆已过期，请重新登陆！'));
+            reject(new Error('401锛佷綘鐧婚檰宸茶繃鏈燂紝璇烽噸鏂扮櫥闄嗭紒'));
           }
         }
         if (params) {

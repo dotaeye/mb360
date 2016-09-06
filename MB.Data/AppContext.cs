@@ -42,6 +42,23 @@ namespace MB.Data
             modelBuilder.Configurations.Add(new UserRoleMap());
             modelBuilder.Configurations.Add(new UserPermissionMap());
 
+
+            modelBuilder.Configurations.Add(new CarCateMap());
+            modelBuilder.Configurations.Add(new CategoryMap());
+            modelBuilder.Configurations.Add(new ManufacturerMap());
+            modelBuilder.Configurations.Add(new ProductAttributeMap());
+            modelBuilder.Configurations.Add(new ProductAttributeMappingMap());
+            modelBuilder.Configurations.Add(new ProductAttributeValueMap());
+            modelBuilder.Configurations.Add(new ProductManufacturerMap());
+
+
+            modelBuilder.Configurations.Add(new ProductMap());
+            modelBuilder.Configurations.Add(new ProductSpecificationAttributeMap());
+            modelBuilder.Configurations.Add(new ProductStorageQuantityMap());
+            modelBuilder.Configurations.Add(new SpecificationAttributeMap());
+            modelBuilder.Configurations.Add(new SpecificationAttributeOptionMap());
+            modelBuilder.Configurations.Add(new StorageMap());
+
             base.OnModelCreating(modelBuilder);
         }
 

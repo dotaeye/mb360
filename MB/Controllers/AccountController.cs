@@ -6,6 +6,8 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Linq;
+using System.Data.Entity;
 using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -16,6 +18,11 @@ using Microsoft.Owin.Security.OAuth;
 using MB.Models;
 using MB.Providers;
 using MB.Results;
+using MB.Data.Service;
+using MB.Data.DTO;
+using MB.Data.Models;
+using SQ.Core.Data;
+using AutoMapper.QueryableExtensions;
 
 namespace MB.Controllers
 {
@@ -25,9 +32,14 @@ namespace MB.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
-
-        public AccountController()
+        private IUserRoleService UserRoleService;
+        private IUserPermissionService UserPermissionService;
+        public AccountController(
+             IUserRoleService _UserRoleService,
+            IUserPermissionService _UserPermissionService)
         {
+            this.UserRoleService = _UserRoleService;
+            this.UserPermissionService = _UserPermissionService;
         }
 
         public AccountController(ApplicationUserManager userManager,
@@ -51,20 +63,30 @@ namespace MB.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
-        // GET api/Account/UserInfo
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("UserInfo")]
-        public UserInfoViewModel GetUserInfo()
+        [HttpGet]
+        [Route("loadPermission")]
+        public IList<PermissionItem> LoadPermission()
         {
-            ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            Int32 userRoleId = 0;
+            int.TryParse(claims.First(c => c.Type == "userRoleId").Value, out userRoleId);
 
-            return new UserInfoViewModel
+            var role = UserRoleService.GetAll()
+                .Include(x => x.UserPermissions)
+                .Single(x => x.Id == userRoleId && !x.Deleted);
+
+            var result = role.UserPermissions.Select(x => new PermissionItem()
             {
-                Email = User.Identity.GetUserName(),
-                HasRegistered = externalLogin == null,
-                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
-            };
+                Id = x.Id,
+                Action = x.Action,
+                Controller = x.Controller
+            }).ToList();
+
+            return result;
         }
+
+
 
         // POST api/Account/Logout
         [Route("Logout")]
@@ -73,6 +95,8 @@ namespace MB.Controllers
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             return Ok();
         }
+
+
 
         // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
         [Route("ManageInfo")]
@@ -125,7 +149,7 @@ namespace MB.Controllers
 
             IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
                 model.NewPassword);
-            
+
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
@@ -258,13 +282,13 @@ namespace MB.Controllers
             if (hasRegistered)
             {
                 Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                
-                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    OAuthDefaults.AuthenticationType);
+
+                ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
+                   OAuthDefaults.AuthenticationType);
                 ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(UserManager,
                     CookieAuthenticationDefaults.AuthenticationType);
 
-                AuthenticationProperties properties = ApplicationOAuthProvider.CreateProperties(user.UserName);
+                AuthenticationProperties properties = ApplicationOAuthProvider.CreateProperties(user);
                 Authentication.SignIn(properties, oAuthIdentity, cookieIdentity);
             }
             else
@@ -368,7 +392,7 @@ namespace MB.Controllers
             result = await UserManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded)
             {
-                return GetErrorResult(result); 
+                return GetErrorResult(result);
             }
             return Ok();
         }
@@ -490,5 +514,15 @@ namespace MB.Controllers
         }
 
         #endregion
+
+        public class PermissionItem
+        {
+            public int Id { get; set; }
+
+            public string Controller { get; set; }
+
+            public string Action { get; set; }
+
+        }
     }
 }

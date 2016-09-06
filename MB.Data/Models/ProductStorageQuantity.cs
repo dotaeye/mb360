@@ -1,23 +1,19 @@
 ﻿
-
 using System;
 using SQ.Core.Data;
 using SQ.Core.DTO;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 
 namespace MB.Data.Models
 {
-    [DTOIgnore]
-    public partial class UserPermission : BaseEntity
+    public class ProductStorageQuantity : BaseEntity
     {
-        public string Name { get; set; }
+        public int ProductId { get; set; }
 
-        public string Controller { get; set; }
-        public string Action { get; set; }
+        public int StorageId { get; set; }
 
-        public string Group { get; set; }
-
-        public bool IsApi { get; set; }
+        public int Quantity { get; set; }
 
         [DTO(false, true)]
         public string CreateUserId { get; set; }
@@ -31,10 +27,8 @@ namespace MB.Data.Models
         [DTO(false, true)]
         public Nullable<System.DateTime> LastTime { get; set; }
 
-        [DTO(false, true)]
-        public bool Deleted { get; set; }
+        public virtual Product Product { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; }
-
+        public virtual Storage Storage { get; set; }
     }
 }

@@ -114,8 +114,21 @@
     <Compile Include="Impl\UserPermissionService.cs" />
     <Compile Include="Impl\UserRoleService.cs" />
     <Compile Include="Mapping\ApplicationUserMap.cs" />
+    <Compile Include="Mapping\CarCateMap.cs" />
+    <Compile Include="Mapping\CategoryMap.cs" />
     <Compile Include="Mapping\DepartmentMap.cs" />
     <Compile Include="Mapping\JobMap.cs" />
+    <Compile Include="Mapping\ManufacturerMap.cs" />
+    <Compile Include="Mapping\ProductAttributeMap.cs" />
+    <Compile Include="Mapping\ProductAttributeMappingMap.cs" />
+    <Compile Include="Mapping\ProductAttributeValueMap.cs" />
+    <Compile Include="Mapping\ProductManufacturerMap.cs" />
+    <Compile Include="Mapping\ProductMap.cs" />
+    <Compile Include="Mapping\ProductSpecificationAttributeMap.cs" />
+    <Compile Include="Mapping\ProductStorageQuantityMap.cs" />
+    <Compile Include="Mapping\SpecificationAttributeMap.cs" />
+    <Compile Include="Mapping\SpecificationAttributeOptionMap.cs" />
+    <Compile Include="Mapping\StorageMap.cs" />
     <Compile Include="Mapping\UserActivitiesMap.cs" />
     <Compile Include="Mapping\UserPermissionMap.cs" />
     <Compile Include="Mapping\UserRoleMap.cs" />
@@ -139,10 +152,27 @@
     <Compile Include="Migrations\201608250839530_UpdateRole.Designer.cs">
       <DependentUpon>201608250839530_UpdateRole.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609060638575_AddProductSchema.cs" />
+    <Compile Include="Migrations\201609060638575_AddProductSchema.Designer.cs">
+      <DependentUpon>201609060638575_AddProductSchema.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\CarCate.cs" />
+    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Job.cs" />
+    <Compile Include="Models\Manufacturer.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductAttribute.cs" />
+    <Compile Include="Models\ProductAttributeMapping.cs" />
+    <Compile Include="Models\ProductAttributeValue.cs" />
+    <Compile Include="Models\ProductManufacturer.cs" />
+    <Compile Include="Models\ProductSpecificationAttribute.cs" />
+    <Compile Include="Models\ProductStorageQuantity.cs" />
+    <Compile Include="Models\SpecificationAttribute.cs" />
+    <Compile Include="Models\SpecificationAttributeOption.cs" />
+    <Compile Include="Models\Storage.cs" />
     <Compile Include="Models\UserActivities.cs" />
     <Compile Include="Models\UserActivityType.cs" />
     <Compile Include="Models\UserPermission.cs" />
@@ -185,6 +215,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608250839530_UpdateRole.resx">
       <DependentUpon>201608250839530_UpdateRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609060638575_AddProductSchema.resx">
+      <DependentUpon>201609060638575_AddProductSchema.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,4 @@
 ﻿
-
 using System;
 using SQ.Core.Data;
 using SQ.Core.DTO;
@@ -7,17 +6,16 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
-    [DTOIgnore]
-    public partial class UserPermission : BaseEntity
+    public class ProductAttributeValue : BaseEntity
     {
+
         public string Name { get; set; }
 
-        public string Controller { get; set; }
-        public string Action { get; set; }
+        public int ProductAttributeMappingId { get; set; }
 
-        public string Group { get; set; }
+        public decimal PriceAdjustment { get; set; }
 
-        public bool IsApi { get; set; }
+        public string ImageUrl { get; set; }
 
         [DTO(false, true)]
         public string CreateUserId { get; set; }
@@ -34,7 +32,11 @@ namespace MB.Data.Models
         [DTO(false, true)]
         public bool Deleted { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        /// <summary>
+        /// Gets the product attribute mapping
+        /// </summary>
+        public virtual ProductAttributeMapping ProductAttributeMapping { get; set; }
 
     }
+
 }
