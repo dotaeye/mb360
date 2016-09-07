@@ -7,10 +7,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select, Cascader } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as carCateActions from '../actions/carCate'
+import { getGroupSelectData , hasError, setCascadeValues} from '../utils/biz';
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;
@@ -58,21 +59,26 @@ var CarCate = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加CarCate',
+      title: '添加汽车类别',
       record: {}
     });
   },
 
   onEdit(record){
-    this.props.carCateActions.getById(record.id).then((err)=> {
-      if (err) {
-        message.error('获取CarCate数据失败！请刷新页面尝试。');
+    const promise = [];
+    promise.push(this.props.carCateActions.getById(record.id));
+    promise.push(this.props.carCateActions.getCascader({
+      id: record.id
+    }));
+    Promise.all(promise).then((errs)=> {
+      if (hasError(errs)) {
+        message.error('获取汽车类别数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑CarCate'
+          title: '编辑汽车类别'
         });
       }
     });
@@ -84,7 +90,7 @@ var CarCate = React.createClass({
     let source = list.data;
     const remove = this.props.carCateActions.remove;
     confirm({
-      title: '确认删除该CarCate？',
+      title: '确认删除该汽车类别？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -116,6 +122,7 @@ var CarCate = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
+      formdata.parentId = formdata.parentId[formdata.parentId.length - 1];
       if (edit) {
         formdata.id = entity.id;
         update(formdata).then((err)=> {
@@ -157,6 +164,10 @@ var CarCate = React.createClass({
     }, {
       title: '名称',
       dataIndex: 'name'
+    }, {
+      title: '编码',
+      dataIndex: 'code',
+      sorter: true
     },{
       title: '操作',
       key: 'operation',
@@ -170,7 +181,7 @@ var CarCate = React.createClass({
         </span>
       )
     }];
-    const { carCate:{ loading, list, entity }} = this.props;
+    const { carCate:{ loading, list, entity, cascader }} = this.props;
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
@@ -180,11 +191,16 @@ var CarCate = React.createClass({
       labelCol: {span: 4},
       wrapperCol: {span: 20}
     };
+    let defaultValues = [];
+    if (record.parentId) {
+      setCascadeValues(cascader, record.parentId, defaultValues);
+      defaultValues = defaultValues.reverse();
+    }
     return (
       <div className='container'>
         <div className='ant-list-header' data-flex="dir:right">
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加CarCate</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加汽车类别</Button>
           </div>
         </div>
         <Table
@@ -209,6 +225,25 @@ var CarCate = React.createClass({
                 }
               )} type="text"/>
             </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="编码"
+              >
+              <Input  {...getFieldProps('code', {
+                  initialValue: record.code,
+                  rules: [{required: true, message: '请输入类别编码'}]
+                }
+              )} type="text"/>
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="父级部门"
+              >
+              <Cascader {...getFieldProps('parentId', {
+                  initialValue: defaultValues
+                }
+              )} placeholder='请选择父级类别' options={cascader} changeOnSelect/>
+            </FormItem>
           </Form>
         </Modal>
       </div>
@@ -231,12 +266,12 @@ function mapDispatchToProps(dispatch) {
 }
 
 const statics = {
-  path: 'userpermission',
-  menuGroup: 'system',
+  path: 'carcate',
+  menuGroup: 'business',
   breadcrumb: [{
-    title: '系统设置'
+    title: '业务中心'
   }, {
-    title: 'CarCate管理'
+    title: '汽车类别管理'
   }]
 };
 

@@ -46,6 +46,12 @@ export default function category(state = initialState, action = {}) {
         loading: false,
         entity: action.result
       };
+    case categoryTypes.GET_CATEGORY_CASCADER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        cascader: action.result
+      };
     case categoryTypes.CREATE_CATEGORY_SUCCESS:
       return {
         ...state,

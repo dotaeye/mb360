@@ -12,7 +12,7 @@ namespace MB.Data.Validator
     {
         public ProductAttributeMappingValidator()
         {
-			RuleFor(ProductAttributeMapping => ProductAttributeMapping.Name).NotEmpty().WithMessage("{PropertyName} is required");
+		
         }
     }
 }

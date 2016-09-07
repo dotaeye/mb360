@@ -64,20 +64,20 @@
 				if(isIgnore.Length>0) continue;
                 T4ModelInfo model = new T4ModelInfo(modelType, true);
 
-                yield return new Controller(model);
-                yield return new JSContainers(model);
-                yield return new DTOs(model);
-				yield return new Validators(model);
-                yield return new IService(model);
-				yield return new Profile(model);
-                yield return new Actions(model);
-                yield return new Contants(model);
-				yield return new Reducers(model);
-                yield return new ImplService(model);
+                //yield return new Controller(model);
+                //yield return new JSContainers(model);
+                //yield return new DTOs(model);
+				//yield return new Validators(model);
+                //yield return new IService(model);
+				//yield return new Profile(model);
+                //yield return new Actions(model);
+                //yield return new Contants(model);
+				//yield return new Reducers(model);
+                //yield return new ImplService(model);
 				
           
             }
-            //yield return new MappingExtensions(modelTypes);
+            yield return new MappingExtensions(modelTypes);
             //yield return new RegisterIOC(modelTypes);
         }
         protected override void RunCore()

@@ -35,8 +35,7 @@ namespace MB.Data.Impl
             if (entity == null)
                 throw new ArgumentNullException("ProductStorageQuantity");
 
-            entity.Deleted = true;
-           return await UpdateAsync(entity);
+            return await _ProductStorageQuantityRepository.DeleteAsync(entity);
         }
 
         public async Task<ProductStorageQuantity> FindOneAsync(int Id)

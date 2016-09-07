@@ -16,6 +16,16 @@ export function getAll(params) {
   };
 }
 
+export function getCascader(params) {
+  return {
+    types: [carCateTypes.GET_CARCATE_CASCADER, carCateTypes.GET_CARCATE_CASCADER_SUCCESS, carCateTypes.GET_CARCATE_CASCADER_FAIL],
+    promise: (client) => client.get('/CARCATE/cascader', {
+      token: true,
+      params
+    })
+  };
+}
+
 export function getById(id) {
   return {
     types: [carCateTypes.GET_ONE_CARCATE, carCateTypes.GET_ONE_CARCATE_SUCCESS, carCateTypes.GET_ONE_CARCATE_FAIL],
@@ -30,7 +40,7 @@ export function create(data) {
     types: [carCateTypes.CREATE_CARCATE, carCateTypes.CREATE_CARCATE_SUCCESS, carCateTypes.CREATE_CARCATE_FAIL],
     promise: (client) => client.post('/carCate', {
       data: data,
-	    token: true
+      token: true
     })
   };
 }
@@ -40,7 +50,7 @@ export function update(data) {
     types: [carCateTypes.UPDATE_CARCATE, carCateTypes.UPDATE_CARCATE_SUCCESS, carCateTypes.UPDATE_CARCATE_FAIL],
     promise: (client) => client.put('/carCate', {
       data: data,
-	    token: true
+      token: true
     })
   };
 }
@@ -49,7 +59,7 @@ export function remove(id) {
   return {
     types: [carCateTypes.DELETE_CARCATE, carCateTypes.DELETE_CARCATE_SUCCESS, carCateTypes.DELETE_CARCATE_FAIL],
     promise: (client) => client.del('/carCate/'+id, {
-		token: true
+      token: true
     })
   };
 }

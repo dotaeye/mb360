@@ -67,7 +67,8 @@ namespace MB.Ioc
             builder.RegisterType<JobService>().As<IJobService>().InstancePerRequest();
             builder.RegisterType<UserRoleService>().As<IUserRoleService>().InstancePerRequest();
             builder.RegisterType<UserPermissionService>().As<IUserPermissionService>().InstancePerRequest();
-
+            builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerRequest();
+            builder.RegisterType<CarCateService>().As<ICarCateService>().InstancePerRequest();
         }
 
         public int Order

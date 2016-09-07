@@ -7,10 +7,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select, Cascader } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as categoryActions from '../actions/category'
+import { getGroupSelectData , hasError, setCascadeValues} from '../utils/biz';
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;
@@ -58,21 +59,26 @@ var Category = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加Category',
+      title: '添加产品类别',
       record: {}
     });
   },
 
   onEdit(record){
-    this.props.categoryActions.getById(record.id).then((err)=> {
-      if (err) {
-        message.error('获取Category数据失败！请刷新页面尝试。');
+    const promise = [];
+    promise.push(this.props.categoryActions.getById(record.id));
+    promise.push(this.props.categoryActions.getCascader({
+      id: record.id
+    }));
+    Promise.all(promise).then((errs)=> {
+      if (hasError(errs)) {
+        message.error('获取产品类别数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑Category'
+          title: '编辑产品类别'
         });
       }
     });
@@ -84,7 +90,7 @@ var Category = React.createClass({
     let source = list.data;
     const remove = this.props.categoryActions.remove;
     confirm({
-      title: '确认删除该Category？',
+      title: '确认删除该产品类别？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -116,6 +122,7 @@ var Category = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
+      formdata.parentId = formdata.parentId[formdata.parentId.length - 1];
       if (edit) {
         formdata.id = entity.id;
         update(formdata).then((err)=> {
@@ -157,6 +164,10 @@ var Category = React.createClass({
     }, {
       title: '名称',
       dataIndex: 'name'
+    }, {
+      title: '编码',
+      dataIndex: 'code',
+      sorter: true
     },{
       title: '操作',
       key: 'operation',
@@ -170,7 +181,7 @@ var Category = React.createClass({
         </span>
       )
     }];
-    const { category:{ loading, list, entity }} = this.props;
+    const { category:{ loading, list, entity, cascader }} = this.props;
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
@@ -180,11 +191,16 @@ var Category = React.createClass({
       labelCol: {span: 4},
       wrapperCol: {span: 20}
     };
+    let defaultValues = [];
+    if (record.parentId) {
+      setCascadeValues(cascader, record.parentId, defaultValues);
+      defaultValues = defaultValues.reverse();
+    }
     return (
       <div className='container'>
         <div className='ant-list-header' data-flex="dir:right">
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加Category</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加产品类别</Button>
           </div>
         </div>
         <Table
@@ -209,6 +225,25 @@ var Category = React.createClass({
                 }
               )} type="text"/>
             </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="编码"
+              >
+              <Input  {...getFieldProps('code', {
+                  initialValue: record.code,
+                  rules: [{required: true, message: '请输入类别编码'}]
+                }
+              )} type="text"/>
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="父级部门"
+              >
+              <Cascader {...getFieldProps('parentId', {
+                  initialValue: defaultValues
+                }
+              )} placeholder='请选择父级类别' options={cascader} changeOnSelect/>
+            </FormItem>
           </Form>
         </Modal>
       </div>
@@ -231,12 +266,12 @@ function mapDispatchToProps(dispatch) {
 }
 
 const statics = {
-  path: 'userpermission',
-  menuGroup: 'system',
+  path: 'category',
+  menuGroup: 'business',
   breadcrumb: [{
-    title: '系统设置'
+    title: '业务中心'
   }, {
-    title: 'Category管理'
+    title: '产品类别管理'
   }]
 };
 

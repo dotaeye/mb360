@@ -46,6 +46,12 @@ export default function carCate(state = initialState, action = {}) {
         loading: false,
         entity: action.result
       };
+    case carCateTypes.GET_CARCATE_CASCADER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        cascader: action.result
+      };
     case carCateTypes.CREATE_CARCATE_SUCCESS:
       return {
         ...state,

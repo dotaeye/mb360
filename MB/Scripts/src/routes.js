@@ -13,6 +13,8 @@ import {
   UserPermission,
   UserRole,
   Department,
+  Category,
+  CarCate,
   Job,
   NotFound
 } from './containers';
@@ -58,11 +60,15 @@ export default (store) => {
 
       <Route path='userpermission' component={UserPermission} onEnter={requireLogin.bind(null,'userpermission','index')} />
 
-      <Route path='userrole' component={UserRole} onEnter={requireLogin.bind(null,'userpermission','index')} />
+      <Route path='userrole' component={UserRole} onEnter={requireLogin.bind(null,'userrole','index')} />
 
-      <Route path='department' component={Department} onEnter={requireLogin.bind(null,'userpermission','index')} />
+      <Route path='department' component={Department} onEnter={requireLogin.bind(null,'department','index')} />
 
-      <Route path='job' component={Job} onEnter={requireLogin.bind(null,'userpermission','index')} />
+      <Route path='job' component={Job} onEnter={requireLogin.bind(null,'job','index')} />
+
+      <Route path='category' component={Category} onEnter={requireLogin.bind(null,'category','index')} />
+
+      <Route path='carcate' component={CarCate} onEnter={requireLogin.bind(null,'carcate','index')} />
 
       <Route path='login' component={Login}/>
 

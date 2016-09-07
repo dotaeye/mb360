@@ -35,8 +35,7 @@ namespace MB.Data.Impl
             if (entity == null)
                 throw new ArgumentNullException("ProductAttributeMapping");
 
-            entity.Deleted = true;
-           return await UpdateAsync(entity);
+            return await _ProductAttributeMappingRepository.DeleteAsync(entity);
         }
 
         public async Task<ProductAttributeMapping> FindOneAsync(int Id)

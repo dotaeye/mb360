@@ -19,36 +19,64 @@ var Aside = React.createClass({
 
   setMenu(menus){
     const { permission }=this.props;
-    menus.forEach(menu=>{
-      if(permission.filter(x=>x.controller==menu.controller && x.action==menu.action).length>0){
-        menu.show = true;
+    menus.forEach(group=> {
+      group.items.forEach(menu=> {
+        if (permission.filter(x=>x.controller == menu.controller && x.action == menu.action).length > 0) {
+          menu.show = true;
+        }
+      });
+      if (group.items.filter(x=>x.show).length > 0) {
+        group.show = true;
       }
     })
   },
 
   render(){
-    var systemMenus=[{
-      controller:'userpermission',
-      action:'index',
-      title:'权限管理'
-    },
-    {
-      controller:'userrole',
-      action:'index',
-      title:'角色管理'
-    },
-    {
-      controller:'department',
-      action:'index',
-      title:'部门管理'
-    },
-    {
-      controller:'job',
-      action:'index',
-      title:'职位管理'
-    }];
-
-    this.setMenu(systemMenus);
+    var menus = [{
+      group: 'system',
+      title: '系统设置',
+      icon: 'setting',
+      items: [
+        {
+          controller: 'userpermission',
+          action: 'index',
+          title: '权限管理'
+        },
+        {
+          controller: 'userrole',
+          action: 'index',
+          title: '角色管理'
+        },
+        {
+          controller: 'department',
+          action: 'index',
+          title: '部门管理'
+        },
+        {
+          controller: 'job',
+          action: 'index',
+          title: '职位管理'
+        }]
+      },
+      {
+        group: 'business',
+        title: '业务中心',
+        icon: 'appstore',
+        items: [
+          {
+            controller: 'category',
+            action: 'index',
+            title: '产品类别'
+          },
+          {
+            controller: 'carcate',
+            action: 'index',
+            title: '汽车类别'
+          }
+        ]
+      }
+    ];
+    this.setMenu(menus);
     return (
       <aside className="ant-layout-sider">
         <Menu
@@ -57,21 +85,25 @@ var Aside = React.createClass({
           selectedKeys={[this.props.current]}
           onOpen={this.onToggle}
           >
-          <SubMenu key="system"
-                   title={
+          {menus.filter(m=>m.show).map(group=> {
+            return (
+              <SubMenu key={group.group}
+                       title={
                         <span>
-                            <Icon type="setting" />
-                            <span className="nav-text">系统设置</span>
+                            <Icon type={group.icon} />
+                            <span className="nav-text">{group.title}</span>
                         </span>
                     }>
-              {systemMenus.filter(m=>m.show).map(m=>{
-                return (
-                  <Menu.Item key={m.controller}>
-                    <Link to={m.controller}>{m.title}</Link>
-                  </Menu.Item>
+                {group.items.filter(m=>m.show).map(m=> {
+                  return (
+                    <Menu.Item key={m.controller}>
+                      <Link to={m.controller}>{m.title}</Link>
+                    </Menu.Item>
                   )
-              })}
-          </SubMenu>
+                })}
+              </SubMenu>
+            )
+          })}
         </Menu>
       </aside>
     );

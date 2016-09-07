@@ -12,7 +12,7 @@ namespace MB.Data.Validator
     {
         public ProductStorageQuantityValidator()
         {
-			RuleFor(ProductStorageQuantity => ProductStorageQuantity.Name).NotEmpty().WithMessage("{PropertyName} is required");
+			
         }
     }
 }

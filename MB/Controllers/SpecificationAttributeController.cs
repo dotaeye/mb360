@@ -38,7 +38,7 @@ namespace MB.Controllers
         [Route("")]
         public ApiListResult<SpecificationAttributeDTO> Get([FromUri] AntPageOption option = null)
         {
-            var query = SpecificationAttributeService.GetAll().Where(x => !x.Deleted).ProjectTo<SpecificationAttributeDTO>();
+            var query = SpecificationAttributeService.GetAll().ProjectTo<SpecificationAttributeDTO>();
             if (option != null)
             {
                 if (!string.IsNullOrEmpty(option.SortField))
@@ -78,7 +78,7 @@ namespace MB.Controllers
         [ResponseType(typeof(SpecificationAttributeDTO))]
         public async Task<IHttpActionResult> GetById(int id)
         {
-            SpecificationAttributeDTO SpecificationAttribute = await SpecificationAttributeService.GetAll().Where(x => x.Id == id && !x.Deleted).ProjectTo<SpecificationAttributeDTO>().FirstOrDefaultAsync();
+            SpecificationAttributeDTO SpecificationAttribute = await SpecificationAttributeService.GetAll().Where(x => x.Id == id ).ProjectTo<SpecificationAttributeDTO>().FirstOrDefaultAsync();
             if (SpecificationAttribute == null)
             {
                 return NotFound();
@@ -98,8 +98,7 @@ namespace MB.Controllers
 
             var entity = SpecificationAttributeDto.ToEntity();
 
-            entity.CreateUserId = User.Identity.GetUserId();
-            entity.CreateTime = DateTime.Now;
+
             await SpecificationAttributeService.InsertAsync(entity);
             return Ok(entity.ToModel());
         }
@@ -117,8 +116,7 @@ namespace MB.Controllers
             }
             var entity = await SpecificationAttributeService.FindOneAsync(SpecificationAttributeDto.Id);
             entity = SpecificationAttributeDto.ToEntity(entity);
-            entity.LastUserId = User.Identity.GetUserId();
-            entity.LastTime = DateTime.Now;
+          
             await SpecificationAttributeService.UpdateAsync(entity);
             return Ok(entity.ToModel());
         }

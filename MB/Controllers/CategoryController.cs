@@ -21,6 +21,7 @@ using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
+using SQ.Core.UI;
 
 namespace MB.Controllers
 {
@@ -73,6 +74,51 @@ namespace MB.Controllers
             var result = query.Paging<CategoryDTO>(option.Page - 1, option.Results, count);
             return new ApiListResult<CategoryDTO>(result, result.PageIndex, result.PageSize, count);
         }
+
+        [Route("cascader/{id:int=0}")]
+        public List<Cascader> GetCategoryCascader(int Id)
+        {
+            var cascader = new List<Cascader>();
+            GenerateCascader(null, Id, cascader);
+            return cascader;
+        }
+
+
+        private void GenerateCascader(int? Id, int currentId, List<Cascader> cascader)
+        {
+            var query = CategoryService.GetAll().Where(x => x.Id != currentId);
+            if (Id.HasValue)
+            {
+                query = query.Where(x => x.ParentId == Id.Value);
+            }
+            else
+            {
+                query = query.Where(x => x.ParentId.Equals(null));
+            }
+
+
+
+            var dategorys = query.ToList();
+
+            foreach (var depart in dategorys)
+            {
+                var item = new Cascader()
+                {
+                    Label = depart.Name,
+                    Value = depart.Id.ToString(),
+                    ParentId = depart.ParentId.HasValue ? depart.ParentId.Value.ToString() : null
+                };
+
+                cascader.Add(item);
+
+                if (CategoryService.GetAll().Any(x => x.ParentId == depart.Id && x.Id != currentId))
+                {
+                    item.Children = new List<Cascader>();
+                    GenerateCascader(depart.Id, currentId, item.Children);
+                }
+            }
+        }
+
 
         [Route("{id:int}")]
         [ResponseType(typeof(CategoryDTO))]

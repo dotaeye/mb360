@@ -35,8 +35,7 @@ namespace MB.Data.Impl
             if (entity == null)
                 throw new ArgumentNullException("SpecificationAttributeOption");
 
-            entity.Deleted = true;
-           return await UpdateAsync(entity);
+            return await _SpecificationAttributeOptionRepository.DeleteAsync(entity);
         }
 
         public async Task<SpecificationAttributeOption> FindOneAsync(int Id)

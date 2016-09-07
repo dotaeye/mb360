@@ -35,8 +35,7 @@ namespace MB.Data.Impl
             if (entity == null)
                 throw new ArgumentNullException("ProductManufacturer");
 
-            entity.Deleted = true;
-           return await UpdateAsync(entity);
+           return await _ProductManufacturerRepository.DeleteAsync(entity);
         }
 
         public async Task<ProductManufacturer> FindOneAsync(int Id)

@@ -188,6 +188,14 @@ var UserPermission = React.createClass({
       labelCol: {span: 4},
       wrapperCol: {span: 20}
     };
+    const permissionGroups = [
+      '后台权限',
+      '权限管理',
+      '角色管理',
+      '部门管理',
+      '产品类别管理',
+      '产品管理'
+    ];
     return (
       <div className='container'>
         <div className='ant-list-header' data-flex="dir:right">
@@ -243,11 +251,11 @@ var UserPermission = React.createClass({
                 initialValue: record.group,
                 rules: [{required: true, message: '请选择权限分组'}]
               })} >
-                <Option value="后台权限">后台权限</Option>
-                <Option value="权限管理">权限管理</Option>
-                <Option value="角色管理">角色管理</Option>
-                <Option value="部门管理">部门管理</Option>
-                <Option value="职位管理">职位管理</Option>
+                {permissionGroups.map(g=>{
+                  return (
+                    <Option value={g}>{g}</Option>
+                  )
+                })}
               </Select>
             </FormItem>
             <FormItem

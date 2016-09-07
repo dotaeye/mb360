@@ -16,6 +16,16 @@ export function getAll(params) {
   };
 }
 
+export function getCascader(params) {
+  return {
+    types: [categoryTypes.GET_CATEGORY_CASCADER, categoryTypes.GET_CATEGORY_CASCADER_SUCCESS, categoryTypes.GET_CATEGORY_CASCADER_FAIL],
+    promise: (client) => client.get('/CATEGORY/cascader', {
+      token: true,
+      params
+    })
+  };
+}
+
 export function getById(id) {
   return {
     types: [categoryTypes.GET_ONE_CATEGORY, categoryTypes.GET_ONE_CATEGORY_SUCCESS, categoryTypes.GET_ONE_CATEGORY_FAIL],

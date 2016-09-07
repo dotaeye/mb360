@@ -16,6 +16,36 @@ namespace MB.Data.AutoMapper
     public static class MappingExtensions
     {
 
+        public static CarCateDTO ToModel(this CarCate entity)
+        {
+            return Mapper.Map<CarCate, CarCateDTO>(entity);
+        }
+
+        public static CarCate ToEntity(this CarCateDTO dto)
+        {
+            return Mapper.Map<CarCateDTO, CarCate>(dto);
+        }
+
+        public static CarCate ToEntity(this CarCateDTO dto, CarCate entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static CategoryDTO ToModel(this Category entity)
+        {
+            return Mapper.Map<Category, CategoryDTO>(entity);
+        }
+
+        public static Category ToEntity(this CategoryDTO dto)
+        {
+            return Mapper.Map<CategoryDTO, Category>(dto);
+        }
+
+        public static Category ToEntity(this CategoryDTO dto, Category entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
         public static DepartmentDTO ToModel(this Department entity)
         {
             return Mapper.Map<Department, DepartmentDTO>(entity);
@@ -42,6 +72,171 @@ namespace MB.Data.AutoMapper
         }
 
         public static Job ToEntity(this JobDTO dto, Job entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static ManufacturerDTO ToModel(this Manufacturer entity)
+        {
+            return Mapper.Map<Manufacturer, ManufacturerDTO>(entity);
+        }
+
+        public static Manufacturer ToEntity(this ManufacturerDTO dto)
+        {
+            return Mapper.Map<ManufacturerDTO, Manufacturer>(dto);
+        }
+
+        public static Manufacturer ToEntity(this ManufacturerDTO dto, Manufacturer entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static ProductDTO ToModel(this Product entity)
+        {
+            return Mapper.Map<Product, ProductDTO>(entity);
+        }
+
+        public static Product ToEntity(this ProductDTO dto)
+        {
+            return Mapper.Map<ProductDTO, Product>(dto);
+        }
+
+        public static Product ToEntity(this ProductDTO dto, Product entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static ProductAttributeDTO ToModel(this ProductAttribute entity)
+        {
+            return Mapper.Map<ProductAttribute, ProductAttributeDTO>(entity);
+        }
+
+        public static ProductAttribute ToEntity(this ProductAttributeDTO dto)
+        {
+            return Mapper.Map<ProductAttributeDTO, ProductAttribute>(dto);
+        }
+
+        public static ProductAttribute ToEntity(this ProductAttributeDTO dto, ProductAttribute entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static ProductAttributeMappingDTO ToModel(this ProductAttributeMapping entity)
+        {
+            return Mapper.Map<ProductAttributeMapping, ProductAttributeMappingDTO>(entity);
+        }
+
+        public static ProductAttributeMapping ToEntity(this ProductAttributeMappingDTO dto)
+        {
+            return Mapper.Map<ProductAttributeMappingDTO, ProductAttributeMapping>(dto);
+        }
+
+        public static ProductAttributeMapping ToEntity(this ProductAttributeMappingDTO dto, ProductAttributeMapping entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static ProductAttributeValueDTO ToModel(this ProductAttributeValue entity)
+        {
+            return Mapper.Map<ProductAttributeValue, ProductAttributeValueDTO>(entity);
+        }
+
+        public static ProductAttributeValue ToEntity(this ProductAttributeValueDTO dto)
+        {
+            return Mapper.Map<ProductAttributeValueDTO, ProductAttributeValue>(dto);
+        }
+
+        public static ProductAttributeValue ToEntity(this ProductAttributeValueDTO dto, ProductAttributeValue entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static ProductManufacturerDTO ToModel(this ProductManufacturer entity)
+        {
+            return Mapper.Map<ProductManufacturer, ProductManufacturerDTO>(entity);
+        }
+
+        public static ProductManufacturer ToEntity(this ProductManufacturerDTO dto)
+        {
+            return Mapper.Map<ProductManufacturerDTO, ProductManufacturer>(dto);
+        }
+
+        public static ProductManufacturer ToEntity(this ProductManufacturerDTO dto, ProductManufacturer entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static ProductSpecificationAttributeDTO ToModel(this ProductSpecificationAttribute entity)
+        {
+            return Mapper.Map<ProductSpecificationAttribute, ProductSpecificationAttributeDTO>(entity);
+        }
+
+        public static ProductSpecificationAttribute ToEntity(this ProductSpecificationAttributeDTO dto)
+        {
+            return Mapper.Map<ProductSpecificationAttributeDTO, ProductSpecificationAttribute>(dto);
+        }
+
+        public static ProductSpecificationAttribute ToEntity(this ProductSpecificationAttributeDTO dto, ProductSpecificationAttribute entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static ProductStorageQuantityDTO ToModel(this ProductStorageQuantity entity)
+        {
+            return Mapper.Map<ProductStorageQuantity, ProductStorageQuantityDTO>(entity);
+        }
+
+        public static ProductStorageQuantity ToEntity(this ProductStorageQuantityDTO dto)
+        {
+            return Mapper.Map<ProductStorageQuantityDTO, ProductStorageQuantity>(dto);
+        }
+
+        public static ProductStorageQuantity ToEntity(this ProductStorageQuantityDTO dto, ProductStorageQuantity entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static SpecificationAttributeDTO ToModel(this SpecificationAttribute entity)
+        {
+            return Mapper.Map<SpecificationAttribute, SpecificationAttributeDTO>(entity);
+        }
+
+        public static SpecificationAttribute ToEntity(this SpecificationAttributeDTO dto)
+        {
+            return Mapper.Map<SpecificationAttributeDTO, SpecificationAttribute>(dto);
+        }
+
+        public static SpecificationAttribute ToEntity(this SpecificationAttributeDTO dto, SpecificationAttribute entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static SpecificationAttributeOptionDTO ToModel(this SpecificationAttributeOption entity)
+        {
+            return Mapper.Map<SpecificationAttributeOption, SpecificationAttributeOptionDTO>(entity);
+        }
+
+        public static SpecificationAttributeOption ToEntity(this SpecificationAttributeOptionDTO dto)
+        {
+            return Mapper.Map<SpecificationAttributeOptionDTO, SpecificationAttributeOption>(dto);
+        }
+
+        public static SpecificationAttributeOption ToEntity(this SpecificationAttributeOptionDTO dto, SpecificationAttributeOption entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static StorageDTO ToModel(this Storage entity)
+        {
+            return Mapper.Map<Storage, StorageDTO>(entity);
+        }
+
+        public static Storage ToEntity(this StorageDTO dto)
+        {
+            return Mapper.Map<StorageDTO, Storage>(dto);
+        }
+
+        public static Storage ToEntity(this StorageDTO dto, Storage entity)
         {
             return Mapper.Map(dto, entity);
         }
@@ -90,6 +285,8 @@ namespace MB.Data.AutoMapper
         {
             return Mapper.Map(dto, entity);
         }
+
+
 
 
     }

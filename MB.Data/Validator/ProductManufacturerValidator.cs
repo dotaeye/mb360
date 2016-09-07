@@ -12,7 +12,6 @@ namespace MB.Data.Validator
     {
         public ProductManufacturerValidator()
         {
-			RuleFor(ProductManufacturer => ProductManufacturer.Name).NotEmpty().WithMessage("{PropertyName} is required");
         }
     }
 }

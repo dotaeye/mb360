@@ -5,6 +5,7 @@
 
 using System;
 using MB.Data.Models;
+using System.Data.Entity.Spatial;
 
 namespace MB.Data.DTO
 {
