@@ -31,6 +31,23 @@ namespace MB.Data.AutoMapper
             return Mapper.Map(dto, entity);
         }
 
+        public static CityCateDTO ToModel(this CityCate entity)
+        {
+            return Mapper.Map<CityCate, CityCateDTO>(entity);
+        }
+
+        public static CityCate ToEntity(this CityCateDTO dto)
+        {
+            return Mapper.Map<CityCateDTO, CityCate>(dto);
+        }
+
+        public static CityCate ToEntity(this CityCateDTO dto, CityCate entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+
+
         public static CategoryDTO ToModel(this Category entity)
         {
             return Mapper.Map<Category, CategoryDTO>(entity);

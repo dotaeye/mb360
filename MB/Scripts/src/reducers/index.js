@@ -6,6 +6,8 @@ import userRole from './userRole';
 import department from './department';
 import category from './category';
 import carCate from './carCate';
+import cityCate from './cityCate';
+import storage from './storage';
 import job from './job';
 
 export default combineReducers({
@@ -16,5 +18,7 @@ export default combineReducers({
     department,
     category,
     job,
-    carCate
+    carCate,
+    cityCate,
+    storage
 });

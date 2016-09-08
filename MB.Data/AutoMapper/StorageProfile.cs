@@ -7,29 +7,32 @@ using AutoMapper;
 using SQ.Core.AutoMapper;
 using MB.Data.Models;
 using MB.Data.DTO;
+using System.Data.Entity.Spatial;
 
 namespace MB.Data.AutoMapper
 {
-	public class StorageProfile : BaseProfile
+    public class StorageProfile : BaseProfile
     {
         public StorageProfile() : base("StorageProfile")
         {
         }
 
-		protected override void CreateMaps()
+        protected override void CreateMaps()
         {
-			 
-			CreateMap<Storage, StorageDTO>()
-;
 
-			 
-			CreateMap<StorageDTO, Storage>()
-					.ForMember(entity => entity.CreateUserId, o => o.Ignore())
-					.ForMember(entity => entity.CreateTime, o => o.Ignore())
-					.ForMember(entity => entity.LastUserId, o => o.Ignore())
-					.ForMember(entity => entity.LastTime, o => o.Ignore())
-					.ForMember(entity => entity.Deleted, o => o.Ignore())
-;
+            CreateMap<Storage, StorageDTO>()
+                 .ForMember(dto => dto.Latitude, o => o.Ignore())
+                 .ForMember(dto => dto.Longitude, o => o.Ignore())
+                 .ForMember(dto => dto.Distance, o => o.Ignore());
+
+
+            CreateMap<StorageDTO, Storage>()
+                 .ForMember(entity => entity.Location, o => o.MapFrom(dto => DbGeography.FromText(string.Format("POINT({0} {1})", dto.Longitude, dto.Latitude))))
+                 .ForMember(entity => entity.CreateUserId, o => o.Ignore())
+                 .ForMember(entity => entity.CreateTime, o => o.Ignore())
+                 .ForMember(entity => entity.LastUserId, o => o.Ignore())
+                 .ForMember(entity => entity.LastTime, o => o.Ignore())
+                 .ForMember(entity => entity.Deleted, o => o.Ignore());
         }
     }
 }

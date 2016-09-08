@@ -72,6 +72,16 @@ var Aside = React.createClass({
             controller: 'carcate',
             action: 'index',
             title: '汽车类别'
+          },
+          {
+            controller: 'citycate',
+            action: 'index',
+            title: '城市管理'
+          },
+          {
+            controller: 'storage',
+            action: 'index',
+            title: '仓库管理'
           }
         ]
       }

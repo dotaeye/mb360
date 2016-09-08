@@ -11,6 +11,7 @@ import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as storageActions from '../actions/storage'
+import MapMaker from '../components/control/MapMaker'
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;
@@ -209,6 +210,20 @@ var Storage = React.createClass({
                 }
               )} type="text"/>
             </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="地理位置"
+              >
+               <MapMaker {...getFieldProps('location', {
+                   initialValue:  {
+                       lng:record.longitude,
+                       lat:record.latitude
+                   },
+                   rules: [{required: true, message: '请标记仓库的具体位置'}]
+               }
+              )} />
+            </FormItem>
           </Form>
         </Modal>
       </div>
@@ -231,12 +246,12 @@ function mapDispatchToProps(dispatch) {
 }
 
 const statics = {
-  path: 'userpermission',
+  path: 'storage',
   menuGroup: 'system',
   breadcrumb: [{
-    title: '系统设置'
+    title: '业务中心'
   }, {
-    title: 'Storage管理'
+    title: '仓库管理'
   }]
 };
 

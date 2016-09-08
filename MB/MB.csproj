@@ -262,6 +262,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CarCateController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\CityCateController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JobController.cs" />
@@ -322,6 +323,7 @@
     </Content>
     <Content Include="Scripts\src\actions\carCate.js" />
     <Content Include="Scripts\src\actions\category.js" />
+    <Content Include="Scripts\src\actions\cityCate.js" />
     <Content Include="Scripts\src\actions\department.js" />
     <Content Include="Scripts\src\actions\job.js" />
     <Content Include="Scripts\src\actions\manufacturer.js" />
@@ -338,9 +340,11 @@
     <Content Include="Scripts\src\actions\userActivities.js" />
     <Content Include="Scripts\src\actions\userPermission.js" />
     <Content Include="Scripts\src\actions\userRole.js" />
+    <Content Include="Scripts\src\components\control\MapMaker.js" />
     <Content Include="Scripts\src\containers\App.js" />
     <Content Include="Scripts\src\containers\carCate.js" />
     <Content Include="Scripts\src\containers\category.js" />
+    <Content Include="Scripts\src\containers\CityCate.js" />
     <Content Include="Scripts\src\containers\Department.js" />
     <Content Include="Scripts\src\containers\Home.js" />
     <Content Include="Scripts\src\containers\index.js" />
@@ -361,11 +365,12 @@
     <Content Include="Scripts\src\containers\Register.js" />
     <Content Include="Scripts\src\containers\specificationAttribute.js" />
     <Content Include="Scripts\src\containers\specificationAttributeOption.js" />
-    <Content Include="Scripts\src\containers\storage.js" />
+    <Content Include="Scripts\src\containers\Storage.js" />
     <Content Include="Scripts\src\containers\userPermission.js" />
     <Content Include="Scripts\src\containers\UserRole.js" />
     <Content Include="Scripts\src\contants\carCate.js" />
     <Content Include="Scripts\src\contants\category.js" />
+    <Content Include="Scripts\src\contants\cityCate.js" />
     <Content Include="Scripts\src\contants\department.js" />
     <Content Include="Scripts\src\contants\job.js" />
     <Content Include="Scripts\src\contants\manufacturer.js" />
@@ -382,8 +387,10 @@
     <Content Include="Scripts\src\contants\userActivities.js" />
     <Content Include="Scripts\src\contants\userPermission.js" />
     <Content Include="Scripts\src\contants\userRole.js" />
+    <None Include="Scripts\src\public\styles\components\control\mapmaker.less" />
     <Content Include="Scripts\src\reducers\carCate.js" />
     <Content Include="Scripts\src\reducers\category.js" />
+    <Content Include="Scripts\src\reducers\cityCate.js" />
     <Content Include="Scripts\src\reducers\department.js" />
     <Content Include="Scripts\src\reducers\job.js" />
     <Content Include="Scripts\src\reducers\manufacturer.js" />
@@ -415,7 +422,9 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\CityCate\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

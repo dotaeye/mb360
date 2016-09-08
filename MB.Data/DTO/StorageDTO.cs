@@ -12,8 +12,12 @@ namespace MB.Data.DTO
 	public class StorageDTO
     {
          
-       public string Name  { get; set; } 
-       public DbGeography Location  { get; set; } 
+       public string Name  { get; set; }
+
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public double Distance { get; set; }
+  
        public int Id  { get; set; } 
     }
 }

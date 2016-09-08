@@ -69,6 +69,9 @@ namespace MB.Ioc
             builder.RegisterType<UserPermissionService>().As<IUserPermissionService>().InstancePerRequest();
             builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerRequest();
             builder.RegisterType<CarCateService>().As<ICarCateService>().InstancePerRequest();
+            builder.RegisterType<CityCateService>().As<ICityCateService>().InstancePerRequest();
+
+            builder.RegisterType<StorageService>().As<IStorageService>().InstancePerRequest();
         }
 
         public int Order

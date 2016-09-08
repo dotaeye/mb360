@@ -97,6 +97,7 @@
     <Compile Include="AutoMapper\AutoMapperStartupTask.cs" />
     <Compile Include="AutoMapper\CarCateProfile.cs" />
     <Compile Include="AutoMapper\CategoryProfile.cs" />
+    <Compile Include="AutoMapper\CityCateProfile.cs" />
     <Compile Include="AutoMapper\DepartmentProfile.cs" />
     <Compile Include="AutoMapper\JobProfile.cs" />
     <Compile Include="AutoMapper\ManufacturerProfile.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="AutoMapper\UserRoleProfile.cs" />
     <Compile Include="DTO\CarCateDTO.cs" />
     <Compile Include="DTO\CategoryDTO.cs" />
+    <Compile Include="DTO\CityCateDTO.cs" />
     <Compile Include="DTO\DepartmentDTO.cs" />
     <Compile Include="DTO\JobDTO.cs" />
     <Compile Include="DTO\ManufacturerDTO.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="EfStartUpTask.cs" />
     <Compile Include="Impl\CarCateService.cs" />
     <Compile Include="Impl\CategoryService.cs" />
+    <Compile Include="Impl\CityCateService.cs" />
     <Compile Include="Impl\DepartmentService.cs" />
     <Compile Include="Impl\JobService.cs" />
     <Compile Include="Impl\ManufacturerService.cs" />
@@ -154,6 +157,7 @@
     <Compile Include="Mapping\ApplicationUserMap.cs" />
     <Compile Include="Mapping\CarCateMap.cs" />
     <Compile Include="Mapping\CategoryMap.cs" />
+    <Compile Include="Mapping\CityCate.cs" />
     <Compile Include="Mapping\DepartmentMap.cs" />
     <Compile Include="Mapping\JobMap.cs" />
     <Compile Include="Mapping\ManufacturerMap.cs" />
@@ -194,10 +198,15 @@
     <Compile Include="Migrations\201609060638575_AddProductSchema.Designer.cs">
       <DependentUpon>201609060638575_AddProductSchema.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609080506338_AddCityCate.cs" />
+    <Compile Include="Migrations\201609080506338_AddCityCate.Designer.cs">
+      <DependentUpon>201609080506338_AddCityCate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\CarCate.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\CityCate.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Job.cs" />
     <Compile Include="Models\Manufacturer.cs" />
@@ -218,6 +227,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\ICarCateService.cs" />
     <Compile Include="Service\ICategoryService.cs" />
+    <Compile Include="Service\ICityCateService.cs" />
     <Compile Include="Service\IDepartmentService.cs" />
     <Compile Include="Service\IJobService.cs" />
     <Compile Include="Service\IManufacturerService.cs" />
@@ -237,6 +247,7 @@
     <Compile Include="SqlServerDataProvider.cs" />
     <Compile Include="Validator\CarCateValidator.cs" />
     <Compile Include="Validator\CategoryValidator.cs" />
+    <Compile Include="Validator\CityCateValidator.cs" />
     <Compile Include="Validator\DepartmentValidator.cs" />
     <Compile Include="Validator\JobValidator.cs" />
     <Compile Include="Validator\ManufacturerValidator.cs" />
@@ -282,6 +293,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609060638575_AddProductSchema.resx">
       <DependentUpon>201609060638575_AddProductSchema.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609080506338_AddCityCate.resx">
+      <DependentUpon>201609080506338_AddCityCate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

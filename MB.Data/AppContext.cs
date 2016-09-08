@@ -44,6 +44,7 @@ namespace MB.Data
 
 
             modelBuilder.Configurations.Add(new CarCateMap());
+            modelBuilder.Configurations.Add(new CityCateMap());
             modelBuilder.Configurations.Add(new CategoryMap());
             modelBuilder.Configurations.Add(new ManufacturerMap());
             modelBuilder.Configurations.Add(new ProductAttributeMap());

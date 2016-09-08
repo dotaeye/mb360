@@ -15,7 +15,9 @@ import {
   Department,
   Category,
   CarCate,
+  CityCate,
   Job,
+  Storage,
   NotFound
 } from './containers';
 
@@ -69,6 +71,10 @@ export default (store) => {
       <Route path='category' component={Category} onEnter={requireLogin.bind(null,'category','index')} />
 
       <Route path='carcate' component={CarCate} onEnter={requireLogin.bind(null,'carcate','index')} />
+          
+      <Route path='citycate' component={CityCate} onEnter={requireLogin.bind(null,'citycate','index')} />
+
+      <Route path='storage' component={Storage} onEnter={requireLogin.bind(null,'storage','index')} />
 
       <Route path='login' component={Login}/>
 

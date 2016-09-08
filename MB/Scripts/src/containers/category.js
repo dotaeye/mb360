@@ -56,12 +56,17 @@ var Category = React.createClass({
     });
   },
   onAdd(){
-    this.setState({
-      visible: true,
-      edit: false,
-      title: '添加产品类别',
-      record: {}
-    });
+      this.props.categoryActions.getCascader().then((err)=> {
+          if (hasError(err)) {
+              message.error('获取产品类别数据失败！请刷新页面尝试。');
+          } else {
+              this.setState({
+                  visible: true,
+                  edit: false,
+                  title: '添加产品类别'
+              });
+          }
+      })
   },
 
   onEdit(record){

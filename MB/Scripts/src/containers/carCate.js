@@ -56,12 +56,17 @@ var CarCate = React.createClass({
     });
   },
   onAdd(){
-    this.setState({
-      visible: true,
-      edit: false,
-      title: '添加汽车类别',
-      record: {}
-    });
+      this.props.cateCateActions.getCascader().then((err)=> {
+          if (hasError(err)) {
+              message.error('获取汽车类别数据失败！请刷新页面尝试。');
+          } else {
+              this.setState({
+                  visible: true,
+                  edit: false,
+                  title: '添加汽车类别'
+              });
+          }
+      })
   },
 
   onEdit(record){

@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="code\AutoMapper\MappingExtensions.cs" />
     <Compile Include="Generator\Entry1.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
