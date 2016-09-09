@@ -12,6 +12,7 @@ import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as storageActions from '../actions/storage'
 import MapMaker from '../components/control/MapMaker'
+import { checkLocation } from '../utils/biz'
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;
@@ -117,6 +118,9 @@ var Storage = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
+      formdata = Object.assign({}, formdata, formdata.location);
+      delete formdata.location;
+      console.log(formdata);
       if (edit) {
         formdata.id = entity.id;
         update(formdata).then((err)=> {
@@ -158,7 +162,7 @@ var Storage = React.createClass({
     }, {
       title: '名称',
       dataIndex: 'name'
-    },{
+    }, {
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -215,14 +219,10 @@ var Storage = React.createClass({
               {...formItemLayout}
               label="地理位置"
               >
-               <MapMaker {...getFieldProps('location', {
-                   initialValue:  {
-                       lng:record.longitude,
-                       lat:record.latitude
-                   },
-                   rules: [{required: true, message: '请标记仓库的具体位置'}]
-               }
-              )} />
+              <MapMaker {...getFieldProps('location', {
+                  rules: [{validator: checkLocation}]
+                }
+              )} ref={(ref)=>this.mapMaker=ref} setLocation={visible} latitude={record.latitude} longitude={record.longitude} address={record.address}/>
             </FormItem>
           </Form>
         </Modal>
@@ -247,7 +247,7 @@ function mapDispatchToProps(dispatch) {
 
 const statics = {
   path: 'storage',
-  menuGroup: 'system',
+  menuGroup: 'business',
   breadcrumb: [{
     title: '业务中心'
   }, {

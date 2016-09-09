@@ -12,6 +12,8 @@ namespace MB.Data.Models
 
         public string Name { get; set; }
 
+        public string Address { get; set; }
+
         public DbGeography Location { get; set; }
 
         [DTO(false, true)]

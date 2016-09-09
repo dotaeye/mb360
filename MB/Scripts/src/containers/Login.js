@@ -2,25 +2,33 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { browserHistory } from 'react-router';
 import { connect } from 'react-redux'
-import { Spin } from 'antd';
 import * as actionCreators from '../actions/auth'
 import { LoginForm } from '../components';
 import connectStatic from '../utils/connectStatic'
-import { message } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
+const FormItem = Form.Item;
+const createForm = Form.create;
+const confirm = Modal.confirm;
 
 
-const Login = React.createClass({
+var Login = React.createClass({
 
-  onSubmit(data){
-    data.grant_type = 'password';
-    this.props.actions.login(data);
+  onSubmit(){
+    this.props.form.validateFields((errors, formdata) => {
+      if (!!errors) {
+        console.log('Errors in form!!!');
+        return;
+      }
+      formdata.grant_type = 'password';
+      this.props.actions.login(formdata);
+    });
   },
 
   componentWillReceiveProps(nextProps){
-    if(!this.props.auth.token && nextProps.auth.token){
+    if (!this.props.auth.token && nextProps.auth.token) {
       browserHistory.push('/admin');
     }
-    if(nextProps.auth.loginError){
+    if (nextProps.auth.loginError) {
       message.error(nextProps.auth.loginError.error_description);
       this.props.actions.clearLoginError();
     }
@@ -28,13 +36,40 @@ const Login = React.createClass({
 
   render() {
     let {auth:{loggingIn}} =this.props;
+    const { getFieldProps } = this.props.form;
+    const formItemLayout = {
+      labelCol: {span: 4},
+      wrapperCol: {span: 20}
+    };
     return (
       <div id="login">
         <div className='login-form'>
           <h1>
-           <a href="/" title="logo" >logo</a>
+            <a href="/" title="logo">logo</a>
           </h1>
-          <LoginForm onSubmit={this.onSubmit} submitting={loggingIn} ref='loginForm'/>
+          <Form horizontal>
+            <FormItem
+              {...formItemLayout}
+              label="用户名"
+              >
+              <Input  {...getFieldProps('username', {
+                  rules: [{required: true, message: '请输入用户名'},{type: 'email', message: '请输入正确的邮箱地址'}]
+                }
+              )} type="text"/>
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="密码"
+              >
+              <Input  {...getFieldProps('password', {
+                  rules: [{required: true, message: '请输入密码'}]
+                }
+              )} type="password"/>
+            </FormItem>
+            <FormItem wrapperCol={{ span: 7, offset: 4 }}>
+              <Button type="primary" onClick={this.onSubmit}>登陆</Button>
+            </FormItem>
+          </Form>
         </div>
       </div>
     );
@@ -43,8 +78,7 @@ const Login = React.createClass({
 
 function mapStateToProps(state) {
   return {
-    auth: state.auth,
-    form: state.form
+    auth: state.auth
   }
 }
 
@@ -53,8 +87,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 const statics = {
-    noLayout: true
+  noLayout: true
 };
+
+Login = createForm()(Login);
 
 export default connectStatic(statics)(connect(mapStateToProps, mapDispatchToProps)(Login))
 

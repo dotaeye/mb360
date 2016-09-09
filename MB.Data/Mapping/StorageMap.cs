@@ -14,6 +14,8 @@ namespace MB.Data.Mapping
 
             this.Property(p => p.Name).IsRequired().HasMaxLength(200);
 
+            this.Property(p => p.Address).IsRequired().HasMaxLength(200);
+
             this.Property(p => p.Location).IsRequired();
         }
     }

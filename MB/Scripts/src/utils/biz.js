@@ -53,3 +53,11 @@ function getSelectedOption(options, value) {
     }
   }
 }
+
+export function checkLocation(rule, value, callback) {
+  if (value && value.address && value.latitude && value.longitude) {
+    callback();
+  } else {
+    callback(new Error('请标记一个具体位置'));
+  }
+}
