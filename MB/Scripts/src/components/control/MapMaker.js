@@ -2,7 +2,7 @@
  * Created by Administrator on 2016/8/17 0017.
  */
 import React,{PropTypes} from 'react';
-import { Input,Form } from 'antd';
+import { Input, Form, Spin } from 'antd';
 import _ from 'lodash';
 const FormItem = Form.Item;
 
@@ -10,7 +10,8 @@ const MapMaker = React.createClass({
 
   getInitialState(){
     return {
-      value: this.props.value || {}
+      value: this.props.value || {},
+      loading: true
     }
   },
 
@@ -37,6 +38,7 @@ const MapMaker = React.createClass({
     }
     this.map.centerAndZoom(point ? point : address ? address : '上海', 18);
     this.serachList.setInputValue(address ? address : '上海');
+
   },
 
   resetMap(){
@@ -46,6 +48,9 @@ const MapMaker = React.createClass({
   },
 
   mapLoad(){
+    this.setState({
+      loading: false
+    });
     this.map = new BMap.Map('map-maker');
     this.geoc = new BMap.Geocoder();
     if (!this.serachList) {
@@ -120,12 +125,14 @@ const MapMaker = React.createClass({
   },
 
   render(){
+    const { loading } = this.state;
     return (
       <div className='map-maker'>
         <Input id='map-search' ref={(ref)=>this.searchBox=ref} className='ant-input-lg' type='text'/>
-
-        <div className='map-maker-container' id='map-maker'>
-        </div>
+        <Spin spinning={this.state.loading}>
+          <div className='map-maker-container' id='map-maker'>
+          </div>
+        </Spin>
       </div>
     )
   }

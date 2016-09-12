@@ -57,17 +57,17 @@ var Category = React.createClass({
     });
   },
   onAdd(){
-      this.props.categoryActions.getCascader().then((err)=> {
-          if (hasError(err)) {
-              message.error('获取产品类别数据失败！请刷新页面尝试。');
-          } else {
-              this.setState({
-                  visible: true,
-                  edit: false,
-                  title: '添加产品类别'
-              });
-          }
-      })
+    this.props.categoryActions.getCascader().then((err)=> {
+      if (hasError(err)) {
+        message.error('获取产品类别数据失败！请刷新页面尝试。');
+      } else {
+        this.setState({
+          visible: true,
+          edit: false,
+          title: '添加产品类别'
+        });
+      }
+    })
   },
 
   onEdit(record){
@@ -171,10 +171,14 @@ var Category = React.createClass({
       title: '名称',
       dataIndex: 'name'
     }, {
+      title: '图片',
+      dataIndex: 'imageUrl',
+      render: (url) => <img src={url} style={{ width:'30px' ,height:'30px'}}/>
+    }, {
       title: '编码',
       dataIndex: 'code',
       sorter: true
-    },{
+    }, {
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -250,13 +254,18 @@ var Category = React.createClass({
                 }
               )} placeholder='请选择父级类别' options={cascader} changeOnSelect/>
             </FormItem>
-
-            <FormItem
-              {...formItemLayout}
-              label="封面图片"
-              >
-              <UploadFile />
-            </FormItem>
+            {visible && (
+              <FormItem
+                {...formItemLayout}
+                label="分类图片"
+                >
+                <UploadFile  {...getFieldProps('imageUrl', {
+                    initialValue: record.imageUrl,
+                    rules: [{required: true, message: '请上传分类图片'}]
+                  }
+                )} origin={true}/>
+              </FormItem>
+            )}
           </Form>
         </Modal>
       </div>
