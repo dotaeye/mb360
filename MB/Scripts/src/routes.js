@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import {IndexRoute, Route} from 'react-router';
-import { loadAuthToken,loadPermission } from './actions/auth';
+import { loadAuthToken, loadPermission, cleanAuthToken } from './actions/auth';
 import configs from './configs';
 import baseStorage from './utils/baseStorage';
 import {
@@ -26,8 +26,8 @@ export default (store) => {
     function checkAuth() {
       const { auth: { token, permission }} = store.getState();
       let hasPermission = permission.find(x=>x.controller==controller&&x.action==action);
-      hasPermission=true;
       if (!token || !hasPermission ) {
+        store.dispatch(cleanAuthToken());
         // oops, not logged in, so can't be here!
         replace('/login');
       }

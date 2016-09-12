@@ -12,8 +12,12 @@ namespace MB.Data.DTO
     {
          
        public string Name  { get; set; } 
-       public int? ParentId  { get; set; } 
-       public string Code  { get; set; } 
+       public int? ParentId  { get; set; }
+        public int DisplayOrder { get; set; }
+
+
+        public string ImageUrl { get; set; }
+        public string Code  { get; set; } 
        public int Id  { get; set; } 
     }
 }

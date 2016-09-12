@@ -17,6 +17,7 @@ namespace MB.Data.Mapping
 
             this.Property(x => x.Code).IsRequired().HasMaxLength(50);
 
+            this.Property(x => x.ImageUrl).IsRequired().HasMaxLength(250);
 
             this.Property(x => x.CreateTime);
 

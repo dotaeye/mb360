@@ -206,6 +206,10 @@
     <Compile Include="Migrations\201609091156078_AddAddressForStorage.Designer.cs">
       <DependentUpon>201609091156078_AddAddressForStorage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609120701078_AddImageUrlForCate.cs" />
+    <Compile Include="Migrations\201609120701078_AddImageUrlForCate.Designer.cs">
+      <DependentUpon>201609120701078_AddImageUrlForCate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\CarCate.cs" />
@@ -303,6 +307,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609091156078_AddAddressForStorage.resx">
       <DependentUpon>201609091156078_AddAddressForStorage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609120701078_AddImageUrlForCate.resx">
+      <DependentUpon>201609120701078_AddImageUrlForCate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -19,6 +19,7 @@ namespace MB.Data.Models
 
         public int DisplayOrder { get; set; }
 
+        public string ImageUrl { get; set; }
         public string Code { get; set; }
 
         [DTO(false, true)]

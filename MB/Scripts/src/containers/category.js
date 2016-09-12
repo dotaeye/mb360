@@ -7,11 +7,12 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select, Cascader } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select, Cascader, Upload } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as categoryActions from '../actions/category'
 import { getGroupSelectData , hasError, setCascadeValues} from '../utils/biz';
+import UploadFile from '../components/control/UploadFile'
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;
@@ -248,6 +249,13 @@ var Category = React.createClass({
                   initialValue: defaultValues
                 }
               )} placeholder='请选择父级类别' options={cascader} changeOnSelect/>
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="封面图片"
+              >
+              <UploadFile />
             </FormItem>
           </Form>
         </Modal>

@@ -57,6 +57,11 @@ export default function auth(state = initialState, action = {}) {
         loaded: true,
         token: token
       };
+    case authTypes.CLEAN_AUTH_TOKEN:
+      return {
+        ...state,
+        token: null
+      };
     case authTypes.REGISTER:
       return {
         ...state,
