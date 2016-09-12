@@ -79,6 +79,7 @@ namespace MB.Controllers
         public async Task<IHttpActionResult> GetById(int id)
         {
             StorageDTO Storage = await StorageService.GetAll().Where(x => x.Id == id && !x.Deleted).ProjectTo<StorageDTO>().FirstOrDefaultAsync();
+
             if (Storage == null)
             {
                 return NotFound();

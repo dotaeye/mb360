@@ -86,7 +86,7 @@ var Storage = React.createClass({
     let source = list.data;
     const remove = this.props.storageActions.remove;
     confirm({
-      title: '确认删除该Storage？',
+      title: '确认删除该仓库？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -163,18 +163,22 @@ var Storage = React.createClass({
       title: '名称',
       dataIndex: 'name'
     }, {
-      title: '操作',
-      key: 'operation',
-      render: (text, record) => (
-        <span>
+      title: '地址',
+      dataIndex: 'address'
+    },
+      {
+        title: '操作',
+        key: 'operation',
+        render: (text, record) => (
+          <span>
           <Button type="ghost" shape="circle" icon="edit" size="small" title='编辑'
                   onClick={this.onEdit.bind(null,record)}/>
           <span className="ant-divider"></span>
           <Button type="ghost" shape="circle" icon="delete" size="small" title='删除'
                   onClick={this.onRemove.bind(null,record)}/>
         </span>
-      )
-    }];
+        )
+      }];
     const { storage:{ loading, list, entity }} = this.props;
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
@@ -189,7 +193,7 @@ var Storage = React.createClass({
       <div className='container'>
         <div className='ant-list-header' data-flex="dir:right">
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加Storage</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加仓库</Button>
           </div>
         </div>
         <Table
@@ -214,16 +218,22 @@ var Storage = React.createClass({
                 }
               )} type="text"/>
             </FormItem>
-
-            <FormItem
-              {...formItemLayout}
-              label="地理位置"
-              >
-              <MapMaker {...getFieldProps('location', {
-                  rules: [{validator: checkLocation}]
-                }
-              )} ref={(ref)=>this.mapMaker=ref} setLocation={visible} latitude={record.latitude} longitude={record.longitude} address={record.address}/>
-            </FormItem>
+            {visible && (
+              <FormItem
+                {...formItemLayout}
+                label="地理位置"
+                >
+                <MapMaker {...getFieldProps('location', {
+                    initialValue: {
+                      latitude: record.latitude,
+                      longitude: record.longitude,
+                      address: record.address
+                    },
+                    rules: [{validator: checkLocation}]
+                  }
+                )} ref={(ref)=>this.mapMaker=ref}/>
+              </FormItem>
+            )}
           </Form>
         </Modal>
       </div>

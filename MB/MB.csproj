@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MB</RootNamespace>
     <AssemblyName>MB</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -103,14 +104,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
@@ -164,6 +165,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -321,92 +323,10 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\src\actions\carCate.js" />
-    <Content Include="Scripts\src\actions\category.js" />
-    <Content Include="Scripts\src\actions\cityCate.js" />
-    <Content Include="Scripts\src\actions\department.js" />
-    <Content Include="Scripts\src\actions\job.js" />
-    <Content Include="Scripts\src\actions\manufacturer.js" />
-    <Content Include="Scripts\src\actions\product.js" />
-    <Content Include="Scripts\src\actions\productAttribute.js" />
-    <Content Include="Scripts\src\actions\productAttributeMapping.js" />
-    <Content Include="Scripts\src\actions\productAttributeValue.js" />
-    <Content Include="Scripts\src\actions\productManufacturer.js" />
-    <Content Include="Scripts\src\actions\productSpecificationAttribute.js" />
-    <Content Include="Scripts\src\actions\productStorageQuantity.js" />
-    <Content Include="Scripts\src\actions\specificationAttribute.js" />
-    <Content Include="Scripts\src\actions\specificationAttributeOption.js" />
-    <Content Include="Scripts\src\actions\storage.js" />
-    <Content Include="Scripts\src\actions\userActivities.js" />
-    <Content Include="Scripts\src\actions\userPermission.js" />
-    <Content Include="Scripts\src\actions\userRole.js" />
-    <Content Include="Scripts\src\components\control\MapMaker.js" />
-    <Content Include="Scripts\src\containers\App.js" />
-    <Content Include="Scripts\src\containers\carCate.js" />
-    <Content Include="Scripts\src\containers\category.js" />
-    <Content Include="Scripts\src\containers\CityCate.js" />
-    <Content Include="Scripts\src\containers\Department.js" />
-    <Content Include="Scripts\src\containers\Home.js" />
-    <Content Include="Scripts\src\containers\index.js" />
-    <Content Include="Scripts\src\containers\Job.js" />
-    <Content Include="Scripts\src\containers\Layout.js" />
-    <Content Include="Scripts\src\containers\Login.js" />
-    <Content Include="Scripts\src\containers\manufacturer.js" />
-    <Content Include="Scripts\src\containers\NoPermission.js" />
-    <Content Include="Scripts\src\containers\NotFound.js" />
-    <Content Include="Scripts\src\containers\product.js" />
-    <Content Include="Scripts\src\containers\productAttribute.js" />
-    <Content Include="Scripts\src\containers\productAttributeMapping.js" />
-    <Content Include="Scripts\src\containers\productAttributeValue.js" />
-    <Content Include="Scripts\src\containers\productManufacturer.js" />
-    <Content Include="Scripts\src\containers\productSpecificationAttribute.js" />
-    <Content Include="Scripts\src\containers\productStorageQuantity.js" />
-    <Content Include="Scripts\src\containers\Profile.js" />
-    <Content Include="Scripts\src\containers\Register.js" />
-    <Content Include="Scripts\src\containers\specificationAttribute.js" />
-    <Content Include="Scripts\src\containers\specificationAttributeOption.js" />
-    <Content Include="Scripts\src\containers\Storage.js" />
-    <Content Include="Scripts\src\containers\userPermission.js" />
-    <Content Include="Scripts\src\containers\UserRole.js" />
-    <Content Include="Scripts\src\contants\carCate.js" />
-    <Content Include="Scripts\src\contants\category.js" />
-    <Content Include="Scripts\src\contants\cityCate.js" />
-    <Content Include="Scripts\src\contants\department.js" />
-    <Content Include="Scripts\src\contants\job.js" />
-    <Content Include="Scripts\src\contants\manufacturer.js" />
-    <Content Include="Scripts\src\contants\product.js" />
-    <Content Include="Scripts\src\contants\productAttribute.js" />
-    <Content Include="Scripts\src\contants\productAttributeMapping.js" />
-    <Content Include="Scripts\src\contants\productAttributeValue.js" />
-    <Content Include="Scripts\src\contants\productManufacturer.js" />
-    <Content Include="Scripts\src\contants\productSpecificationAttribute.js" />
-    <Content Include="Scripts\src\contants\productStorageQuantity.js" />
-    <Content Include="Scripts\src\contants\specificationAttribute.js" />
-    <Content Include="Scripts\src\contants\specificationAttributeOption.js" />
-    <Content Include="Scripts\src\contants\storage.js" />
-    <Content Include="Scripts\src\contants\userActivities.js" />
-    <Content Include="Scripts\src\contants\userPermission.js" />
-    <Content Include="Scripts\src\contants\userRole.js" />
-    <None Include="Scripts\src\public\styles\components\control\mapmaker.less" />
-    <Content Include="Scripts\src\reducers\carCate.js" />
-    <Content Include="Scripts\src\reducers\category.js" />
-    <Content Include="Scripts\src\reducers\cityCate.js" />
-    <Content Include="Scripts\src\reducers\department.js" />
-    <Content Include="Scripts\src\reducers\job.js" />
-    <Content Include="Scripts\src\reducers\manufacturer.js" />
-    <Content Include="Scripts\src\reducers\product.js" />
-    <Content Include="Scripts\src\reducers\productAttribute.js" />
-    <Content Include="Scripts\src\reducers\productAttributeMapping.js" />
-    <Content Include="Scripts\src\reducers\productAttributeValue.js" />
-    <Content Include="Scripts\src\reducers\productManufacturer.js" />
-    <Content Include="Scripts\src\reducers\productSpecificationAttribute.js" />
-    <Content Include="Scripts\src\reducers\productStorageQuantity.js" />
-    <Content Include="Scripts\src\reducers\specificationAttribute.js" />
-    <Content Include="Scripts\src\reducers\specificationAttributeOption.js" />
-    <Content Include="Scripts\src\reducers\storage.js" />
-    <Content Include="Scripts\src\reducers\userActivities.js" />
-    <Content Include="Scripts\src\reducers\userPermission.js" />
-    <Content Include="Scripts\src\reducers\userRole.js" />
+    <None Include="Properties\PublishProfiles\绿呗.pubxml" />
+    <None Include="Properties\PublishProfiles\绿呗本地.pubxml" />
+    <Content Include="Scripts\src\public\build\js\common.min.js" />
+    <Content Include="Scripts\src\public\build\js\main.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

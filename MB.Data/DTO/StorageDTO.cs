@@ -15,8 +15,8 @@ namespace MB.Data.DTO
         public string Name { get; set; }
 
         public string Address { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
         public double Distance { get; set; }
 
         public int Id { get; set; }

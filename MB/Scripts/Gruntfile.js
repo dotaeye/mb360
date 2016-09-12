@@ -141,12 +141,12 @@ module.exports = function (grunt) {
   });
 
   //development environment task
-  grunt.registerTask('default', ['clean', 'less:dev', 'webpack-dev-server']);
+  grunt.registerTask('default', ['less:dev', 'webpack-dev-server']);
 
   //production environment task
-  grunt.registerTask('prod', ['clean', 'less:prod', 'webpack:prod']);
+  grunt.registerTask('prod', ['clean','less:prod', 'webpack:prod']);
 
   //test task
-  grunt.registerTask('test', ['clean', 'webpack:test', 'karma']);
+  grunt.registerTask('test', ['webpack:test', 'karma']);
 
 };

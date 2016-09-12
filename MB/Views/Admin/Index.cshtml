@@ -1,5 +1,6 @@
 ﻿@{
     Layout = null;
+    var product = false;
 }
 <!doctype html>
 <html>
@@ -17,8 +18,16 @@
 
 <body>
     <div id="main"></div>
-    <script type="text/javascript" src="http://localhost:5591/common.js"></script>
-    <script type="text/javascript" src="http://localhost:5591/main.js"></script>
+    @if (product)
+    {
+        <script type="text/javascript" src="~/Scripts/src/public/build/js/common.min.js"></script>
+        <script type="text/javascript" src="~/Scripts/src/public/build/js/main.min.js"></script>
+    }
+    else
+    {
+        <script type="text/javascript" src="http://localhost:5591/common.js"></script>
+        <script type="text/javascript" src="http://localhost:5591/main.js"></script>
+    }
 </body>
 
 </html>

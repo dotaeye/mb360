@@ -21,8 +21,8 @@ namespace MB.Data.AutoMapper
         {
 
             CreateMap<Storage, StorageDTO>()
-                 .ForMember(dto => dto.Latitude, o => o.Ignore())
-                 .ForMember(dto => dto.Longitude, o => o.Ignore())
+                 .ForMember(dto => dto.Latitude, o => o.MapFrom(ety=>ety.Location.Latitude))
+                 .ForMember(dto => dto.Longitude, o => o.MapFrom(ety => ety.Location.Longitude))
                  .ForMember(dto => dto.Distance, o => o.Ignore());
 
 

@@ -8,34 +8,41 @@ const FormItem = Form.Item;
 
 const MapMaker = React.createClass({
 
-  propTypes: {
-    latitude: PropTypes.number,
-    longitude: PropTypes.number,
-    address: PropTypes.string,
-    setLocation: PropTypes.bool,
+  getInitialState(){
+    return {
+      value: this.props.value || {}
+    }
+  },
+
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      value: nextProps.value || {}
+    })
   },
 
   componentDidMount(){
     window.mapLoad = this.mapLoad;
-    this.loadScript()
+    if (typeof BMap === "undefined") {
+      this.loadScript()
+    } else {
+      this.mapLoad();
+    }
   },
 
-  setDefaultLocation(props){
-    const {latitude, longitude, address}=props;
+  setDefaultLocation(){
+    const { value:{ latitude, longitude, address }}=this.state;
     var point;
     if (latitude && longitude) {
       point = new BMap.Point(longitude, latitude);
     }
-    this.map.centerAndZoom(point ? point : address ? address : '北京', 16);
-    this.serachList.setInputValue(address ? address : '北京');
+    this.map.centerAndZoom(point ? point : address ? address : '上海', 18);
+    this.serachList.setInputValue(address ? address : '上海');
   },
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.setLocation){
-      console.log('componentWillReceiveProps');
-      console.log(nextProps.address);
-      this.setDefaultLocation(nextProps);
-    }
+  resetMap(){
+    this.setState({
+      value: {}
+    })
   },
 
   mapLoad(){
@@ -46,7 +53,6 @@ const MapMaker = React.createClass({
         "input": "map-search",
         "location": this.map
       });
-
       this.serachList.addEventListener("onconfirm", function (e) {    //鼠标点击下拉列表后的事件
         const _value = e.item.value;
         const address = _value.province + _value.city + _value.district + _value.street + _value.business;
@@ -55,19 +61,13 @@ const MapMaker = React.createClass({
           onSearchComplete: this.onSearchComplete.bind(this, address)
         });
         this.local.search(address);
-
+        this.setState(Object.assign({}, this.state.value, {address}))
       }.bind(this));
-      this.serachList.setInputValue(this.props.address);
     }
-    this.setDefaultLocation(this.props);
+    this.setDefaultLocation();
   },
 
   onSearchComplete(address){
-    const infoOptions = {
-      width: 100,     // 信息窗口宽度
-      height: 30,     // 信息窗口高度
-      title: "提示："  // 信息窗口标题
-    };
     const infoWinContent = "拖动图标到您需要标记的位置!";
     const pp = this.local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
     this.map.centerAndZoom(pp, 18);
@@ -94,6 +94,7 @@ const MapMaker = React.createClass({
       longitude: pp.lng,
       address
     };
+    this.setState(state);
     this.props.onChange(state);
   },
 
@@ -106,8 +107,10 @@ const MapMaker = React.createClass({
         longitude: point.lng,
         address
       };
+      this.setState(state);
       this.props.onChange(state);
-    });
+      this.serachList.setInputValue(address);
+    }.bind(this));
   },
 
   loadScript(){
@@ -117,7 +120,6 @@ const MapMaker = React.createClass({
   },
 
   render(){
-
     return (
       <div className='map-maker'>
         <Input id='map-search' ref={(ref)=>this.searchBox=ref} className='ant-input-lg' type='text'/>
