@@ -45,6 +45,13 @@ export function loadAuthToken(token) {
   }
 }
 
+export function cleanAuthToken(token) {
+  return {
+    type: authTypes.CLEAN_AUTH_TOKEN
+  }
+}
+
+
 export function clearLoginError(token) {
   return {
     type: authTypes.CLEAR_LOGIN_ERROR

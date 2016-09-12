@@ -275,6 +275,7 @@
     <Compile Include="Controllers\ProductSpecificationAttributeController.cs" />
     <Compile Include="Controllers\SpecificationAttributeController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
+    <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\UserActivitiesController.cs" />
     <Compile Include="Controllers\UserPermissionController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
@@ -343,6 +344,8 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\temp\" />
+    <Folder Include="Upload\Normal\" />
     <Folder Include="Views\CityCate\" />
   </ItemGroup>
   <ItemGroup>

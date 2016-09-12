@@ -19,6 +19,10 @@ namespace MB.Data.Models
 
         public string Code { get; set; }
 
+        public string ImageUrl { get; set; }
+
+        public int DisplayOrder { get; set; }
+
         [DTO(false, true)]
         public string CreateUserId { get; set; }
 
