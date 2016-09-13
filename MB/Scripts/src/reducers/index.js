@@ -8,6 +8,7 @@ import category from './category';
 import carCate from './carCate';
 import cityCate from './cityCate';
 import storage from './storage';
+import product from './product'
 import job from './job';
 
 export default combineReducers({
@@ -20,5 +21,6 @@ export default combineReducers({
     job,
     carCate,
     cityCate,
-    storage
+    storage,
+    product
 });

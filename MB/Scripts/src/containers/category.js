@@ -263,7 +263,7 @@ var Category = React.createClass({
                     initialValue: record.imageUrl,
                     rules: [{required: true, message: '请上传分类图片'}]
                   }
-                )} origin={true}/>
+                )} origin={true} />
               </FormItem>
             )}
           </Form>

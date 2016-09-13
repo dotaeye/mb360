@@ -18,6 +18,7 @@ import {
   CityCate,
   Job,
   Storage,
+  Product,
   NotFound
 } from './containers';
 
@@ -75,6 +76,8 @@ export default (store) => {
       <Route path='citycate' component={CityCate} onEnter={requireLogin.bind(null,'citycate','index')} />
 
       <Route path='storage' component={Storage} onEnter={requireLogin.bind(null,'storage','index')} />
+
+      <Route path='product' component={Product} onEnter={requireLogin.bind(null,'product','index')} />
 
       <Route path='login' component={Login}/>
 

@@ -70,6 +70,7 @@ namespace MB.Ioc
             builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerRequest();
             builder.RegisterType<CarCateService>().As<ICarCateService>().InstancePerRequest();
             builder.RegisterType<CityCateService>().As<ICityCateService>().InstancePerRequest();
+            builder.RegisterType<ProductService>().As<IProductService>().InstancePerRequest();
 
             builder.RegisterType<StorageService>().As<IStorageService>().InstancePerRequest();
         }

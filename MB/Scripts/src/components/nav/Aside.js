@@ -84,6 +84,23 @@ var Aside = React.createClass({
             title: '仓库管理'
           }
         ]
+      },
+      {
+        group: 'product',
+        title: '产品中心',
+        icon: 'hdd',
+        items: [
+          {
+            controller: 'product',
+            action: 'index',
+            title: '产品列表'
+          },
+          {
+            controller: 'product',
+            action: 'create',
+            title: '产品添加'
+          }
+        ]
       }
     ];
     this.setMenu(menus);
@@ -105,9 +122,10 @@ var Aside = React.createClass({
                         </span>
                     }>
                 {group.items.filter(m=>m.show).map(m=> {
+                  let linkTo= m.controller + (m.action==='index'?'':('/'+m.action));
                   return (
-                    <Menu.Item key={m.controller}>
-                      <Link to={m.controller}>{m.title}</Link>
+                    <Menu.Item key={linkTo}>
+                      <Link to={linkTo}>{m.title}</Link>
                     </Menu.Item>
                   )
                 })}

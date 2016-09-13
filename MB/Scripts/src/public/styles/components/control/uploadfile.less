@@ -1,0 +1,62 @@
+.upload-container{
+
+}
+
+.ant-upload-list{
+	display:none
+}
+
+.upload-item{
+  position: relative;
+  display: inline-block;
+  height: 96px;
+  width: 96px;
+  padding: 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  vertical-align: top;
+  margin-right:15px;
+  margin-bottom:15px;
+}
+
+.upload-item img {
+  height: 78px;
+  width: 78px;
+}
+
+
+.upload-tool {
+  position: absolute;
+  left: 8px;
+  width: 78px;
+  height: 24px;
+  color: #bbb;
+  line-height: 24px;
+  text-align: center;
+  background-color: #808080;
+  opacity: .8;
+  &.bottom{
+	bottom: 8px;
+  }
+
+  &.top{
+  	top:8px;
+  }
+}
+
+.upload-tool i {
+
+	width:34px;
+
+	&:hover{
+		color:#fff
+	}
+
+	&.disabled{
+		color:gray;
+
+		&:hover{
+			color:gray;
+		}
+	}
+}
