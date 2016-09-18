@@ -183,6 +183,23 @@ namespace MB.Data.AutoMapper
             return Mapper.Map(dto, entity);
         }
 
+
+        public static ProductCarCateDTO ToModel(this ProductCarCate entity)
+        {
+            return Mapper.Map<ProductCarCate, ProductCarCateDTO>(entity);
+        }
+
+        public static ProductCarCate ToEntity(this ProductCarCateDTO dto)
+        {
+            return Mapper.Map<ProductCarCateDTO, ProductCarCate>(dto);
+        }
+
+        public static ProductCarCate ToEntity(this ProductCarCateDTO dto, ProductCarCate entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+
         public static ProductSpecificationAttributeDTO ToModel(this ProductSpecificationAttribute entity)
         {
             return Mapper.Map<ProductSpecificationAttribute, ProductSpecificationAttributeDTO>(entity);

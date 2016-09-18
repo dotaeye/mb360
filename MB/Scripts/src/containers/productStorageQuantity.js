@@ -6,10 +6,13 @@
 
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
+import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import { Spin, Table, Icon, Button, Modal, Form, Input, InputNumber, Checkbox, message,Select } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
+import * as storageActions from '../actions/storage'
+import * as productActions from '../actions/product'
 import * as productStorageQuantityActions from '../actions/productStorageQuantity'
 import _ from 'lodash';
 const FormItem = Form.Item;
@@ -24,17 +27,24 @@ var ProductStorageQuantity = React.createClass({
   getInitialState() {
     return {
       pagination: {
-        pageSize: 10,
+        pageSize: 1000,
         current: 1
       }
     };
   },
 
   fetchData(page){
-    this.props.productStorageQuantityActions.getAll({
-      results: this.state.pagination.pageSize,
-      page: page || this.state.pagination.current
-    });
+    const {routeParams:{id}}=this.props;
+    var promise=[];
+    promise.push(this.props.storageActions.getStorageSelectList());
+    promise.push(this.props.productActions.getById(id));
+    Promise.all(promise).then(err=>{
+      this.props.productStorageQuantityActions.getAll({
+        id,
+        results: this.state.pagination.pageSize,
+        page: page || this.state.pagination.current
+      });
+    })
   },
 
   componentDidMount(){
@@ -43,11 +53,13 @@ var ProductStorageQuantity = React.createClass({
 
   handleTableChange(pagination, filters, sorter) {
     const pager = this.state.pagination;
+    const {routeParams:{id}}=this.props;
     pager.current = pagination.current;
     this.setState({
       pagination: pager
     });
     this.props.productStorageQuantityActions.getAll({
+      id,
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
@@ -58,7 +70,7 @@ var ProductStorageQuantity = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加ProductStorageQuantity',
+      title: '添加产品库存',
       record: {}
     });
   },
@@ -66,13 +78,13 @@ var ProductStorageQuantity = React.createClass({
   onEdit(record){
     this.props.productStorageQuantityActions.getById(record.id).then((err)=> {
       if (err) {
-        message.error('获取ProductStorageQuantity数据失败！请刷新页面尝试。');
+        message.error('获取产品库存数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑ProductStorageQuantity'
+          title: '编辑产品库存'
         });
       }
     });
@@ -84,7 +96,7 @@ var ProductStorageQuantity = React.createClass({
     let source = list.data;
     const remove = this.props.productStorageQuantityActions.remove;
     confirm({
-      title: '确认删除该ProductStorageQuantity？',
+      title: '确认删除该产品库存？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -109,6 +121,7 @@ var ProductStorageQuantity = React.createClass({
 
   onModalSubmit(){
     const { edit }=this.state;
+    const {routeParams:{id}}=this.props;
     const { update, create} =this.props.productStorageQuantityActions;
     const { entity }= this.props.productStorageQuantity;
     this.props.form.validateFields((errors, formdata) => {
@@ -116,6 +129,7 @@ var ProductStorageQuantity = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
+      formdata.productId=id;
       if (edit) {
         formdata.id = entity.id;
         update(formdata).then((err)=> {
@@ -149,14 +163,19 @@ var ProductStorageQuantity = React.createClass({
   },
 
   render() {
+    const selectlist = this.props.storage.selectlist;
     const columns = [{
       title: 'Id',
       dataIndex: 'id',
       sorter: true,
       width: '20%'
     }, {
-      title: '名称',
-      dataIndex: 'name'
+      title: '仓库',
+      dataIndex: 'storageId',
+      render: (storageId)=> selectlist.find(x=>x.id==storageId).name
+    },{
+      title: '数量',
+      dataIndex: 'quantity'
     },{
       title: '操作',
       key: 'operation',
@@ -171,20 +190,30 @@ var ProductStorageQuantity = React.createClass({
       )
     }];
     const { productStorageQuantity:{ loading, list, entity }} = this.props;
+    const product = this.props.product.entity;
+
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
+    const record = edit ? entity : {};
+    let selectdata=selectlist.filter(item=>data.filter(d=>d.storageId==item.id).length==0 ||record.storageId==item.id);
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
     const { getFieldProps } = this.props.form;
-    const record = edit ? entity : {};
+
     const formItemLayout = {
       labelCol: {span: 4},
       wrapperCol: {span: 20}
     };
+
     return (
       <div className='container'>
-        <div className='ant-list-header' data-flex="dir:right">
+        <div className='ant-list-header' data-flex="main:justify">
+
+          <Link to={`product/update/${product.id}`} >
+              <Icon type='arrow-left'/> 返回 {product.name} 
+          </Link>
+
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加ProductStorageQuantity</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加产品库存</Button>
           </div>
         </div>
         <Table
@@ -201,14 +230,30 @@ var ProductStorageQuantity = React.createClass({
           <Form horizontal>
             <FormItem
               {...formItemLayout}
-              label="名称"
+              label="仓库"
               >
-              <Input  {...getFieldProps('name', {
-                  initialValue: record.name,
-                  rules: [{required: true, message: '请输入名称'}]
+              <Select {...getFieldProps('storageId', {
+                  initialValue: record.storageId?`${record.storageId}`:'',
+                  rules: [{required: true, message: '请选择仓库'}]
                 }
-              )} type="text"/>
-            </FormItem>
+              )} placeholder='请选择仓库' >
+                {selectdata.map(item=>{
+                  return (
+                    <Option key={item.id} >{item.name}</Option>
+                  )
+                })}
+              </Select>
+           </FormItem>
+
+           <FormItem 
+                 {...formItemLayout}
+              label="数量" >
+              <InputNumber step={1}  {...getFieldProps('quantity',{
+                   initialValue: record.quantity,
+                    rules: [{required: true, type:'number', message: '请输入库存数量'}]
+              })} />
+           </FormItem>
+
           </Form>
         </Modal>
       </div>
@@ -219,6 +264,8 @@ var ProductStorageQuantity = React.createClass({
 function mapStateToProps(state) {
   return {
     auth: state.auth,
+    storage: state.storage,
+    product: state.product,
     productStorageQuantity: state.productStorageQuantity
   }
 }
@@ -226,17 +273,19 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     authActions: bindActionCreators(authActions, dispatch),
+    storageActions: bindActionCreators(storageActions, dispatch),
+    productActions: bindActionCreators(productActions, dispatch),
     productStorageQuantityActions: bindActionCreators(productStorageQuantityActions, dispatch)
   }
 }
 
 const statics = {
-  path: 'userpermission',
-  menuGroup: 'system',
+  path: 'product',
+  menuGroup: 'product',
   breadcrumb: [{
-    title: '系统设置'
+    title: '产品中心'
   }, {
-    title: 'ProductStorageQuantity管理'
+    title: '产品库存管理'
   }]
 };
 

@@ -10,6 +10,8 @@ namespace MB.Data.Models
 
         private ICollection<ProductManufacturer> _productManufacturers;
 
+        private ICollection<ProductCarCate> _productCarCate;
+
         private ICollection<ProductStorageQuantity> _productStorageQuantity;
 
         private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
@@ -62,7 +64,11 @@ namespace MB.Data.Models
             protected set { _productManufacturers = value; }
         }
 
-
+        public virtual ICollection<ProductCarCate> ProductCarCate
+        {
+            get { return _productCarCate ?? (_productCarCate = new List<ProductCarCate>()); }
+            protected set { _productCarCate = value; }
+        }
 
         /// <summary>
         /// Gets or sets the collection of ProductStorageQuantity

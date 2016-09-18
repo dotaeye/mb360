@@ -23,6 +23,7 @@ using MB.Data.DTO;
 using MB.Data.Models;
 using SQ.Core.Data;
 using AutoMapper.QueryableExtensions;
+using MB.Helpers;
 
 namespace MB.Controllers
 {
@@ -67,11 +68,7 @@ namespace MB.Controllers
         [Route("loadPermission")]
         public IList<PermissionItem> LoadPermission()
         {
-            var identity = (ClaimsIdentity)User.Identity;
-            IEnumerable<Claim> claims = identity.Claims;
-            Int32 userRoleId = 0;
-            int.TryParse(claims.First(c => c.Type == "userRoleId").Value, out userRoleId);
-
+            int userRoleId = MBHelper.GetUserRoleId(User);
             var role = UserRoleService.GetAll()
                 .Include(x => x.UserPermissions)
                 .Single(x => x.Id == userRoleId && !x.Deleted);

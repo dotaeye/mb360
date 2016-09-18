@@ -9,7 +9,8 @@ import * as categoryTypes from '../contants/category';
 
 const initialState = {
   loaded: false,
-  entity: {}
+  entity: {},
+  cascader:[]
 };
 
 export default function category(state = initialState, action = {}) {

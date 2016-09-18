@@ -31,7 +31,8 @@ namespace MB.Data.AutoMapper
 					.ForMember(entity => entity.Deleted, o => o.Ignore())
 					.ForMember(entity => entity.Category, o => o.Ignore())
 					.ForMember(entity => entity.ProductManufacturers, o => o.Ignore())
-					.ForMember(entity => entity.ProductStorageQuantity, o => o.Ignore())
+                    .ForMember(entity => entity.ProductCarCate, o => o.Ignore())
+                    .ForMember(entity => entity.ProductStorageQuantity, o => o.Ignore())
 					.ForMember(entity => entity.ProductSpecificationAttributes, o => o.Ignore())
 					.ForMember(entity => entity.ProductAttributeMappings, o => o.Ignore())
 ;

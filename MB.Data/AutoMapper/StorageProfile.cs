@@ -32,6 +32,7 @@ namespace MB.Data.AutoMapper
                  .ForMember(entity => entity.CreateTime, o => o.Ignore())
                  .ForMember(entity => entity.LastUserId, o => o.Ignore())
                  .ForMember(entity => entity.LastTime, o => o.Ignore())
+                 .ForMember(entity => entity.StorageType, o => o.Ignore())
                  .ForMember(entity => entity.Deleted, o => o.Ignore());
         }
     }

@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select, Cascader, Upload } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message, Select, Cascader, Upload } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as categoryActions from '../actions/category'

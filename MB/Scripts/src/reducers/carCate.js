@@ -9,7 +9,8 @@ import * as carCateTypes from '../contants/carCate';
 
 const initialState = {
   loaded: false,
-  entity: {}
+  entity: {},
+  cascader:[]
 };
 
 export default function carCate(state = initialState, action = {}) {

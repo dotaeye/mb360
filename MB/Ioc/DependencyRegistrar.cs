@@ -73,6 +73,9 @@ namespace MB.Ioc
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerRequest();
 
             builder.RegisterType<StorageService>().As<IStorageService>().InstancePerRequest();
+            builder.RegisterType<ProductStorageQuantityService>().As<IProductStorageQuantityService>().InstancePerRequest();
+            builder.RegisterType<ProductCarCateService>().As<IProductCarCateService>().InstancePerRequest();
+
         }
 
         public int Order

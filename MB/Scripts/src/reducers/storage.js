@@ -9,13 +9,15 @@ import * as storageTypes from '../contants/storage';
 
 const initialState = {
   loaded: false,
-  entity: {}
+  entity: {},
+  selectlist:[]
 };
 
 export default function storage(state = initialState, action = {}) {
   switch (action.type) {
     case storageTypes.GET_ALL_STORAGE:
     case storageTypes.GET_ONE_STORAGE:
+    case storageTypes.GET_STORAGE_SELECTLIST:
     case storageTypes.CREATE_STORAGE:
     case storageTypes.UPDATE_STORAGE:
     case storageTypes.DELETE_STORAGE:
@@ -25,6 +27,7 @@ export default function storage(state = initialState, action = {}) {
       };
     case storageTypes.GET_ALL_STORAGE_FAIL:
     case storageTypes.GET_ONE_STORAGE_FAIL:
+    case storageTypes.GET_STORAGE_SELECTLIST_FAIL:
     case storageTypes.CREATE_STORAGE_FAIL:
     case storageTypes.UPDATE_STORAGE_FAIL:
     case storageTypes.DELETE_STORAGE_FAIL:
@@ -39,6 +42,13 @@ export default function storage(state = initialState, action = {}) {
         loading: false,
         loaded: true,
         list: action.result
+      };
+    case storageTypes.GET_STORAGE_SELECTLIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        selectlist: action.result
       };
     case storageTypes.GET_ONE_STORAGE_SUCCESS:
       return {

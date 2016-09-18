@@ -21,25 +21,24 @@ using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
-using MB.Helpers;
 
 namespace MB.Controllers
 {
-    [RoutePrefix("api/Storage")]
-    public class StorageController : ApiController
+    [RoutePrefix("api/ProductStorageQuantity")]
+    public class ProductStorageQuantityController : ApiController
     {
-        private IStorageService StorageService;
-        public StorageController(
-            IStorageService _StorageService
+        private IProductStorageQuantityService ProductStorageQuantityService;
+        public ProductStorageQuantityController(
+            IProductStorageQuantityService _ProductStorageQuantityService
           )
         {
-            this.StorageService = _StorageService;
+            this.ProductStorageQuantityService = _ProductStorageQuantityService;
         }
 
         [Route("")]
-        public ApiListResult<StorageDTO> Get([FromUri] AntPageOption option = null)
+        public ApiListResult<ProductStorageQuantityDTO> Get([FromUri] AntPageOption option = null)
         {
-            var query = StorageService.GetAll().Where(x => !x.Deleted).ProjectTo<StorageDTO>();
+            var query = ProductStorageQuantityService.GetAll().Where(x=>x.ProductId==option.Id).ProjectTo<ProductStorageQuantityDTO>();
             if (option != null)
             {
                 if (!string.IsNullOrEmpty(option.SortField))
@@ -71,98 +70,74 @@ namespace MB.Controllers
                 query = query.OrderBy(x => x.Id);
             }
             var count = query.Count();
-            var result = query.Paging<StorageDTO>(option.Page - 1, option.Results, count);
-            return new ApiListResult<StorageDTO>(result, result.PageIndex, result.PageSize, count);
+            var result = query.Paging<ProductStorageQuantityDTO>(option.Page - 1, option.Results, count);
+            return new ApiListResult<ProductStorageQuantityDTO>(result, result.PageIndex, result.PageSize, count);
         }
 
         [Route("{id:int}")]
-        [ResponseType(typeof(StorageDTO))]
+        [ResponseType(typeof(ProductStorageQuantityDTO))]
         public async Task<IHttpActionResult> GetById(int id)
         {
-            StorageDTO Storage = await StorageService.GetAll().Where(x => x.Id == id && !x.Deleted).ProjectTo<StorageDTO>().FirstOrDefaultAsync();
-
-            if (Storage == null)
+            ProductStorageQuantityDTO ProductStorageQuantity = await ProductStorageQuantityService.GetAll().Where(x => x.Id == id ).ProjectTo<ProductStorageQuantityDTO>().FirstOrDefaultAsync();
+            if (ProductStorageQuantity == null)
             {
                 return NotFound();
             }
-            return Ok(Storage);
+            return Ok(ProductStorageQuantity);
         }
 
         [Route("")]
         [HttpPost]
-        [ResponseType(typeof(StorageDTO))]
-        public async Task<IHttpActionResult> Create([FromBody]StorageDTO StorageDto)
+        [ResponseType(typeof(ProductStorageQuantityDTO))]
+        public async Task<IHttpActionResult> Create([FromBody]ProductStorageQuantityDTO ProductStorageQuantityDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var entity = StorageDto.ToEntity();
-            var roleId = MBHelper.GetUserRoleId(User);
-            if (roleId == (int)RoleType.Member)
-            {
-                entity.StorageType = (int)StorageType.Member;
-            }
-            else
-            {
-                entity.StorageType = (int)StorageType.System;
-            }
+            var entity = ProductStorageQuantityDto.ToEntity();
+
             entity.CreateUserId = User.Identity.GetUserId();
             entity.CreateTime = DateTime.Now;
-            await StorageService.InsertAsync(entity);
+            await ProductStorageQuantityService.InsertAsync(entity);
             return Ok(entity.ToModel());
         }
 
 
         [Route("")]
         [HttpPut]
-        [ResponseType(typeof(StorageDTO))]
-        public async Task<IHttpActionResult> Update([FromBody]StorageDTO StorageDto)
+        [ResponseType(typeof(ProductStorageQuantityDTO))]
+        public async Task<IHttpActionResult> Update([FromBody]ProductStorageQuantityDTO ProductStorageQuantityDto)
         {
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var entity = await StorageService.FindOneAsync(StorageDto.Id);
-            entity = StorageDto.ToEntity(entity);
+            var entity = await ProductStorageQuantityService.FindOneAsync(ProductStorageQuantityDto.Id);
+            entity = ProductStorageQuantityDto.ToEntity(entity);
             entity.LastUserId = User.Identity.GetUserId();
             entity.LastTime = DateTime.Now;
-            await StorageService.UpdateAsync(entity);
+            await ProductStorageQuantityService.UpdateAsync(entity);
             return Ok(entity.ToModel());
         }
 
         [Route("{id:int}")]
         [HttpDelete]
-        [ResponseType(typeof(StorageDTO))]
+        [ResponseType(typeof(ProductStorageQuantityDTO))]
         public async Task<IHttpActionResult> Delete(int id)
         {
-            Storage entity = await StorageService.FindOneAsync(id);
+            ProductStorageQuantity entity = await ProductStorageQuantityService.FindOneAsync(id);
             if (entity == null)
             {
                 return NotFound();
             }
-            await StorageService.DeleteAsync(entity);
+            await ProductStorageQuantityService.DeleteAsync(entity);
 
             return Ok(entity.ToModel());
         }
 
-
-        [Route("selectlist")]
-        [HttpGet]
-        public List<StorageDTO> GetStorageSelectList()
-        {
-            var result = new List<StorageDTO>();
-            var roleId = MBHelper.GetUserRoleId(User);
-            var storageType = 0;
-            if (roleId == (int)RoleType.Member)
-            {
-                storageType = (int)StorageType.Member;
-            }
-            result = StorageService.GetAll().Where(x => !x.Deleted && x.StorageType == storageType).ProjectTo<StorageDTO>().ToList();
-            return result;
-        }
     }
 }
 

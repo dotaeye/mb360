@@ -26,8 +26,12 @@ const UploadFile = React.createClass({
     }
   },
   getInitialState() {
-    let fileList = [];
-    const { value }=this.props;
+ 	return this.getDefaultStateFromProps(this.props);
+  },
+
+  getDefaultStateFromProps(props){
+   let fileList = [];
+    const { value }=props;
     const defaultUrls = value ? value.split(',') : [];
     if (defaultUrls.length > 0) {
       fileList = defaultUrls.map(url=> {
@@ -42,6 +46,10 @@ const UploadFile = React.createClass({
     return {
       fileList
     };
+  },
+
+  componentWillReceiveProps(newProps){
+  	this.setState(this.getDefaultStateFromProps(newProps));
   },
 
   onRemove(file){

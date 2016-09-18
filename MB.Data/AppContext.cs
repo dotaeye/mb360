@@ -51,6 +51,7 @@ namespace MB.Data
             modelBuilder.Configurations.Add(new ProductAttributeMappingMap());
             modelBuilder.Configurations.Add(new ProductAttributeValueMap());
             modelBuilder.Configurations.Add(new ProductManufacturerMap());
+            modelBuilder.Configurations.Add(new ProductCarCateMap());
 
 
             modelBuilder.Configurations.Add(new ProductMap());

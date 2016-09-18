@@ -7,7 +7,8 @@
 import * as departmentTypes from '../contants/department';
 
 const initialState = {
-	entity:{}
+	entity:{},
+	cascader:[]
 };
 
 export default function department(state = initialState, action = {}) {

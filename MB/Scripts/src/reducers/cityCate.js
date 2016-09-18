@@ -9,7 +9,8 @@ import * as cityCateTypes from '../contants/cityCate';
 
 const initialState = {
     loaded: false,
-    entity: {}
+    entity: {},
+    cascader:[]
 };
 
 export default function cityCate(state = initialState, action = {}) {

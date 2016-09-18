@@ -271,8 +271,10 @@
     <Compile Include="Controllers\ManufacturerController.cs" />
     <Compile Include="Controllers\ProductAttributeController.cs" />
     <Compile Include="Controllers\ProductAttributeValueController.cs" />
+    <Compile Include="Controllers\ProductCarCateController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ProductSpecificationAttributeController.cs" />
+    <Compile Include="Controllers\ProductStorageQuantityController.cs" />
     <Compile Include="Controllers\SpecificationAttributeController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
@@ -283,6 +285,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MBHelper.cs" />
     <Compile Include="Ioc\DependencyRegistrar.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />

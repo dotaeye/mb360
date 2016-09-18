@@ -106,6 +106,7 @@
     <Compile Include="AutoMapper\ProductAttributeMappingProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeValueProfile.cs" />
+    <Compile Include="AutoMapper\ProductCarCateProfile.cs" />
     <Compile Include="AutoMapper\ProductManufacturerProfile.cs" />
     <Compile Include="AutoMapper\ProductProfile.cs" />
     <Compile Include="AutoMapper\ProductSpecificationAttributeProfile.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="DTO\ProductAttributeDTO.cs" />
     <Compile Include="DTO\ProductAttributeMappingDTO.cs" />
     <Compile Include="DTO\ProductAttributeValueDTO.cs" />
+    <Compile Include="DTO\ProductCarCateDTO.cs" />
     <Compile Include="DTO\ProductDTO.cs" />
     <Compile Include="DTO\ProductManufacturerDTO.cs" />
     <Compile Include="DTO\ProductSpecificationAttributeDTO.cs" />
@@ -145,6 +147,7 @@
     <Compile Include="Impl\ProductAttributeMappingService.cs" />
     <Compile Include="Impl\ProductAttributeService.cs" />
     <Compile Include="Impl\ProductAttributeValueService.cs" />
+    <Compile Include="Impl\ProductCarCateService.cs" />
     <Compile Include="Impl\ProductManufacturerService.cs" />
     <Compile Include="Impl\ProductService.cs" />
     <Compile Include="Impl\ProductSpecificationAttributeService.cs" />
@@ -165,6 +168,7 @@
     <Compile Include="Mapping\ProductAttributeMap.cs" />
     <Compile Include="Mapping\ProductAttributeMappingMap.cs" />
     <Compile Include="Mapping\ProductAttributeValueMap.cs" />
+    <Compile Include="Mapping\ProductCarCateMap.cs" />
     <Compile Include="Mapping\ProductManufacturerMap.cs" />
     <Compile Include="Mapping\ProductMap.cs" />
     <Compile Include="Mapping\ProductSpecificationAttributeMap.cs" />
@@ -211,6 +215,14 @@
     <Compile Include="Migrations\201609120701078_AddImageUrlForCate.Designer.cs">
       <DependentUpon>201609120701078_AddImageUrlForCate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609180241399_AddProductCarCateMap.cs" />
+    <Compile Include="Migrations\201609180241399_AddProductCarCateMap.Designer.cs">
+      <DependentUpon>201609180241399_AddProductCarCateMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609180306355_AddStorageType.cs" />
+    <Compile Include="Migrations\201609180306355_AddStorageType.Designer.cs">
+      <DependentUpon>201609180306355_AddStorageType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\CarCate.cs" />
@@ -223,6 +235,7 @@
     <Compile Include="Models\ProductAttribute.cs" />
     <Compile Include="Models\ProductAttributeMapping.cs" />
     <Compile Include="Models\ProductAttributeValue.cs" />
+    <Compile Include="Models\ProductCarCate.cs" />
     <Compile Include="Models\ProductManufacturer.cs" />
     <Compile Include="Models\ProductSpecificationAttribute.cs" />
     <Compile Include="Models\ProductStorageQuantity.cs" />
@@ -243,6 +256,7 @@
     <Compile Include="Service\IProductAttributeMappingService.cs" />
     <Compile Include="Service\IProductAttributeService.cs" />
     <Compile Include="Service\IProductAttributeValueService.cs" />
+    <Compile Include="Service\IProductCarCateService.cs" />
     <Compile Include="Service\IProductManufacturerService.cs" />
     <Compile Include="Service\IProductService.cs" />
     <Compile Include="Service\IProductSpecificationAttributeService.cs" />
@@ -311,6 +325,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609120701078_AddImageUrlForCate.resx">
       <DependentUpon>201609120701078_AddImageUrlForCate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609180241399_AddProductCarCateMap.resx">
+      <DependentUpon>201609180241399_AddProductCarCateMap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609180306355_AddStorageType.resx">
+      <DependentUpon>201609180306355_AddStorageType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

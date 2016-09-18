@@ -40,6 +40,7 @@ namespace MB.Providers
                OAuthDefaults.AuthenticationType);
             oAuthIdentity.AddClaim(new Claim("userName", user.UserName));
             oAuthIdentity.AddClaim(new Claim("userRoleId", user.UserRoleId.ToString()));
+            
             AuthenticationProperties properties = CreateProperties(user);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);

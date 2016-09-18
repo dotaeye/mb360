@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace MB.Data.Impl
 {
-	public class ProductStorageQuantityService : IProductStorageQuantityService
+    public class ProductStorageQuantityService : IProductStorageQuantityService
     {
-		   #region Fields
+        #region Fields
 
         private readonly IRepository<ProductStorageQuantity> _ProductStorageQuantityRepository;
 

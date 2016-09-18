@@ -69,3 +69,13 @@ export function guid() {
   });
 }
 
+export function getCascaderName(ids,cascader) {
+  let currentCascader=cascader;
+  let results=[];
+  ids.forEach(id=>{
+    let currentNode=currentCascader.find(c=>c.value==id);
+    results.push(currentNode.label);
+    currentCascader=currentNode.children;
+  })
+  return results;
+}

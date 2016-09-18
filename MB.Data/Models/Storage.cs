@@ -16,6 +16,8 @@ namespace MB.Data.Models
 
         public DbGeography Location { get; set; }
 
+        public int StorageType { get; set; }
+
         [DTO(false, true)]
         public string CreateUserId { get; set; }
 
