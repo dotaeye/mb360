@@ -179,18 +179,19 @@ var ProductCreateOrUpdate = React.createClass({
                   )} type="text"/>
                 </FormItem>
 
-                 <FormItem
-                  {...formItemLayout}
-                  label="产品图片"
-                  >
-                  <UploadFile  {...getFieldProps('imageUrl', {
-                      initialValue: record.imageUrl,
-                      rules: [{required: true, message: '请上传产品图片'}]
-                    }
-                  )}  multiple={true} />
+                {!loading&&(
+                  <FormItem
+                    {...formItemLayout}
+                    label="产品图片"
+                    >
+                    <UploadFile  {...getFieldProps('imageUrl', {
+                        initialValue: record.imageUrl,
+                        rules: [{required: true, message: '请上传产品图片'}]
+                      }
+                    )}  multiple={true} />
 
-                </FormItem>
-
+                  </FormItem>
+                )}
                 <FormItem
                   {...formItemLayout}
                   label="参与团购活动"

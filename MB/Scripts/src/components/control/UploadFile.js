@@ -48,9 +48,10 @@ const UploadFile = React.createClass({
     };
   },
 
-  componentWillReceiveProps(newProps){
-  	this.setState(this.getDefaultStateFromProps(newProps));
-  },
+  //componentWillReceiveProps(newProps){
+  //  console.log('componentWillReceiveProps')
+  //	// this.setState(this.getDefaultStateFromProps(newProps));
+  //},
 
   onRemove(file){
     let {fileList}=this.state;
@@ -62,6 +63,7 @@ const UploadFile = React.createClass({
   },
 
   onUploadChange(info){
+    console.log(arguments)
     const { origin, multiple }=this.props;
     let fileList = info.fileList;
     // 1. 上传列表数量的限制
