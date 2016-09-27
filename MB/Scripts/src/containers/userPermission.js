@@ -251,9 +251,9 @@ var UserPermission = React.createClass({
                 initialValue: record.group,
                 rules: [{required: true, message: '请选择权限分组'}]
               })} >
-                {permissionGroups.map(g=>{
+                {permissionGroups.map((g,gIndex)=>{
                   return (
-                    <Option value={g}>{g}</Option>
+                    <Option key={gIndex} value={g}>{g}</Option>
                   )
                 })}
               </Select>
