@@ -9,7 +9,8 @@ import * as manufacturerTypes from '../contants/manufacturer';
 
 const initialState = {
   loaded: false,
-  entity: {}
+  entity: {},
+  selectlist:[]
 };
 
 export default function manufacturer(state = initialState, action = {}) {
@@ -19,6 +20,7 @@ export default function manufacturer(state = initialState, action = {}) {
     case manufacturerTypes.CREATE_MANUFACTURER:
     case manufacturerTypes.UPDATE_MANUFACTURER:
     case manufacturerTypes.DELETE_MANUFACTURER:
+    case manufacturerTypes.GET_MANUFACTURER_SELECTLIST:
       return {
         ...state,
         loading: true
@@ -28,10 +30,18 @@ export default function manufacturer(state = initialState, action = {}) {
     case manufacturerTypes.CREATE_MANUFACTURER_FAIL:
     case manufacturerTypes.UPDATE_MANUFACTURER_FAIL:
     case manufacturerTypes.DELETE_MANUFACTURER_FAIL:
+    case manufacturerTypes.GET_MANUFACTURER_SELECTLIST_FAIL:
       return {
         ...state,
         loading: false,
         error: action.error
+      };
+    case manufacturerTypes.GET_MANUFACTURER_SELECTLIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        selectlist: action.result
       };
     case manufacturerTypes.GET_ALL_MANUFACTURER_SUCCESS:
       return {

@@ -20,11 +20,14 @@ namespace MB.Data.AutoMapper
         {
 			 
 			CreateMap<Product, ProductDTO>()
+                   .ForMember(dto => dto.ManufacturerId, e => e.Ignore())
+                   .ForMember(dto => dto.IsFeaturedProduct, e => e.Ignore())
 ;
 
 			 
 			CreateMap<ProductDTO, Product>()
-					.ForMember(entity => entity.CreateUserId, o => o.Ignore())
+                 
+                    .ForMember(entity => entity.CreateUserId, o => o.Ignore())
 					.ForMember(entity => entity.CreateTime, o => o.Ignore())
 					.ForMember(entity => entity.LastUserId, o => o.Ignore())
 					.ForMember(entity => entity.LastTime, o => o.Ignore())

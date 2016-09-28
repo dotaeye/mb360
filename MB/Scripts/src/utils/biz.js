@@ -41,17 +41,20 @@ export function setCascadeValues(options, value, results) {
 }
 
 function getSelectedOption(options, value) {
+  var result = null;
   for (let i = 0; i < options.length; i++) {
     if (options[i].value == value) {
-      return options[i];
+      result = options[i];
     } else {
       if (options[i].children && options[i].children.length > 0) {
-        return getSelectedOption(options[i].children, value);
-      } else {
-        return null;
+        var op = getSelectedOption(options[i].children, value);
+        if (op) {
+          result = op
+        }
       }
     }
   }
+  return result;
 }
 
 export function checkLocation(rule, value, callback) {
@@ -63,19 +66,19 @@ export function checkLocation(rule, value, callback) {
 }
 
 export function guid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
 }
 
-export function getCascaderName(ids,cascader) {
-  let currentCascader=cascader;
-  let results=[];
-  ids.forEach(id=>{
-    let currentNode=currentCascader.find(c=>c.value==id);
+export function getCascaderName(ids, cascader) {
+  let currentCascader = cascader;
+  let results = [];
+  ids.forEach(id=> {
+    let currentNode = currentCascader.find(c=>c.value == id);
     results.push(currentNode.label);
-    currentCascader=currentNode.children;
+    currentCascader = currentNode.children;
   })
   return results;
 }

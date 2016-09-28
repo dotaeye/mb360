@@ -5,6 +5,7 @@
 
 using System;
 using MB.Data.Models;
+using System.Collections.Generic;
 
 namespace MB.Data.DTO
 {
@@ -15,6 +16,11 @@ namespace MB.Data.DTO
         public int CategoryId { get; set; }
         public string SKU { get; set; }
         public Boolean isAgreeActive { get; set; }
+
+        public int ManufacturerId { get; set; }
+
+        public bool IsFeaturedProduct { get; set; }
+
         public int Status { get; set; }
         public Decimal Price { get; set; }
         public Decimal VipPrice { get; set; }

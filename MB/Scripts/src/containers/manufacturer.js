@@ -11,6 +11,7 @@ import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as manufacturerActions from '../actions/manufacturer'
+import UploadFile from '../components/control/UploadFile'
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;
@@ -209,6 +210,28 @@ var Manufacturer = React.createClass({
                 }
               )} type="text"/>
             </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="品牌描述"
+              >
+              <Input  {...getFieldProps('description', {
+                  initialValue: record.description,
+                  rules: [{required: true, message: '请输入品牌描述'}]
+                }
+              )} type="textarea"/>
+            </FormItem>
+            {visible && (
+              <FormItem
+                {...formItemLayout}
+                label="分类图片"
+                >
+                <UploadFile  {...getFieldProps('imageUrl', {
+                    initialValue: record.imageUrl,
+                    rules: [{required: true, message: '请上传分类图片'}]
+                  }
+                )} origin={true} />
+              </FormItem>
+            )}
           </Form>
         </Modal>
       </div>
@@ -231,12 +254,12 @@ function mapDispatchToProps(dispatch) {
 }
 
 const statics = {
-  path: 'userpermission',
-  menuGroup: 'system',
+  path: 'manufacturer',
+  menuGroup: 'product',
   breadcrumb: [{
-    title: '系统设置'
+    title: '产品中心'
   }, {
-    title: 'Manufacturer管理'
+    title: '品牌管理'
   }]
 };
 

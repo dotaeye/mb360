@@ -77,6 +77,8 @@ namespace MB.Ioc
             builder.RegisterType<ProductCarCateService>().As<IProductCarCateService>().InstancePerRequest();
 
             builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerRequest();
+            builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerRequest();
+            builder.RegisterType<ProductManufacturerService>().As<IProductManufacturerService>().InstancePerRequest();
 
         }
 

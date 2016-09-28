@@ -28,11 +28,14 @@ namespace MB.Controllers
     public class ProductController : ApiController
     {
         private IProductService ProductService;
+        private IProductManufacturerService ProductManufacturerService;
         public ProductController(
-            IProductService _ProductService
+            IProductService _ProductService,
+            IProductManufacturerService _ProductManufacturerService
           )
         {
             this.ProductService = _ProductService;
+            this.ProductManufacturerService = _ProductManufacturerService;
         }
 
         [Route("")]
@@ -79,10 +82,21 @@ namespace MB.Controllers
         public async Task<IHttpActionResult> GetById(int id)
         {
             ProductDTO Product = await ProductService.GetAll().Where(x => x.Id == id && !x.Deleted).ProjectTo<ProductDTO>().FirstOrDefaultAsync();
+
             if (Product == null)
             {
                 return NotFound();
             }
+            ProductManufacturerDTO pm = await ProductManufacturerService.GetAll()
+                .Where(x => x.ProductId == Product.Id)
+                .ProjectTo<ProductManufacturerDTO>()
+                .FirstOrDefaultAsync();
+            if (pm != null)
+            {
+                Product.ManufacturerId = pm.ManufacturerId;
+                Product.IsFeaturedProduct = pm.IsFeaturedProduct;
+            }
+
             return Ok(Product);
         }
 
@@ -101,6 +115,15 @@ namespace MB.Controllers
             entity.CreateUserId = User.Identity.GetUserId();
             entity.CreateTime = DateTime.Now;
             await ProductService.InsertAsync(entity);
+
+            var pm = new ProductManufacturerDTO()
+            {
+                IsFeaturedProduct = ProductDto.IsFeaturedProduct,
+                ManufacturerId = ProductDto.ManufacturerId,
+                ProductId = entity.Id
+            };
+            await ProductManufacturerService.InsertAsync(pm.ToEntity());
+
             return Ok(entity.ToModel());
         }
 
@@ -120,6 +143,27 @@ namespace MB.Controllers
             entity.LastUserId = User.Identity.GetUserId();
             entity.LastTime = DateTime.Now;
             await ProductService.UpdateAsync(entity);
+
+            var pmEntity = await ProductManufacturerService.GetAll()
+                .Where(x => x.ProductId == ProductDto.Id)
+                .FirstOrDefaultAsync();
+            var isEmpty = false;
+            if (pmEntity == null)
+            {
+                isEmpty = true;
+                pmEntity = new ProductManufacturer();
+            }
+            pmEntity.ManufacturerId = ProductDto.ManufacturerId;
+            pmEntity.IsFeaturedProduct = ProductDto.IsFeaturedProduct;
+            pmEntity.ProductId = entity.Id;
+            if (isEmpty)
+            {
+                await ProductManufacturerService.InsertAsync(pmEntity);
+            }
+            else
+            {
+                await ProductManufacturerService.UpdateAsync(pmEntity);
+            }
             return Ok(entity.ToModel());
         }
 

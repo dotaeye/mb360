@@ -25,6 +25,15 @@ export function getById(id) {
   };
 }
 
+export function getSelectList() {
+  return {
+    types: [manufacturerTypes.GET_MANUFACTURER_SELECTLIST, manufacturerTypes.GET_MANUFACTURER_SELECTLIST_SUCCESS, manufacturerTypes.GET_MANUFACTURER_SELECTLIST_FAIL],
+    promise: (client) => client.get('/manufacturer/selectlist',{
+      token: true
+    })
+  };
+}
+
 export function create(data) {
   return {
     types: [manufacturerTypes.CREATE_MANUFACTURER, manufacturerTypes.CREATE_MANUFACTURER_SUCCESS, manufacturerTypes.CREATE_MANUFACTURER_FAIL],

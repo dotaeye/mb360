@@ -12,6 +12,7 @@ import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as productActions from '../actions/product'
+
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;

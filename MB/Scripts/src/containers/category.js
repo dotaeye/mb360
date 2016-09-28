@@ -254,6 +254,16 @@ var Category = React.createClass({
                 }
               )} placeholder='请选择父级类别' options={cascader} changeOnSelect/>
             </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="产品描述"
+              >
+              <Input  {...getFieldProps('description', {
+                  initialValue: record.description,
+                  rules: [{required: true, message: '请输入产品描述'}]
+                }
+              )} type="textarea"/>
+            </FormItem>
             {visible && (
               <FormItem
                 {...formItemLayout}

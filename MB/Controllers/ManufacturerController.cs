@@ -21,6 +21,7 @@ using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
+using MB.Helpers;
 
 namespace MB.Controllers
 {
@@ -136,6 +137,16 @@ namespace MB.Controllers
             await ManufacturerService.DeleteAsync(entity);
 
             return Ok(entity.ToModel());
+        }
+
+        [Route("selectlist")]
+        [HttpGet]
+        public List<ManufacturerDTO> GetSelectList()
+        {
+            var result = new List<ManufacturerDTO>();
+            var roleId = MBHelper.GetUserRoleId(User);
+            result = ManufacturerService.GetAll().Where(x => !x.Deleted).ProjectTo<ManufacturerDTO>().ToList();
+            return result;
         }
 
     }

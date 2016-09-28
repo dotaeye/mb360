@@ -23,6 +23,7 @@ import {
   ProductStorageQuantity,
   ProductCarCate,
   ProductAttribute,
+  Manufacturer,
   NotFound
 } from './containers';
 
@@ -94,6 +95,7 @@ export default (store) => {
 
       <Route path='productattribute' component={ProductAttribute} onEnter={requireLogin.bind(null,'productattribute','index')} />
 
+      <Route path='manufacturer' component={Manufacturer} onEnter={requireLogin.bind(null,'manufacturer','index')} />
 
       <Route path='login' component={Login}/>
 

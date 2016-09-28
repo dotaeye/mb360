@@ -104,6 +104,11 @@ var Aside = React.createClass({
             controller: 'productattribute',
             action: 'index',
             title: '产品属性'
+          },
+          {
+            controller: 'manufacturer',
+            action: 'index',
+            title: '品牌管理'
           }
         ]
       }

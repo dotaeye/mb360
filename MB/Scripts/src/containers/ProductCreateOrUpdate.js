@@ -15,6 +15,7 @@ import * as productActions from '../actions/product'
 import * as categoryActions from '../actions/category'
 import * as storageActions from '../actions/storage'
 import * as carCateActions from '../actions/carCate'
+import * as manufacturerActions from '../actions/manufacturer'
 import _ from 'lodash';
 import { setCascadeValues } from '../utils/biz'; 
 import UploadFile from '../components/control/UploadFile'
@@ -32,7 +33,7 @@ var ProductCreateOrUpdate = React.createClass({
     const { routeParams:{id} } =this.props;
     const promise = [];
     promise.push(this.props.categoryActions.getCascader());
-    promise.push(this.props.carCateActions.getCascader());
+    promise.push(this.props.manufacturerActions.getSelectList());
     Promise.all(promise).then(err=>{
         if(id){
            this.props.productActions.getById(id)
@@ -101,10 +102,8 @@ var ProductCreateOrUpdate = React.createClass({
     const { cascader }=this.props.category;
     const { getFieldProps } = this.props.form;
     const record = id ? entity : {};
-    const { selectlist } = this.props.storage;
-    const carCateCascader=this.props.carCate.cascader;
-    const { editMode }=this.state;
-
+    const { editMode }= this.state;
+    const { selectlist }= this.props.manufacturer;
     let categoryValues = [];
     if (record.categoryId) {
       setCascadeValues(cascader, record.categoryId, categoryValues);
@@ -152,6 +151,30 @@ var ProductCreateOrUpdate = React.createClass({
                       rules: [{required: true, type:'array', message: '请选择产品分类'}]
                     }
                   )} placeholder='请选择产品分类' options={cascader} />
+                </FormItem>
+
+                <FormItem
+                  {...formItemLayout}
+                  label="所属品牌"
+                  >
+                  <Select {...getFieldProps('manufacturerId', {
+                      initialValue: record.manufacturerId?`${record.manufacturerId}`:'',
+                      rules: [{required: true, message: '请选择所属品牌'}]
+                    }
+                  )} placeholder='请选择所属品牌' >
+                    {selectlist.map(item=>{
+                      return (
+                        <Option key={item.id} >{item.name}</Option>
+                      )
+                    })}
+                  </Select>
+                </FormItem>
+
+                <FormItem
+                  {...formItemLayout}
+                  label="热销产品"
+                  >
+                  <Checkbox {...getFieldProps('isFeaturedProduct', {initialValue: record.isFeaturedProduct, valuePropName: 'checked'})}/>
                 </FormItem>
 
                 <FormItem
@@ -280,8 +303,7 @@ function mapStateToProps(state) {
     auth: state.auth,
     product: state.product,
     category: state.category,
-    carCate: state.carCate,
-    storage: state.storage
+    manufacturer: state.manufacturer
   }
 }
 
@@ -290,8 +312,7 @@ function mapDispatchToProps(dispatch) {
     authActions: bindActionCreators(authActions, dispatch),
     productActions: bindActionCreators(productActions, dispatch),
     categoryActions: bindActionCreators(categoryActions, dispatch),
-    carCateActions: bindActionCreators(carCateActions, dispatch),
-    storageActions: bindActionCreators(storageActions, dispatch)
+    manufacturerActions: bindActionCreators(manufacturerActions, dispatch)
   }
 }
 

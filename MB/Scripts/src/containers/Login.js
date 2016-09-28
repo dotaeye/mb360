@@ -67,7 +67,7 @@ var Login = React.createClass({
               )} type="password"/>
             </FormItem>
             <FormItem wrapperCol={{ span: 7, offset: 4 }}>
-              <Button type="primary" onClick={this.onSubmit}>登陆</Button>
+              <Button type="primary" onClick={this.onSubmit} disabled={loggingIn}>{loggingIn?'登录中...':'登陆'}</Button>
             </FormItem>
           </Form>
         </div>
