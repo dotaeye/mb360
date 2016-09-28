@@ -32,6 +32,7 @@ export default (store) => {
       let hasPermission = permission.find(x=>x.controller==controller&&x.action==action);
       if (!token || !hasPermission ) {
         store.dispatch(cleanAuthToken());
+        baseStorage.getStorage(configs.storage).remove(configs.authToken);
         // oops, not logged in, so can't be here!
         replace('/login');
       }
