@@ -8,17 +8,20 @@ using MB.Data.Models;
 
 namespace MB.Data.DTO
 {
-	public class ProductDTO
+    public class ProductDTO
     {
-         
-       public string Name  { get; set; } 
-       public int CategoryId  { get; set; } 
-       public string SKU  { get; set; } 
-       public Boolean isAgreeActive  { get; set; } 
-       public int Status  { get; set; } 
-       public Decimal Price  { get; set; } 
-       public Decimal VipPrice  { get; set; } 
-       public string ImageUrl  { get; set; } 
-       public int Id  { get; set; } 
+
+        public string Name { get; set; }
+        public int CategoryId { get; set; }
+        public string SKU { get; set; }
+        public Boolean isAgreeActive { get; set; }
+        public int Status { get; set; }
+        public Decimal Price { get; set; }
+        public Decimal VipPrice { get; set; }
+        public string ImageUrl { get; set; }
+        public decimal UrgencyPrice { get; set; }
+        public string Description { get; set; }
+        public string DetailUrl { get; set; }
+        public int Id { get; set; }
     }
 }

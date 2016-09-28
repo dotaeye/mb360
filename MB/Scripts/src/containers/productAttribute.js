@@ -158,6 +158,9 @@ var ProductAttribute = React.createClass({
       title: '名称',
       dataIndex: 'name'
     },{
+      title: '描述',
+      dataIndex: 'description'
+    },{
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -209,6 +212,17 @@ var ProductAttribute = React.createClass({
                 }
               )} type="text"/>
             </FormItem>
+
+                <FormItem
+                  {...formItemLayout}
+                  label="属性描述"
+                  >
+                  <Input  {...getFieldProps('description', {
+                      initialValue: record.description,
+                      rules: [{required: true, message: '请输入属性描述'}]
+                    }
+                  )} type="textarea"/>
+                </FormItem>
           </Form>
         </Modal>
       </div>

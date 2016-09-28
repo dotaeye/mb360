@@ -10,7 +10,8 @@ import cityCate from './cityCate';
 import storage from './storage';
 import product from './product'
 import productStorageQuantity from './productStorageQuantity'
-import productCarCate from './productCarCate'
+import productCarCate from './productCarCate' 
+import productAttribute from './productAttribute'
 import job from './job';
 
 export default combineReducers({
@@ -26,5 +27,6 @@ export default combineReducers({
     storage,
     product,
     productStorageQuantity,
-    productCarCate
+    productCarCate,
+    productAttribute
 });

@@ -86,7 +86,7 @@ namespace MB.Controllers
 
         private void GenerateCascader(int? Id, int currentId, List<Cascader> cascader)
         {
-            var query = CityCateService.GetAll().Where(x => x.Id != currentId);
+            var query = CityCateService.GetAll().Where(x => x.Id != currentId&&!x.Deleted);
             if (Id.HasValue)
             {
                 query = query.Where(x => x.ParentId == Id.Value);
@@ -111,7 +111,7 @@ namespace MB.Controllers
 
                 cascader.Add(item);
 
-                if (CityCateService.GetAll().Any(x => x.ParentId == depart.Id && x.Id != currentId))
+                if (CityCateService.GetAll().Any(x => x.ParentId == depart.Id && x.Id != currentId && !x.Deleted))
                 {
                     item.Children = new List<Cascader>();
                     GenerateCascader(depart.Id, currentId, item.Children);

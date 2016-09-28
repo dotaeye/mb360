@@ -35,7 +35,13 @@ namespace MB.Data.Models
 
         public decimal VipPrice { get; set; }
 
+        public decimal UrgencyPrice { get; set; }
+
+        public string Description { get; set; }
+
         public string ImageUrl { get; set; }
+
+        public string DetailUrl { get; set; }
 
         [DTO(false, true)]
         public string CreateUserId { get; set; }

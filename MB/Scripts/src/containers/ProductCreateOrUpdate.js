@@ -88,7 +88,14 @@ var ProductCreateOrUpdate = React.createClass({
     });
   },
 
-
+  /*
+  *  <div className='nav-tabs-container'>
+          <ul className="nav nav-tabs">
+            <li className="active"><a>Product info</a></li>
+            <li><a href="#tab-seo">SEO</a></li>
+          </ul>
+        </div>
+  */
   render() {
     const { product:{ loading, entity }, routeParams:{id}} = this.props;
     const { cascader }=this.props.category;
@@ -121,6 +128,7 @@ var ProductCreateOrUpdate = React.createClass({
             </div>  
             )}
         </div>
+      
         {editMode&&(
           <Form horizontal>
 
@@ -174,9 +182,31 @@ var ProductCreateOrUpdate = React.createClass({
                   >
                   <InputNumber step={0.01}  {...getFieldProps('vipPrice', {
                       initialValue: record.vipPrice,
-                      rules: [{required: true, type:'number', message: '请输入产品价格'}]
+                      rules: [{required: true, type:'number', message: '请输入VIP价格'}]
                     }
                   )} type="text"/>
+                </FormItem>
+
+                <FormItem
+                  {...formItemLayout}
+                  label="紧急调配价格"
+                  >
+                  <InputNumber step={0.01}  {...getFieldProps('urgencyPrice', {
+                      initialValue: record.urgencyPrice,
+                      rules: [{required: true, type:'number', message: '请输入紧急调配价格'}]
+                    }
+                  )} type="text"/>
+                </FormItem>
+
+                <FormItem
+                  {...formItemLayout}
+                  label="产品描述"
+                  >
+                  <Input  {...getFieldProps('description', {
+                      initialValue: record.description,
+                      rules: [{required: true, message: '请输入产品描述'}]
+                    }
+                  )} type="textarea"/>
                 </FormItem>
 
                 {!loading&&(
@@ -192,6 +222,22 @@ var ProductCreateOrUpdate = React.createClass({
 
                   </FormItem>
                 )}
+
+                {!loading&&(
+                  <FormItem
+                    {...formItemLayout}
+                    label="详情图片"
+                    >
+                    <UploadFile  {...getFieldProps('detailUrl', {
+                        initialValue: record.detailUrl,
+                        rules: [{required: true, message: '请上传详情图片'}]
+                      }
+                    )}  multiple={true} />
+
+                  </FormItem>
+                )}
+
+
                 <FormItem
                   {...formItemLayout}
                   label="参与团购活动"
@@ -216,8 +262,11 @@ var ProductCreateOrUpdate = React.createClass({
 
                 </Link>
 
+                <Link to={`productcarcate/${entity.id}`} >
+
                 <Button type='primary' >车型匹配</Button>
 
+                </Link>  
               </div>
             </div>
             )}

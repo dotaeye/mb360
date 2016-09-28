@@ -342,6 +342,35 @@
 .ant-form-horizontal {
   max-width: 700px;
 }
+.nav-tabs-container {
+  margin-bottom: 15;
+}
+.nav-tabs {
+  overflow: hidden;
+}
+.nav-tabs > li {
+  border-top: 3px solid transparent;
+  margin-bottom: -2px;
+  margin-right: 5px;
+  float: left;
+  position: relative;
+  display: block;
+}
+.nav-tabs > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+}
+.nav-tabs > li:first-of-type {
+  margin-left: 0;
+}
+.nav-tabs > li.active {
+  border-top-color: #3c8dbc;
+}
+.nav-tabs > li.active > a {
+  border-right: 1px solid #ddd !important;
+  border-left: 1px solid #ddd !important;
+}
 #main,
 #app {
   height: 100%;
