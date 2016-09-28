@@ -223,6 +223,10 @@
     <Compile Include="Migrations\201609180306355_AddStorageType.Designer.cs">
       <DependentUpon>201609180306355_AddStorageType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609280751099_AddUrgencyPrice.cs" />
+    <Compile Include="Migrations\201609280751099_AddUrgencyPrice.Designer.cs">
+      <DependentUpon>201609280751099_AddUrgencyPrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\CarCate.cs" />
@@ -331,6 +335,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609180306355_AddStorageType.resx">
       <DependentUpon>201609180306355_AddStorageType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609280751099_AddUrgencyPrice.resx">
+      <DependentUpon>201609280751099_AddUrgencyPrice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

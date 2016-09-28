@@ -22,6 +22,7 @@ import {
   ProductCreateOrUpdate,
   ProductStorageQuantity,
   ProductCarCate,
+  ProductAttribute,
   NotFound
 } from './containers';
 
@@ -90,6 +91,9 @@ export default (store) => {
       <Route path='productstoragequantity/:id' component={ProductStorageQuantity} onEnter={requireLogin.bind(null,'productstoragequantity','index')} />
 
       <Route path='productcarcate/:id' component={ProductCarCate} onEnter={requireLogin.bind(null,'productcarcate','index')} />
+
+      <Route path='productattribute' component={ProductAttribute} onEnter={requireLogin.bind(null,'productattribute','index')} />
+
 
       <Route path='login' component={Login}/>
 

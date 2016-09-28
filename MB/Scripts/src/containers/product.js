@@ -171,7 +171,11 @@ var Product = React.createClass({
     },{
       title: 'Vip价格',
       dataIndex: 'vipPrice'
-    }, {
+    },{
+      title: '紧急调配价格',
+      dataIndex: 'urgencyPrice'
+    },
+     {
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -221,21 +225,6 @@ var Product = React.createClass({
           loading={loading}
           onChange={this.handleTableChange}
           />
-        <Modal title={title} visible={visible} onOk={this.onModalSubmit}
-               onCancel={this.onModalClose}>
-          <Form horizontal>
-            <FormItem
-              {...formItemLayout}
-              label="名称"
-              >
-              <Input  {...getFieldProps('name', {
-                  initialValue: record.name,
-                  rules: [{required: true, message: '请输入名称'}]
-                }
-              )} type="text"/>
-            </FormItem>
-          </Form>
-        </Modal>
       </div>
     );
   }

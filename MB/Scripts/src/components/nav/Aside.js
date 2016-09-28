@@ -99,6 +99,11 @@ var Aside = React.createClass({
             controller: 'product',
             action: 'create',
             title: '产品添加'
+          },
+          {
+            controller: 'productattribute',
+            action: 'index',
+            title: '产品属性'
           }
         ]
       }
