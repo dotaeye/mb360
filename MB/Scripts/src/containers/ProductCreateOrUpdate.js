@@ -84,6 +84,9 @@ var ProductCreateOrUpdate = React.createClass({
             message.error('更新数据失败。');
           } else {
             message.success('更新数据成功！');
+            this.setState({
+              loading:false
+            });
           }
         });
       } else {
