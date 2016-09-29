@@ -23,6 +23,8 @@ namespace MB.Data.Models
 
         public int DisplayOrder { get; set; }
 
+        public string Description { get; set; }
+
         [DTO(false, true)]
         public string CreateUserId { get; set; }
 

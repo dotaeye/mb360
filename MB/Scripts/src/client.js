@@ -6,6 +6,7 @@ import { Router, browserHistory, RouterContext} from 'react-router';
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux';
 import { useBasename } from 'history'
+import createLogger from 'redux-logger';
 import clientMiddleware from './middleware/clientMiddleware'
 import createRoutes from './routes'
 import ApiClient from './utils/ApiClient';
@@ -18,9 +19,12 @@ import 'antd/dist/antd.css';
 import 'flex.css/dist/data-flex.css'; //flex布局
 import './public/styles/main.css';
 
-baseStorage.setNamespace('mb_');
+const middlewares = [];
 
-const createStoreWithMW = applyMiddleware(clientMiddleware(new ApiClient()))(createStore);
+baseStorage.setNamespace('mb_');
+middlewares.push(clientMiddleware(new ApiClient()));
+middlewares.push(createLogger());
+const createStoreWithMW = applyMiddleware(...middlewares)(createStore);
 const store = createStoreWithMW(reducers);
 const routes = createRoutes(store);
 const history = useBasename(()=>browserHistory)({

@@ -6,7 +6,7 @@
 
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { connect } from 'react-redux'
 import { Alert, Spin, Table, Icon, Button, Modal, Form, Input, InputNumber ,Checkbox, Tabs, message,Select, Cascader } from 'antd';
 import connectStatic from '../utils/connectStatic'
@@ -36,21 +36,33 @@ var ProductCreateOrUpdate = React.createClass({
     promise.push(this.props.manufacturerActions.getSelectList());
     Promise.all(promise).then(err=>{
         if(id){
-           this.props.productActions.getById(id)
+           this.props.productActions.getById(id).then(err=>{
+            this.setState({
+              loading:false
+            })
+           })
+         }else{
+           this.setState({
+              loading:false
+            })
          }
     });
   },
 
   getInitialState(){
     return {
-      editMode:true
+      addSuccessed:false,
+      loading:true
     }
+  },
+
+  componentWillUnMount(){
+    console.log('componentWillUnMount')
   },
 
   componentDidMount(){
     this.fetchData();
   },
-
 
   onModalSubmit(){
     const { routeParams:{id} }=this.props;
@@ -61,6 +73,9 @@ var ProductCreateOrUpdate = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
+      this.setState({
+        loading:true
+      })
       formdata.categoryId = formdata.categoryId[formdata.categoryId.length - 1];
       if (id) {
         formdata.id = entity.id;
@@ -69,19 +84,23 @@ var ProductCreateOrUpdate = React.createClass({
             message.error('更新数据失败。');
           } else {
             message.success('更新数据成功！');
-            this.setState({
-              editMode:false
-            })
           }
         });
       } else {
+
         create(formdata).then((err)=> {
           if (err) {
             message.error('创建数据失败。');
           } else {
             message.success('创建数据成功！');
-            this.setState({
-              editMode:false
+             this.setState({
+              loading:false,
+              hasAdd:true
+            },()=>{
+              const newEntity=this.props.product.entity;
+              if(newEntity.id){
+                browserHistory.push('/admin/product/update/'+newEntity.id);
+              }
             })
           }
         });
@@ -89,20 +108,12 @@ var ProductCreateOrUpdate = React.createClass({
     });
   },
 
-  /*
-  *  <div className='nav-tabs-container'>
-          <ul className="nav nav-tabs">
-            <li className="active"><a>Product info</a></li>
-            <li><a href="#tab-seo">SEO</a></li>
-          </ul>
-        </div>
-  */
   render() {
-    const { product:{ loading, entity }, routeParams:{id}} = this.props;
+    const { product:{ entity }, routeParams:{id}} = this.props;
+    const { loading , hasAdd }=this.state;
     const { cascader }=this.props.category;
     const { getFieldProps } = this.props.form;
-    const record = id ? entity : {};
-    const { editMode }= this.state;
+    const record = (id||hasAdd) ? entity : {};
     const { selectlist }= this.props.manufacturer;
     let categoryValues = [];
     if (record.categoryId) {
@@ -121,16 +132,23 @@ var ProductCreateOrUpdate = React.createClass({
               <Icon type='arrow-left'/> 返回列表
             </Link>
           </div>
-          {editMode&&(
-            <div className='ant-list-header-right'>
-              <Button type="primary" icon="save" onClick={this.onModalSubmit}>保存</Button>
-            </div>  
-            )}
+          <div className='ant-list-header-right'>
+            <Button type="primary" icon="save" onClick={this.onModalSubmit}>保存</Button>
+          </div>   
         </div>
-      
-        {editMode&&(
+        {id&&(
+          <div className='nav-tabs-container'>
+            <ul className="nav nav-tabs">
+              <li className="active"><a>基本信息</a></li>
+              <li><Link to={`productstoragequantity/${entity.id}`} >管理库存</Link></li>
+              <li><Link to={`productcarcate/${entity.id}`} >车型匹配</Link></li>  
+              <li><Link to={`productattributemapping/${entity.id}`} >产品属性</Link></li>  
+         
+            </ul>
+          </div>
+        )}  
+        <Spin spinning={loading} >
           <Form horizontal>
-
                 <FormItem
                   {...formItemLayout}
                   label="名称"
@@ -259,8 +277,6 @@ var ProductCreateOrUpdate = React.createClass({
 
                   </FormItem>
                 )}
-
-
                 <FormItem
                   {...formItemLayout}
                   label="参与团购活动"
@@ -268,31 +284,8 @@ var ProductCreateOrUpdate = React.createClass({
                   >
                   <Checkbox {...getFieldProps('isAgreeActive', {initialValue: record.isAgreeActive, valuePropName: 'checked'})}/>
                 </FormItem>
-       
-          </Form>
-          )}
-
-          {!editMode&&(
-            <div>
-
-              <Alert message="产品信息保存成功！" type="success" showIcon />
-
-              <div data-flex="main:center">
-
-                <Link to={`productstoragequantity/${entity.id}`} >
-
-                <Button type='primary'  style={{marginRight:'30px'}}>管理库存</Button>
-
-                </Link>
-
-                <Link to={`productcarcate/${entity.id}`} >
-
-                <Button type='primary' >车型匹配</Button>
-
-                </Link>  
-              </div>
-            </div>
-            )}
+            </Form>
+          </Spin>
       </div>
     );
   }
@@ -322,7 +315,7 @@ const statics = {
   breadcrumb: [{
     title: '产品中心'
   }, {
-    title: '产品添加'
+    title: '产品信息'
   }]
 };
 

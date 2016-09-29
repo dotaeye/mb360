@@ -25,6 +25,15 @@ export function getById(id) {
   };
 }
 
+export function getSelectList() {
+  return {
+    types: [productAttributeTypes.GET_PRODUCTATTRIBUTE_SELECTLIST, productAttributeTypes.GET_PRODUCTATTRIBUTE_SELECTLIST_SUCCESS, productAttributeTypes.GET_PRODUCTATTRIBUTE_SELECTLIST_FAIL],
+    promise: (client) => client.get('/productAttribute/selectlist',{
+      token: true
+    })
+  };
+}
+
 export function create(data) {
   return {
     types: [productAttributeTypes.CREATE_PRODUCTATTRIBUTE, productAttributeTypes.CREATE_PRODUCTATTRIBUTE_SUCCESS, productAttributeTypes.CREATE_PRODUCTATTRIBUTE_FAIL],

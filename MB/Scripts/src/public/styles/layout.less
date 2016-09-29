@@ -163,19 +163,20 @@
 }
 
 .nav-tabs-container{
-  margin-bottom:15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ccc;
 }
 
 .nav-tabs{
-  overflow:hidden;
+    overflow: hidden;
+    margin-bottom: -1px;
+    position: relative;
   > li{
     border-top: 3px solid transparent;
-    margin-bottom: -2px;
-    margin-right: 5px;
+    margin-bottom: -1px;
     float:left;
     position: relative;
     display: block;
-
     >a {
       position: relative;
       display: block;
@@ -188,6 +189,8 @@
 
     &.active{
       border-top-color: #3c8dbc;
+      border-bottom: 0;
+      background:#fff;
       > a{
         border-right: 1px solid #ddd !important;
         border-left: 1px solid #ddd !important;

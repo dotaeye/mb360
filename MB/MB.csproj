@@ -270,6 +270,7 @@
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Controllers\ManufacturerController.cs" />
     <Compile Include="Controllers\ProductAttributeController.cs" />
+    <Compile Include="Controllers\ProductAttributeMappingController.cs" />
     <Compile Include="Controllers\ProductAttributeValueController.cs" />
     <Compile Include="Controllers\ProductCarCateController.cs" />
     <Compile Include="Controllers\ProductController.cs" />

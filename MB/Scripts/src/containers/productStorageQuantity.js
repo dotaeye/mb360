@@ -207,14 +207,23 @@ var ProductStorageQuantity = React.createClass({
     return (
       <div className='container'>
         <div className='ant-list-header' data-flex="main:justify">
-
-          <Link to={`product/update/${product.id}`} >
-              <Icon type='arrow-left'/> 返回 {product.name} 
-          </Link>
-
+          <div>
+           <Link to='product'>
+              <Icon type='arrow-left'/> 返回列表
+            </Link>
+          </div>
           <div className='ant-list-header-right'>
             <Button type="primary" icon="plus" onClick={this.onAdd}>添加产品库存</Button>
           </div>
+        </div>
+        <div className='nav-tabs-container'>
+          <ul className="nav nav-tabs">
+            <li ><Link to={`product/update/${product.id}`} >基本信息</Link></li>
+            <li className="active"> <a>管理库存</a></li>
+            <li><Link to={`productcarcate/${product.id}`} >车型匹配</Link></li>  
+            <li><Link to={`productattributemapping/${product.id}`} >产品属性</Link></li>  
+         
+          </ul>
         </div>
         <Table
           ref='table'
@@ -280,7 +289,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 const statics = {
-  path: 'product',
+  path: 'productcarcate',
   menuGroup: 'product',
   breadcrumb: [{
     title: '产品中心'

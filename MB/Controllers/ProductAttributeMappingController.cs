@@ -21,25 +21,24 @@ using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
-using MB.Helpers;
 
 namespace MB.Controllers
 {
-    [RoutePrefix("api/ProductAttribute")]
-    public class ProductAttributeController : ApiController
+    [RoutePrefix("api/ProductAttributeMapping")]
+    public class ProductAttributeMappingController : ApiController
     {
-        private IProductAttributeService ProductAttributeService;
-        public ProductAttributeController(
-            IProductAttributeService _ProductAttributeService
+        private IProductAttributeMappingService ProductAttributeMappingService;
+        public ProductAttributeMappingController(
+            IProductAttributeMappingService _ProductAttributeMappingService
           )
         {
-            this.ProductAttributeService = _ProductAttributeService;
+            this.ProductAttributeMappingService = _ProductAttributeMappingService;
         }
 
         [Route("")]
-        public ApiListResult<ProductAttributeDTO> Get([FromUri] AntPageOption option = null)
+        public ApiListResult<ProductAttributeMappingDTO> Get([FromUri] AntPageOption option = null)
         {
-            var query = ProductAttributeService.GetAll().Where(x => !x.Deleted).ProjectTo<ProductAttributeDTO>();
+            var query = ProductAttributeMappingService.GetAll().ProjectTo<ProductAttributeMappingDTO>();
             if (option != null)
             {
                 if (!string.IsNullOrEmpty(option.SortField))
@@ -71,82 +70,70 @@ namespace MB.Controllers
                 query = query.OrderBy(x => x.Id);
             }
             var count = query.Count();
-            var result = query.Paging<ProductAttributeDTO>(option.Page - 1, option.Results, count);
-            return new ApiListResult<ProductAttributeDTO>(result, result.PageIndex, result.PageSize, count);
+            var result = query.Paging<ProductAttributeMappingDTO>(option.Page - 1, option.Results, count);
+            return new ApiListResult<ProductAttributeMappingDTO>(result, result.PageIndex, result.PageSize, count);
         }
 
         [Route("{id:int}")]
-        [ResponseType(typeof(ProductAttributeDTO))]
+        [ResponseType(typeof(ProductAttributeMappingDTO))]
         public async Task<IHttpActionResult> GetById(int id)
         {
-            ProductAttributeDTO ProductAttribute = await ProductAttributeService.GetAll().Where(x => x.Id == id && !x.Deleted).ProjectTo<ProductAttributeDTO>().FirstOrDefaultAsync();
-            if (ProductAttribute == null)
+            ProductAttributeMappingDTO ProductAttributeMapping = await ProductAttributeMappingService.GetAll().Where(x => x.Id == id).ProjectTo<ProductAttributeMappingDTO>().FirstOrDefaultAsync();
+            if (ProductAttributeMapping == null)
             {
                 return NotFound();
             }
-            return Ok(ProductAttribute);
+            return Ok(ProductAttributeMapping);
         }
 
         [Route("")]
         [HttpPost]
-        [ResponseType(typeof(ProductAttributeDTO))]
-        public async Task<IHttpActionResult> Create([FromBody]ProductAttributeDTO ProductAttributeDto)
+        [ResponseType(typeof(ProductAttributeMappingDTO))]
+        public async Task<IHttpActionResult> Create([FromBody]ProductAttributeMappingDTO ProductAttributeMappingDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var entity = ProductAttributeDto.ToEntity();
+            var entity = ProductAttributeMappingDto.ToEntity();
 
-            entity.CreateUserId = User.Identity.GetUserId();
-            entity.CreateTime = DateTime.Now;
-            await ProductAttributeService.InsertAsync(entity);
+        
+            await ProductAttributeMappingService.InsertAsync(entity);
             return Ok(entity.ToModel());
         }
 
 
         [Route("")]
         [HttpPut]
-        [ResponseType(typeof(ProductAttributeDTO))]
-        public async Task<IHttpActionResult> Update([FromBody]ProductAttributeDTO ProductAttributeDto)
+        [ResponseType(typeof(ProductAttributeMappingDTO))]
+        public async Task<IHttpActionResult> Update([FromBody]ProductAttributeMappingDTO ProductAttributeMappingDto)
         {
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var entity = await ProductAttributeService.FindOneAsync(ProductAttributeDto.Id);
-            entity = ProductAttributeDto.ToEntity(entity);
-            entity.LastUserId = User.Identity.GetUserId();
-            entity.LastTime = DateTime.Now;
-            await ProductAttributeService.UpdateAsync(entity);
+            var entity = await ProductAttributeMappingService.FindOneAsync(ProductAttributeMappingDto.Id);
+            entity = ProductAttributeMappingDto.ToEntity(entity);
+         
+            await ProductAttributeMappingService.UpdateAsync(entity);
             return Ok(entity.ToModel());
         }
 
         [Route("{id:int}")]
         [HttpDelete]
-        [ResponseType(typeof(ProductAttributeDTO))]
+        [ResponseType(typeof(ProductAttributeMappingDTO))]
         public async Task<IHttpActionResult> Delete(int id)
         {
-            ProductAttribute entity = await ProductAttributeService.FindOneAsync(id);
+            ProductAttributeMapping entity = await ProductAttributeMappingService.FindOneAsync(id);
             if (entity == null)
             {
                 return NotFound();
             }
-            await ProductAttributeService.DeleteAsync(entity);
+            await ProductAttributeMappingService.DeleteAsync(entity);
 
             return Ok(entity.ToModel());
-        }
-
-        [Route("selectlist")]
-        [HttpGet]
-        public List<ProductAttributeDTO> GetSelectList()
-        {
-            var result = new List<ProductAttributeDTO>();
-            var roleId = MBHelper.GetUserRoleId(User);
-            result = ProductAttributeService.GetAll().Where(x => !x.Deleted).ProjectTo<ProductAttributeDTO>().ToList();
-            return result;
         }
 
     }

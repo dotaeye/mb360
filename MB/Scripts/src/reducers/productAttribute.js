@@ -9,7 +9,8 @@ import * as productAttributeTypes from '../contants/productAttribute';
 
 const initialState = {
   loaded: false,
-  entity: {}
+  entity: {},
+  selectlist:[]
 };
 
 export default function productAttribute(state = initialState, action = {}) {
@@ -19,6 +20,8 @@ export default function productAttribute(state = initialState, action = {}) {
     case productAttributeTypes.CREATE_PRODUCTATTRIBUTE:
     case productAttributeTypes.UPDATE_PRODUCTATTRIBUTE:
     case productAttributeTypes.DELETE_PRODUCTATTRIBUTE:
+    case productAttributeTypes.GET_PRODUCTATTRIBUTE_SELECTLIST:
+    
       return {
         ...state,
         loading: true
@@ -28,10 +31,19 @@ export default function productAttribute(state = initialState, action = {}) {
     case productAttributeTypes.CREATE_PRODUCTATTRIBUTE_FAIL:
     case productAttributeTypes.UPDATE_PRODUCTATTRIBUTE_FAIL:
     case productAttributeTypes.DELETE_PRODUCTATTRIBUTE_FAIL:
+    case productAttributeTypes.GET_PRODUCTATTRIBUTE_SELECTLIST_FAIL:
+    
       return {
         ...state,
         loading: false,
         error: action.error
+      };
+    case productAttributeTypes.GET_PRODUCTATTRIBUTE_SELECTLIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        selectlist: action.result
       };
     case productAttributeTypes.GET_ALL_PRODUCTATTRIBUTE_SUCCESS:
       return {
