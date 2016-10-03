@@ -36,7 +36,7 @@ var Login = React.createClass({
 
   render() {
     let {auth:{loggingIn}} =this.props;
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: {span: 4},
       wrapperCol: {span: 20}
@@ -52,19 +52,23 @@ var Login = React.createClass({
               {...formItemLayout}
               label="用户名"
               >
-              <Input  {...getFieldProps('username', {
+              {getFieldDecorator('username', {
                   rules: [{required: true, message: '请输入用户名'},{type: 'email', message: '请输入正确的邮箱地址'}]
                 }
-              )} type="text"/>
+              )(
+                <Input  type="text"/>
+              )}
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="密码"
               >
-              <Input  {...getFieldProps('password', {
+              {getFieldDecorator('password', {
                   rules: [{required: true, message: '请输入密码'}]
                 }
-              )} type="password"/>
+              )(
+                <Input type="password"/>
+              )}
             </FormItem>
             <FormItem wrapperCol={{ span: 7, offset: 4 }}>
               <Button type="primary" onClick={this.onSubmit} disabled={loggingIn}>{loggingIn?'登录中...':'登陆'}</Button>

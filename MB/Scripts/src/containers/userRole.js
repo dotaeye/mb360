@@ -187,7 +187,7 @@ var UserRole = React.createClass({
     const { title, visible, edit  }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
@@ -216,18 +216,23 @@ var UserRole = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                 initialValue: record.name,
                 rules: [{required: true, message: '请输入名称'}]
-              })} type="text"/>
+              })(
+                <Input type="text"/>
+              )}
+
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="权限"
               >
-              <GroupCheckList  {...getFieldProps('permission', {
+              {getFieldDecorator('permission', {
                 initialValue: record.permission,
-              })} groups={groupPermissions}/>
+              })(
+                <GroupCheckList groups={groupPermissions}/>
+              )}
             </FormItem>
           </Form>
         </Modal>

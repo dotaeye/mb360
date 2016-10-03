@@ -7,9 +7,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
+import { Link } from 'react-router';
+import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select, InputNumber } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
+import * as specificationAttributeActions from '../actions/specificationAttribute'
 import * as specificationAttributeOptionActions from '../actions/specificationAttributeOption'
 import _ from 'lodash';
 const FormItem = Form.Item;
@@ -31,10 +33,16 @@ var SpecificationAttributeOption = React.createClass({
   },
 
   fetchData(page){
-    this.props.specificationAttributeOptionActions.getAll({
-      results: this.state.pagination.pageSize,
-      page: page || this.state.pagination.current
-    });
+    const {routeParams:{id}}=this.props;
+    var promise = [];
+    promise.push(this.props.specificationAttributeActions.getById(id));
+    Promise.all(promise).then(err=> {
+      this.props.specificationAttributeOptionActions.getAll({
+        id,
+        results: this.state.pagination.pageSize,
+        page: page || this.state.pagination.current
+      });
+    })
   },
 
   componentDidMount(){
@@ -48,6 +56,7 @@ var SpecificationAttributeOption = React.createClass({
       pagination: pager
     });
     this.props.specificationAttributeOptionActions.getAll({
+      id,
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
@@ -58,7 +67,7 @@ var SpecificationAttributeOption = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加SpecificationAttributeOption',
+      title: '添加规格值',
       record: {}
     });
   },
@@ -66,13 +75,13 @@ var SpecificationAttributeOption = React.createClass({
   onEdit(record){
     this.props.specificationAttributeOptionActions.getById(record.id).then((err)=> {
       if (err) {
-        message.error('获取SpecificationAttributeOption数据失败！请刷新页面尝试。');
+        message.error('获取规格值数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑SpecificationAttributeOption'
+          title: '编辑规格值'
         });
       }
     });
@@ -84,7 +93,7 @@ var SpecificationAttributeOption = React.createClass({
     let source = list.data;
     const remove = this.props.specificationAttributeOptionActions.remove;
     confirm({
-      title: '确认删除该SpecificationAttributeOption？',
+      title: '确认删除该规格值？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -109,6 +118,7 @@ var SpecificationAttributeOption = React.createClass({
 
   onModalSubmit(){
     const { edit }=this.state;
+    const { routeParams:{id} }=this.props;
     const { update, create} =this.props.specificationAttributeOptionActions;
     const { entity }= this.props.specificationAttributeOption;
     this.props.form.validateFields((errors, formdata) => {
@@ -116,6 +126,7 @@ var SpecificationAttributeOption = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
+      formdata.specificationAttributeId = id;
       if (edit) {
         formdata.id = entity.id;
         update(formdata).then((err)=> {
@@ -158,6 +169,9 @@ var SpecificationAttributeOption = React.createClass({
       title: '名称',
       dataIndex: 'name'
     },{
+      title: '排序',
+      dataIndex: 'displayOrder'
+    },{
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -171,10 +185,11 @@ var SpecificationAttributeOption = React.createClass({
       )
     }];
     const { specificationAttributeOption:{ loading, list, entity }} = this.props;
+    const specificationAttribute = this.props.specificationAttribute.entity;
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
@@ -182,14 +197,20 @@ var SpecificationAttributeOption = React.createClass({
     };
     return (
       <div className='container'>
-        <div className='ant-list-header' data-flex="dir:right">
+        <div className='ant-list-header' data-flex="main:justify">
+          <div>
+            <Link to='specificationattribute'>
+              <Icon type='arrow-left'/> 返回列表
+            </Link>
+          </div>
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加SpecificationAttributeOption</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加规格值</Button>
           </div>
         </div>
         <Table
           ref='table'
           columns={columns}
+          title={() => `${specificationAttribute.name} 值列表`}
           rowKey={record => record.id}
           dataSource={data}
           pagination={pagination}
@@ -203,11 +224,24 @@ var SpecificationAttributeOption = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                   initialValue: record.name,
                   rules: [{required: true, message: '请输入名称'}]
                 }
-              )} type="text"/>
+              )(
+                <Input type="text"/>
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="排序"
+              >
+              {getFieldDecorator('displayOrder', {
+                  initialValue: record.displayOrder || 0
+                }
+              )(
+                <InputNumber  />
+              )}
             </FormItem>
           </Form>
         </Modal>
@@ -219,6 +253,7 @@ var SpecificationAttributeOption = React.createClass({
 function mapStateToProps(state) {
   return {
     auth: state.auth,
+    specificationAttribute: state.specificationAttribute,
     specificationAttributeOption: state.specificationAttributeOption
   }
 }
@@ -226,17 +261,18 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     authActions: bindActionCreators(authActions, dispatch),
+    specificationAttributeActions: bindActionCreators(specificationAttributeActions, dispatch),
     specificationAttributeOptionActions: bindActionCreators(specificationAttributeOptionActions, dispatch)
   }
 }
 
 const statics = {
-  path: 'userpermission',
-  menuGroup: 'system',
+  path: ' specificationattributeoption',
+  menuGroup: 'product',
   breadcrumb: [{
-    title: '系统设置'
+    title: '产品中心'
   }, {
-    title: 'SpecificationAttributeOption管理'
+    title: '规格值列表'
   }]
 };
 

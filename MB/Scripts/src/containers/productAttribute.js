@@ -58,7 +58,7 @@ var ProductAttribute = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加ProductAttribute',
+      title: '添加产品属性',
       record: {}
     });
   },
@@ -66,13 +66,13 @@ var ProductAttribute = React.createClass({
   onEdit(record){
     this.props.productAttributeActions.getById(record.id).then((err)=> {
       if (err) {
-        message.error('获取ProductAttribute数据失败！请刷新页面尝试。');
+        message.error('获取产品属性数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑ProductAttribute'
+          title: '编辑产品属性'
         });
       }
     });
@@ -84,7 +84,7 @@ var ProductAttribute = React.createClass({
     let source = list.data;
     const remove = this.props.productAttributeActions.remove;
     confirm({
-      title: '确认删除该ProductAttribute？',
+      title: '确认删除该产品属性？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -153,14 +153,14 @@ var ProductAttribute = React.createClass({
       title: 'Id',
       dataIndex: 'id',
       sorter: true,
-      width: '20%'
+      width: '50px'
     }, {
       title: '名称',
       dataIndex: 'name'
-    },{
+    }, {
       title: '描述',
       dataIndex: 'description'
-    },{
+    }, {
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -177,7 +177,7 @@ var ProductAttribute = React.createClass({
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
@@ -187,7 +187,7 @@ var ProductAttribute = React.createClass({
       <div className='container'>
         <div className='ant-list-header' data-flex="dir:right">
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加ProductAttribute</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加产品属性</Button>
           </div>
         </div>
         <Table
@@ -206,23 +206,27 @@ var ProductAttribute = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                   initialValue: record.name,
                   rules: [{required: true, message: '请输入名称'}]
                 }
-              )} type="text"/>
+              )(
+                <Input type="text"/>
+              )}
             </FormItem>
 
-                <FormItem
-                  {...formItemLayout}
-                  label="属性描述"
-                  >
-                  <Input  {...getFieldProps('description', {
-                      initialValue: record.description,
-                      rules: [{required: true, message: '请输入属性描述'}]
-                    }
-                  )} type="textarea"/>
-                </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="属性描述"
+              >
+              {getFieldDecorator('description', {
+                  initialValue: record.description,
+                  rules: [{required: true, message: '请输入属性描述'}]
+                }
+              )(
+                <Input type="textarea"/>
+              )}
+            </FormItem>
           </Form>
         </Modal>
       </div>
@@ -245,14 +249,15 @@ function mapDispatchToProps(dispatch) {
 }
 
 const statics = {
-  path: 'userpermission',
-  menuGroup: 'system',
+  path: 'productattribute',
+  menuGroup: 'product',
   breadcrumb: [{
     title: '系统设置'
   }, {
-    title: 'ProductAttribute管理'
+    title: '产品属性管理'
   }]
 };
+
 
 ProductAttribute = createForm()(ProductAttribute);
 

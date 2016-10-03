@@ -11,10 +11,9 @@ var Aside = React.createClass({
       openKeys: [this.props.open]
     };
   },
-  onToggle(info) {
-    this.setState({
-      openKeys: info.open ? info.keyPath : info.keyPath.slice(1),
-    });
+  onToggle(openKeys) {
+    const latestOpenKey = openKeys.find(key => !(this.state.openKeys.indexOf(key) > -1));
+    this.setState({ openKeys: [latestOpenKey] });
   },
 
   setMenu(menus){
@@ -109,6 +108,11 @@ var Aside = React.createClass({
             controller: 'manufacturer',
             action: 'index',
             title: '品牌管理'
+          },
+          {
+            controller: 'specificationattribute',
+            action: 'index',
+            title: '产品规格'
           }
         ]
       }
@@ -120,7 +124,7 @@ var Aside = React.createClass({
           mode="inline"
           openKeys={this.state.openKeys}
           selectedKeys={[this.props.current]}
-          onOpen={this.onToggle}
+          onOpenChange={this.onToggle}
           >
           {menus.filter(m=>m.show).map(group=> {
             return (

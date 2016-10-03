@@ -19,7 +19,7 @@ export function getAll(params) {
 export function getCascader(params) {
   return {
     types: [categoryTypes.GET_CATEGORY_CASCADER, categoryTypes.GET_CATEGORY_CASCADER_SUCCESS, categoryTypes.GET_CATEGORY_CASCADER_FAIL],
-    promise: (client) => client.get('/CATEGORY/cascader', {
+    promise: (client) => client.get('/category/cascader', {
       token: true,
       params
     })

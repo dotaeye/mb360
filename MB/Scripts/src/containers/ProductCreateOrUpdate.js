@@ -17,7 +17,7 @@ import * as storageActions from '../actions/storage'
 import * as carCateActions from '../actions/carCate'
 import * as manufacturerActions from '../actions/manufacturer'
 import _ from 'lodash';
-import { setCascadeValues } from '../utils/biz'; 
+import { setCascadeValues } from '../utils/biz';
 import UploadFile from '../components/control/UploadFile'
 const FormItem = Form.Item;
 const createForm = Form.create;
@@ -34,25 +34,25 @@ var ProductCreateOrUpdate = React.createClass({
     const promise = [];
     promise.push(this.props.categoryActions.getCascader());
     promise.push(this.props.manufacturerActions.getSelectList());
-    Promise.all(promise).then(err=>{
-        if(id){
-           this.props.productActions.getById(id).then(err=>{
-            this.setState({
-              loading:false
-            })
-           })
-         }else{
-           this.setState({
-              loading:false
-            })
-         }
+    Promise.all(promise).then(err=> {
+      if (id) {
+        this.props.productActions.getById(id).then(err=> {
+          this.setState({
+            loading: false
+          })
+        })
+      } else {
+        this.setState({
+          loading: false
+        })
+      }
     });
   },
 
   getInitialState(){
     return {
-      addSuccessed:false,
-      loading:true
+      addSuccessed: false,
+      loading: true
     }
   },
 
@@ -74,7 +74,7 @@ var ProductCreateOrUpdate = React.createClass({
         return;
       }
       this.setState({
-        loading:true
+        loading: true
       })
       formdata.categoryId = formdata.categoryId[formdata.categoryId.length - 1];
       if (id) {
@@ -85,7 +85,7 @@ var ProductCreateOrUpdate = React.createClass({
           } else {
             message.success('更新数据成功！');
             this.setState({
-              loading:false
+              loading: false
             });
           }
         });
@@ -96,13 +96,13 @@ var ProductCreateOrUpdate = React.createClass({
             message.error('创建数据失败。');
           } else {
             message.success('创建数据成功！');
-             this.setState({
-              loading:false,
-              hasAdd:true
-            },()=>{
-              const newEntity=this.props.product.entity;
-              if(newEntity.id){
-                browserHistory.push('/admin/product/update/'+newEntity.id);
+            this.setState({
+              loading: false,
+              hasAdd: true
+            }, ()=> {
+              const newEntity = this.props.product.entity;
+              if (newEntity.id) {
+                browserHistory.push('/admin/product/update/' + newEntity.id);
               }
             })
           }
@@ -115,8 +115,8 @@ var ProductCreateOrUpdate = React.createClass({
     const { product:{ entity }, routeParams:{id}} = this.props;
     const { loading , hasAdd }=this.state;
     const { cascader }=this.props.category;
-    const { getFieldProps } = this.props.form;
-    const record = (id||hasAdd) ? entity : {};
+    const { getFieldDecorator } = this.props.form;
+    const record = (id || hasAdd) ? entity : {};
     const { selectlist }= this.props.manufacturer;
     let categoryValues = [];
     if (record.categoryId) {
@@ -130,165 +130,190 @@ var ProductCreateOrUpdate = React.createClass({
     return (
       <div className='container'>
         <div className='ant-list-header' data-flex="main:justify">
-         <div className='ant-list-header-left'>
+          <div className='ant-list-header-left'>
             <Link to='product'>
               <Icon type='arrow-left'/> 返回列表
             </Link>
           </div>
           <div className='ant-list-header-right'>
             <Button type="primary" icon="save" onClick={this.onModalSubmit}>保存</Button>
-          </div>   
+          </div>
         </div>
-        {id&&(
+        {id && (
           <div className='nav-tabs-container'>
             <ul className="nav nav-tabs">
               <li className="active"><a>基本信息</a></li>
-              <li><Link to={`productstoragequantity/${entity.id}`} >管理库存</Link></li>
-              <li><Link to={`productcarcate/${entity.id}`} >车型匹配</Link></li>  
-              <li><Link to={`productattributemapping/${entity.id}`} >产品属性</Link></li>  
-         
+              <li><Link to={`productstoragequantity/${entity.id}`}>管理库存</Link></li>
+              <li><Link to={`productcarcate/${entity.id}`}>车型匹配</Link></li>
+              <li><Link to={`productattributemapping/${entity.id}`}>产品属性</Link></li>
+              <li><Link to={`productspecificationattribute/${entity.id}`}>产品规格</Link></li>
             </ul>
           </div>
-        )}  
-        <Spin spinning={loading} >
+        )}
+        <Spin spinning={loading}>
           <Form horizontal>
-                <FormItem
-                  {...formItemLayout}
-                  label="名称"
-                  >
-                  <Input  {...getFieldProps('name', {
-                      initialValue: record.name,
-                      rules: [{required: true, message: '请输入名称'}]
-                    }
-                  )} type="text"/>
-                </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="名称"
+              >
+              {getFieldDecorator('name', {
+                  initialValue: record.name,
+                  rules: [{required: true, message: '请输入名称'}]
+                }
+              )(
+                <Input type="text"/>
+              )}
+            </FormItem>
 
-                 <FormItem
-                  {...formItemLayout}
-                  label="产品分类"
-                  >
-                  <Cascader {...getFieldProps('categoryId', {
-                      initialValue: categoryValues,
-                      rules: [{required: true, type:'array', message: '请选择产品分类'}]
-                    }
-                  )} placeholder='请选择产品分类' options={cascader} />
-                </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="产品分类"
+              >
+              {getFieldDecorator('categoryId', {
+                  initialValue: categoryValues,
+                  rules: [{required: true, type: 'array', message: '请选择产品分类'}]
+                }
+              )(
+                <Cascader placeholder='请选择产品分类' options={cascader}/>
+              )}
+            </FormItem>
 
-                <FormItem
-                  {...formItemLayout}
-                  label="所属品牌"
-                  >
-                  <Select {...getFieldProps('manufacturerId', {
-                      initialValue: record.manufacturerId?`${record.manufacturerId}`:'',
-                      rules: [{required: true, message: '请选择所属品牌'}]
-                    }
-                  )} placeholder='请选择所属品牌' >
-                    {selectlist.map(item=>{
-                      return (
-                        <Option key={item.id} >{item.name}</Option>
-                      )
-                    })}
-                  </Select>
-                </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="所属品牌"
+              >
+              {getFieldDecorator('manufacturerId', {
+                initialValue: record.manufacturerId ? `${record.manufacturerId}` : '',
+                rules: [{required: true, message: '请选择所属品牌'}]
+              })(
+                <Select placeholder='请选择所属品牌'>
+                  {selectlist.map(item=> {
+                    return (
+                      <Option key={item.id}>{item.name}</Option>
+                    )
+                  })}
+                </Select>
+              )}
+            </FormItem>
 
-                <FormItem
-                  {...formItemLayout}
-                  label="热销产品"
-                  >
-                  <Checkbox {...getFieldProps('isFeaturedProduct', {initialValue: record.isFeaturedProduct, valuePropName: 'checked'})}/>
-                </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="热销产品"
+              >{getFieldDecorator('isFeaturedProduct', {
+              initialValue: record.isFeaturedProduct,
+              valuePropName: 'checked'
+            })(
+              <Checkbox />
+            )}
+            </FormItem>
 
-                <FormItem
-                  {...formItemLayout}
-                  label="SKU"
-                  >
-                  <Input  {...getFieldProps('sku', {
-                      initialValue: record.sku,
-                      rules: [{required: true, message: '请输入SKU'}]
-                    }
-                  )} type="text"/>
-                </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="SKU"
+              >
+              {getFieldDecorator('sku', {
+                  initialValue: record.sku,
+                  rules: [{required: true, message: '请输入SKU'}]
+                }
+              )(
+                <Input type="text"/>
+              )}
+            </FormItem>
 
-                <FormItem
-                  {...formItemLayout}
-                  label="产品价格"
-                  >
-                  <InputNumber step={0.01}  {...getFieldProps('price', {
-                      initialValue: record.price,
-                      rules: [{required: true, type:'number', message: '请输入产品价格'}]
-                    }
-                  )} type="text"/>
-                </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="产品价格"
+              >
+              {getFieldDecorator('price', {
+                  initialValue: record.price,
+                  rules: [{required: true, type: 'number', message: '请输入产品价格'}]
+                }
+              )(
+                <InputNumber step={0.01} type="text"/>
+              )}
+            </FormItem>
 
-                <FormItem
-                  {...formItemLayout}
-                  label="VIP价格"
-                  >
-                  <InputNumber step={0.01}  {...getFieldProps('vipPrice', {
-                      initialValue: record.vipPrice,
-                      rules: [{required: true, type:'number', message: '请输入VIP价格'}]
-                    }
-                  )} type="text"/>
-                </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="VIP价格"
+              >
+              {getFieldDecorator('vipPrice', {
+                  initialValue: record.vipPrice,
+                  rules: [{required: true, type: 'number', message: '请输入VIP价格'}]
+                }
+              )(
+                <InputNumber step={0.01} type="text"/>
+              )}
+            </FormItem>
 
-                <FormItem
-                  {...formItemLayout}
-                  label="紧急调配价格"
-                  >
-                  <InputNumber step={0.01}  {...getFieldProps('urgencyPrice', {
-                      initialValue: record.urgencyPrice,
-                      rules: [{required: true, type:'number', message: '请输入紧急调配价格'}]
-                    }
-                  )} type="text"/>
-                </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="紧急调配价格"
+              >
+              {getFieldDecorator('urgencyPrice', {
+                  initialValue: record.urgencyPrice,
+                  rules: [{required: true, type: 'number', message: '请输入紧急调配价格'}]
+                }
+              )(
+                <InputNumber step={0.01}   type="text"/>
+              )}
+            </FormItem>
 
-                <FormItem
-                  {...formItemLayout}
-                  label="产品描述"
-                  >
-                  <Input  {...getFieldProps('description', {
-                      initialValue: record.description,
-                      rules: [{required: true, message: '请输入产品描述'}]
-                    }
-                  )} type="textarea"/>
-                </FormItem>
-
-                {!loading&&(
-                  <FormItem
-                    {...formItemLayout}
-                    label="产品图片"
-                    >
-                    <UploadFile  {...getFieldProps('imageUrl', {
-                        initialValue: record.imageUrl,
-                        rules: [{required: true, message: '请上传产品图片'}]
-                      }
-                    )}  multiple={true} />
-
-                  </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="产品描述"
+              >
+              {getFieldDecorator('description', {
+                  initialValue: record.description,
+                  rules: [{required: true, message: '请输入产品描述'}]
+                }
+              )(
+                <Input  type="textarea"/>
+              )}
+            </FormItem>
+            {!loading && (
+              <FormItem
+                {...formItemLayout}
+                label="产品图片"
+                >
+                {getFieldDecorator('imageUrl', {
+                    initialValue: record.imageUrl,
+                    rules: [{required: true, message: '请上传产品图片'}]
+                  }
+                )(
+                  <UploadFile   multiple={true}/>
                 )}
+              </FormItem>
+            )}
 
-                {!loading&&(
-                  <FormItem
-                    {...formItemLayout}
-                    label="详情图片"
-                    >
-                    <UploadFile  {...getFieldProps('detailUrl', {
-                        initialValue: record.detailUrl,
-                        rules: [{required: true, message: '请上传详情图片'}]
-                      }
-                    )}  multiple={true} />
-
-                  </FormItem>
+            {!loading && (
+              <FormItem
+                {...formItemLayout}
+                label="详情图片"
+                >
+                {getFieldDecorator('detailUrl', {
+                    initialValue: record.detailUrl,
+                    rules: [{required: true, message: '请上传详情图片'}]
+                  }
+                )(
+                  <UploadFile   multiple={true}/>
                 )}
-                <FormItem
-                  {...formItemLayout}
-                  label="参与团购活动"
-                  help="如果同意将产品加入到团购活动中"
-                  >
-                  <Checkbox {...getFieldProps('isAgreeActive', {initialValue: record.isAgreeActive, valuePropName: 'checked'})}/>
-                </FormItem>
-            </Form>
-          </Spin>
+              </FormItem>
+            )}
+            <FormItem
+              {...formItemLayout}
+              label="参与团购活动"
+              help="如果同意将产品加入到团购活动中"
+              >
+              {getFieldDecorator('isAgreeActive', {
+                initialValue: record.isAgreeActive,
+                valuePropName: 'checked'
+              })(
+                <Checkbox/>
+              )}
+            </FormItem>
+          </Form>
+        </Spin>
       </div>
     );
   }

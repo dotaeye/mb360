@@ -19,7 +19,7 @@ export function getAll(params) {
 export function getCascader(params) {
   return {
     types: [carCateTypes.GET_CARCATE_CASCADER, carCateTypes.GET_CARCATE_CASCADER_SUCCESS, carCateTypes.GET_CARCATE_CASCADER_FAIL],
-    promise: (client) => client.get('/CARCATE/cascader', {
+    promise: (client) => client.get('/carCate/cascader', {
       token: true,
       params
     })

@@ -12,7 +12,11 @@ import product from './product'
 import productStorageQuantity from './productStorageQuantity'
 import productCarCate from './productCarCate' 
 import productAttribute from './productAttribute'
+import productAttributeValue from './productAttributeValue'
 import productAttributeMapping from './productAttributeMapping'
+import specificationAttribute from './specificationAttribute'
+import specificationAttributeOption from './specificationAttributeOption'
+import productSpecificationAttribute from './productSpecificationAttribute'
 import manufacturer from './manufacturer'
 import job from './job';
 
@@ -31,6 +35,10 @@ export default combineReducers({
     productStorageQuantity,
     productCarCate,
     productAttribute,
+    productAttributeValue,
     productAttributeMapping,
+    productSpecificationAttribute,
+    specificationAttribute,
+    specificationAttributeOption,
     manufacturer
 });

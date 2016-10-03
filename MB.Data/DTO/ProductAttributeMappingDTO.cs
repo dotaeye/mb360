@@ -14,6 +14,9 @@ namespace MB.Data.DTO
        public int ProductId  { get; set; } 
        public int ProductAttributeId  { get; set; } 
        public int AttributeControlTypeId  { get; set; } 
+
+        public int ValueCount { get; set; }
+
        public int DisplayOrder  { get; set; } 
        public int Id  { get; set; } 
     }

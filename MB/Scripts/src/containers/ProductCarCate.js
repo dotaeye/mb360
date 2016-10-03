@@ -36,10 +36,10 @@ var ProductCarCate = React.createClass({
 
   fetchData(page){
     const {routeParams:{id}}=this.props;
-    var promise=[];
+    var promise = [];
     promise.push(this.props.carCateActions.getCascader());
     promise.push(this.props.productActions.getById(id));
-    Promise.all(promise).then(err=>{
+    Promise.all(promise).then(err=> {
       this.props.productCarCateActions.getAll({
         id,
         results: this.state.pagination.pageSize,
@@ -130,9 +130,9 @@ var ProductCarCate = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
-      formdata.productId=id;
+      formdata.productId = id;
       formdata.carCateId = formdata.carCateId[formdata.carCateId.length - 1];
-      
+
       if (edit) {
         formdata.id = entity.id;
         update(formdata).then((err)=> {
@@ -175,12 +175,12 @@ var ProductCarCate = React.createClass({
     }, {
       title: '车型',
       dataIndex: 'carCateId',
-      render: (carCateId)=>{
-          let cascaderIds = [];
-          setCascadeValues(cascader, carCateId, cascaderIds);
-          cascaderIds = cascaderIds.reverse();
-          let carCates= getCascaderName(cascaderIds, cascader);
-          return carCates.join('-');
+      render: (carCateId)=> {
+        let cascaderIds = [];
+        setCascadeValues(cascader, carCateId, cascaderIds);
+        cascaderIds = cascaderIds.reverse();
+        let carCates = getCascaderName(cascaderIds, cascader);
+        return carCates.join('-');
       }
     }, {
       title: '操作',
@@ -201,7 +201,7 @@ var ProductCarCate = React.createClass({
     const data = list ? list.data : [];
     const record = edit ? entity : {};
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
 
     let defaultValues = [];
     if (record.carCateId) {
@@ -214,24 +214,23 @@ var ProductCarCate = React.createClass({
       wrapperCol: {span: 20}
     };
 
-    const checkCarCate=(rule, value, callback)=>{
-      if (data.filter(item=>item.carCateId==value).length>0) {
+    const checkCarCate = (rule, value, callback)=> {
+      if (data.filter(item=>item.carCateId == value).length > 0) {
         callback(new Error('当前车型已经添加!'));
       } else {
         callback();
       }
-    }
-
+    };
 
     return (
       <div className='container'>
         <div className='ant-list-header' data-flex="main:justify">
 
           <div>
-          <Link to='product'>
+            <Link to='product'>
               <Icon type='arrow-left'/> 返回列表
             </Link>
-            </div>
+          </div>
 
           <div className='ant-list-header-right'>
             <Button type="primary" icon="plus" onClick={this.onAdd}>添加车型匹配</Button>
@@ -239,10 +238,11 @@ var ProductCarCate = React.createClass({
         </div>
         <div className='nav-tabs-container'>
           <ul className="nav nav-tabs">
-            <li><Link to={`product/update/${product.id}`} >基本信息</Link></li>
-            <li><Link to={`productstoragequantity/${product.id}`} >管理库存</Link></li>
-            <li className='active'><a>车型匹配</a></li>  
-            <li><Link to={`productattributemapping/${product.id}`} >产品属性</Link></li>  
+            <li><Link to={`product/update/${product.id}`}>基本信息</Link></li>
+            <li><Link to={`productstoragequantity/${product.id}`}>管理库存</Link></li>
+            <li className='active'><a>车型匹配</a></li>
+            <li><Link to={`productattributemapping/${product.id}`}>产品属性</Link></li>
+            <li><Link to={`productspecificationattribute/${product.id}`}>产品规格</Link></li>
           </ul>
         </div>
         <Table
@@ -261,19 +261,20 @@ var ProductCarCate = React.createClass({
               {...formItemLayout}
               label="选择车型"
               >
-              <Cascader {...getFieldProps('carCateId', {
+              {getFieldDecorator('carCateId', {
                   initialValue: defaultValues,
-                  rules:[{
+                  rules: [{
                     required: true,
                     type: 'array',
-                    message: '请选择车型',
-                  },{
+                    message: '请选择车型'
+                  }, {
                     validator: checkCarCate
                   }]
                 }
-              )} placeholder='请选择车型' options={cascader} />
+              )(
+                <Cascader placeholder='请选择车型' options={cascader}/>
+              )}
             </FormItem>
-
           </Form>
         </Modal>
       </div>

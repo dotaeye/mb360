@@ -277,6 +277,7 @@
     <Compile Include="Controllers\ProductSpecificationAttributeController.cs" />
     <Compile Include="Controllers\ProductStorageQuantityController.cs" />
     <Compile Include="Controllers\SpecificationAttributeController.cs" />
+    <Compile Include="Controllers\SpecificationAttributeOptionController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\UserActivitiesController.cs" />

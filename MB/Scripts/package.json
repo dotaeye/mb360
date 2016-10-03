@@ -7,7 +7,7 @@
     "start": "grunt"
   },
   "dependencies": {
-    "antd": "^1.11.1",
+    "antd": "^2.0.1",
     "classnames": "^2.2.5",
     "css-loader": "^0.25.0",
     "flex.css": "^1.0.5",

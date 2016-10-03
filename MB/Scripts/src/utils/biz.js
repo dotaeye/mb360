@@ -40,7 +40,7 @@ export function setCascadeValues(options, value, results) {
   }
 }
 
-function getSelectedOption(options, value) {
+export function getSelectedOption(options, value) {
   var result = null;
   for (let i = 0; i < options.length; i++) {
     if (options[i].value == value) {

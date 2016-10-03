@@ -25,6 +25,16 @@ export function getById(id) {
   };
 }
 
+export function getCascader(params) {
+  return {
+    types: [specificationAttributeOptionTypes.GET_SPECIFICATIONATTRIBUTEOPTION_CASCADER, specificationAttributeOptionTypes.GET_SPECIFICATIONATTRIBUTEOPTION_CASCADER_SUCCESS, specificationAttributeOptionTypes.GET_SPECIFICATIONATTRIBUTEOPTION_CASCADER_FAIL],
+    promise: (client) => client.get('/specificationAttributeOption/cascader', {
+      token: true,
+      params
+    })
+  };
+}
+
 export function create(data) {
   return {
     types: [specificationAttributeOptionTypes.CREATE_SPECIFICATIONATTRIBUTEOPTION, specificationAttributeOptionTypes.CREATE_SPECIFICATIONATTRIBUTEOPTION_SUCCESS, specificationAttributeOptionTypes.CREATE_SPECIFICATIONATTRIBUTEOPTION_FAIL],

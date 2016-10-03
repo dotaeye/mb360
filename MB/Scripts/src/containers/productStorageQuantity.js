@@ -35,10 +35,10 @@ var ProductStorageQuantity = React.createClass({
 
   fetchData(page){
     const {routeParams:{id}}=this.props;
-    var promise=[];
+    var promise = [];
     promise.push(this.props.storageActions.getStorageSelectList());
     promise.push(this.props.productActions.getById(id));
-    Promise.all(promise).then(err=>{
+    Promise.all(promise).then(err=> {
       this.props.productStorageQuantityActions.getAll({
         id,
         results: this.state.pagination.pageSize,
@@ -129,7 +129,7 @@ var ProductStorageQuantity = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
-      formdata.productId=id;
+      formdata.productId = id;
       if (edit) {
         formdata.id = entity.id;
         update(formdata).then((err)=> {
@@ -172,11 +172,11 @@ var ProductStorageQuantity = React.createClass({
     }, {
       title: '仓库',
       dataIndex: 'storageId',
-      render: (storageId)=> selectlist.find(x=>x.id==storageId).name
-    },{
+      render: (storageId)=> selectlist.find(x=>x.id == storageId).name
+    }, {
       title: '数量',
       dataIndex: 'quantity'
-    },{
+    }, {
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -195,9 +195,9 @@ var ProductStorageQuantity = React.createClass({
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const record = edit ? entity : {};
-    let selectdata=selectlist.filter(item=>data.filter(d=>d.storageId==item.id).length==0 ||record.storageId==item.id);
+    let selectdata = selectlist.filter(item=>data.filter(d=>d.storageId == item.id).length == 0 || record.storageId == item.id);
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
 
     const formItemLayout = {
       labelCol: {span: 4},
@@ -208,7 +208,7 @@ var ProductStorageQuantity = React.createClass({
       <div className='container'>
         <div className='ant-list-header' data-flex="main:justify">
           <div>
-           <Link to='product'>
+            <Link to='product'>
               <Icon type='arrow-left'/> 返回列表
             </Link>
           </div>
@@ -218,11 +218,11 @@ var ProductStorageQuantity = React.createClass({
         </div>
         <div className='nav-tabs-container'>
           <ul className="nav nav-tabs">
-            <li ><Link to={`product/update/${product.id}`} >基本信息</Link></li>
-            <li className="active"> <a>管理库存</a></li>
-            <li><Link to={`productcarcate/${product.id}`} >车型匹配</Link></li>  
-            <li><Link to={`productattributemapping/${product.id}`} >产品属性</Link></li>  
-         
+            <li ><Link to={`product/update/${product.id}`}>基本信息</Link></li>
+            <li className="active"><a>管理库存</a></li>
+            <li><Link to={`productcarcate/${product.id}`}>车型匹配</Link></li>
+            <li><Link to={`productattributemapping/${product.id}`}>产品属性</Link></li>
+            <li><Link to={`productspecificationattribute/${product.id}`}>产品规格</Link></li>
           </ul>
         </div>
         <Table
@@ -241,28 +241,30 @@ var ProductStorageQuantity = React.createClass({
               {...formItemLayout}
               label="仓库"
               >
-              <Select {...getFieldProps('storageId', {
-                  initialValue: record.storageId?`${record.storageId}`:'',
+              {getFieldDecorator('storageId', {
+                  initialValue: record.storageId ? `${record.storageId}` : '',
                   rules: [{required: true, message: '请选择仓库'}]
                 }
-              )} placeholder='请选择仓库' >
-                {selectdata.map(item=>{
-                  return (
-                    <Option key={item.id} >{item.name}</Option>
-                  )
-                })}
-              </Select>
-           </FormItem>
-
-           <FormItem 
-                 {...formItemLayout}
-              label="数量" >
-              <InputNumber step={1}  {...getFieldProps('quantity',{
-                   initialValue: record.quantity,
-                    rules: [{required: true, type:'number', message: '请输入库存数量'}]
-              })} />
-           </FormItem>
-
+              )(
+                <Select placeholder='请选择仓库'>
+                  {selectdata.map(item=> {
+                    return (
+                      <Option key={item.id}>{item.name}</Option>
+                    )
+                  })}
+                </Select>
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="数量">
+              {getFieldDecorator('quantity', {
+                initialValue: record.quantity,
+                rules: [{required: true, type: 'number', message: '请输入库存数量'}]
+              })(
+                <InputNumber step={1}/>
+              )}
+            </FormItem>
           </Form>
         </Modal>
       </div>

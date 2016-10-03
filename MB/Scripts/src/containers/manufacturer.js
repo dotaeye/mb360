@@ -59,7 +59,7 @@ var Manufacturer = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加Manufacturer',
+      title: '添加品牌',
       record: {}
     });
   },
@@ -67,13 +67,13 @@ var Manufacturer = React.createClass({
   onEdit(record){
     this.props.manufacturerActions.getById(record.id).then((err)=> {
       if (err) {
-        message.error('获取Manufacturer数据失败！请刷新页面尝试。');
+        message.error('获取品牌数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑Manufacturer'
+          title: '编辑品牌'
         });
       }
     });
@@ -85,7 +85,7 @@ var Manufacturer = React.createClass({
     let source = list.data;
     const remove = this.props.manufacturerActions.remove;
     confirm({
-      title: '确认删除该Manufacturer？',
+      title: '确认删除该品牌？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -154,10 +154,17 @@ var Manufacturer = React.createClass({
       title: 'Id',
       dataIndex: 'id',
       sorter: true,
-      width: '20%'
+      width: '50px'
     }, {
       title: '名称',
       dataIndex: 'name'
+    },{
+      title: '图片',
+      dataIndex: 'imageUrl',
+      render: (url) => <img src={url} style={{ width:'30px' ,height:'30px'}}/>
+    }, {
+      title: '描述',
+      dataIndex: 'description'
     },{
       title: '操作',
       key: 'operation',
@@ -175,7 +182,7 @@ var Manufacturer = React.createClass({
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
@@ -185,7 +192,7 @@ var Manufacturer = React.createClass({
       <div className='container'>
         <div className='ant-list-header' data-flex="dir:right">
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加Manufacturer</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加品牌</Button>
           </div>
         </div>
         <Table
@@ -204,32 +211,38 @@ var Manufacturer = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                   initialValue: record.name,
                   rules: [{required: true, message: '请输入名称'}]
                 }
-              )} type="text"/>
+              )(
+                <Input type="text"/>
+              )}
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="品牌描述"
               >
-              <Input  {...getFieldProps('description', {
+              {getFieldDecorator('description', {
                   initialValue: record.description,
                   rules: [{required: true, message: '请输入品牌描述'}]
                 }
-              )} type="textarea"/>
+              )(
+                <Input type="textarea"/>
+              )}
             </FormItem>
             {visible && (
               <FormItem
                 {...formItemLayout}
                 label="分类图片"
                 >
-                <UploadFile  {...getFieldProps('imageUrl', {
+                {getFieldDecorator('imageUrl', {
                     initialValue: record.imageUrl,
                     rules: [{required: true, message: '请上传分类图片'}]
                   }
-                )} origin={true} />
+                )(
+                  <UploadFile origin={true} />
+                )}
               </FormItem>
             )}
           </Form>

@@ -185,7 +185,7 @@ var Department = React.createClass({
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0});
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     let defaultValues = [];
     if (record.parentId) {
@@ -220,30 +220,36 @@ var Department = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                   initialValue: record.name,
                   rules: [{required: true, message: '请输入名称'}]
                 }
-              )} type="text"/>
+              )(
+                <Input  type="text"/>
+              )}
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="编码"
               >
-              <Input  {...getFieldProps('code', {
+              {getFieldDecorator('code', {
                   initialValue: record.code,
-                  rules: [{required: true, message: '请输入部门编码'}]
+                  rules: [{required: true, message: '请输入类别编码'}]
                 }
-              )} type="text"/>
+              )(
+                <Input  type="text"/>
+              )}
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="父级部门"
+              label="父级类别"
               >
-              <Cascader {...getFieldProps('parentId', {
+              {getFieldDecorator('parentId', {
                   initialValue: defaultValues
                 }
-              )} placeholder='请选择父级部门' options={cascader} changeOnSelect/>
+              )(
+                <Cascader  placeholder='请选择父级类别' options={cascader} changeOnSelect/>
+              )}
             </FormItem>
           </Form>
         </Modal>

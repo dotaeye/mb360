@@ -183,7 +183,7 @@ var Storage = React.createClass({
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
@@ -212,18 +212,20 @@ var Storage = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                   initialValue: record.name,
                   rules: [{required: true, message: '请输入名称'}]
                 }
-              )} type="text"/>
+              )(
+                <Input type="text"/>
+              )}
             </FormItem>
             {visible && (
               <FormItem
                 {...formItemLayout}
                 label="地理位置"
                 >
-                <MapMaker {...getFieldProps('location', {
+                {getFieldDecorator('location', {
                     initialValue: {
                       latitude: record.latitude,
                       longitude: record.longitude,
@@ -231,7 +233,9 @@ var Storage = React.createClass({
                     },
                     rules: [{validator: checkLocation}]
                   }
-                )} ref={(ref)=>this.mapMaker=ref}/>
+                )(
+                  <MapMaker ref={(ref)=>this.mapMaker=ref}/>
+                )}
               </FormItem>
             )}
           </Form>

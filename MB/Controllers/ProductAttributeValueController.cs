@@ -38,7 +38,9 @@ namespace MB.Controllers
         [Route("")]
         public ApiListResult<ProductAttributeValueDTO> Get([FromUri] AntPageOption option = null)
         {
-            var query = ProductAttributeValueService.GetAll().Where(x => !x.Deleted).ProjectTo<ProductAttributeValueDTO>();
+            var query = ProductAttributeValueService.GetAll()
+                .Where(x => !x.Deleted&&x.ProductAttributeMappingId==option.Id)
+                .ProjectTo<ProductAttributeValueDTO>();
             if (option != null)
             {
                 if (!string.IsNullOrEmpty(option.SortField))

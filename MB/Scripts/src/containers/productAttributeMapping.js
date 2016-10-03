@@ -13,7 +13,9 @@ import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as productActions from '../actions/product'
 import * as productAttributeActions from '../actions/productAttribute'
+import * as productAttributeValueActions from '../actions/productAttributeValue'
 import * as productAttributeMappingActions from '../actions/productAttributeMapping'
+import ProductAttributeValueForm from '../components/form/ProductAttributeValueForm';
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;
@@ -29,16 +31,20 @@ var ProductAttributeMapping = React.createClass({
       pagination: {
         pageSize: 10,
         current: 1
+      },
+      valuePagination: {
+        pageSize: 20,
+        current: 1
       }
     };
   },
 
   fetchData(page){
     const {routeParams:{id}}=this.props;
-    var promise=[];
+    var promise = [];
     promise.push(this.props.productActions.getById(id));
     promise.push(this.props.productAttributeActions.getSelectList());
-    Promise.all(promise).then(err=>{
+    Promise.all(promise).then(err=> {
       this.props.productAttributeMappingActions.getAll({
         id,
         results: this.state.pagination.pageSize,
@@ -66,11 +72,27 @@ var ProductAttributeMapping = React.createClass({
       sortOrder: sorter.order
     });
   },
+  handleValueTableChange(pagination, filters, sorter){
+    const pager = this.state.valuePagination;
+    const {routeParams:{id}}=this.props;
+    pager.current = pagination.current;
+    this.setState({
+      valuePagination: pager
+    });
+    this.props.productAttributeValueActions.getAll({
+      id,
+      results: pagination.pageSize,
+      page: pagination.current,
+      sortField: sorter.field,
+      sortOrder: sorter.order
+    });
+  },
+
   onAdd(){
     this.setState({
       visible: true,
       edit: false,
-      title: '添加ProductAttributeMapping',
+      title: '添加产品属性',
       record: {}
     });
   },
@@ -78,13 +100,13 @@ var ProductAttributeMapping = React.createClass({
   onEdit(record){
     this.props.productAttributeMappingActions.getById(record.id).then((err)=> {
       if (err) {
-        message.error('获取ProductAttributeMapping数据失败！请刷新页面尝试。');
+        message.error('获取产品属性数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑ProductAttributeMapping'
+          title: '编辑产品属性'
         });
       }
     });
@@ -96,7 +118,7 @@ var ProductAttributeMapping = React.createClass({
     let source = list.data;
     const remove = this.props.productAttributeMappingActions.remove;
     confirm({
-      title: '确认删除该ProductAttributeMapping？',
+      title: '确认删除该产品属性？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -129,7 +151,7 @@ var ProductAttributeMapping = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
-      formdata.productId=id;
+      formdata.productId = id;
       if (edit) {
         formdata.id = entity.id;
         update(formdata).then((err)=> {
@@ -162,6 +184,129 @@ var ProductAttributeMapping = React.createClass({
     });
   },
 
+  onValueModalClose(){
+    this.setState({showValueModal: false});
+  },
+
+  fetchModalData(id, page){
+    return this.props.productAttributeValueActions.getAll({
+      id,
+      results: this.state.valuePagination.pageSize,
+      page: page || this.state.valuePagination.current
+    })
+  },
+
+  onShowValueModal(productAttributeMappingId, name){
+    this.fetchModalData(productAttributeMappingId).then(err=> {
+      if (err) {
+        message.error('获取产品属性数据失败！请刷新页面尝试。');
+      }
+      else {
+        this.setState({
+          showValueModal: true,
+          valueTitle: `产品${name}列表`,
+          productAttributeMappingId
+        });
+      }
+    });
+  },
+
+  onAddValue(){
+    this.setState({
+      showValueEditModal: true,
+      edit: false,
+      title: '添加属性值',
+      record: {}
+    });
+  },
+
+  onEditValue(record){
+    this.props.productAttributeValueActions.getById(record.id).then((err)=> {
+      if (err) {
+        message.error('获取产品属性值数据失败！请刷新页面尝试。');
+      }
+      else {
+        this.setState({
+          showValueEditModal: true,
+          edit: true,
+          title: '编辑属性值'
+        });
+      }
+    });
+  },
+
+  onRemoveValue(record){
+    const self = this;
+    const { productAttributeMappingId }=this.state;
+    const { productAttributeValue:{ list }} = this.props;
+    let source = list.data;
+    const remove = this.props.productAttributeValueActions.remove;
+    confirm({
+      title: '确认删除该产品属性？',
+      onOk() {
+        remove(record.id).then((err)=> {
+          if (err) {
+            message.error('删除操作执行失败！请刷新页面尝试。');
+          } else {
+            message.success('删除操作执行成功！');
+            let data = _.remove(source, (item)=> {
+              return item.id === record.id
+            });
+            let page = self.state.valuePagination.current;
+            if (data.length === 0) {
+              page = page - 1;
+            }
+            self.fetchModalData(productAttributeMappingId, _.max([page - 1, 1]));
+          }
+        });
+      },
+      onCancel() {
+      }
+    });
+  },
+
+  onValueSubmit(){
+    const { edit, productAttributeMappingId }=this.state;
+    const { update, create} =this.props.productAttributeValueActions;
+    const { entity }= this.props.productAttributeValue;
+    this.refs.pavf.validateFields((errors, formdata) => {
+      if (!!errors) {
+        console.log('Errors in form!!!');
+        return;
+      }
+      formdata.productAttributeMappingId = productAttributeMappingId;
+      if (edit) {
+        formdata.id = entity.id;
+        update(formdata).then((err)=> {
+          if (err) {
+            message.error('更新数据失败。');
+          } else {
+            message.success('更新数据成功！');
+            this.refs.pavf.resetFields();
+            this.fetchModalData(productAttributeMappingId);
+          }
+        });
+      } else {
+        create(formdata).then((err)=> {
+          if (err) {
+            message.error('创建数据失败。');
+          } else {
+            message.success('创建数据成功！');
+            this.refs.pavf.resetFields();
+            this.fetchModalData(productAttributeMappingId);
+          }
+        });
+      }
+      this.onValueEditModalClose();
+    });
+  },
+
+  onValueEditModalClose(){
+    this.setState({showValueEditModal: false}, ()=> {
+      this.refs.pavf.resetFields();
+    });
+  },
+
   render() {
     const { selectlist }= this.props.productAttribute;
     const columns = [{
@@ -172,9 +317,17 @@ var ProductAttributeMapping = React.createClass({
     }, {
       title: '属性名',
       dataIndex: 'productAttributeId',
-      render: (productAttributeId)=> selectlist.find(x=>x.id==productAttributeId).name
-   
-    },{
+      render: (productAttributeId)=> selectlist.find(x=>x.id == productAttributeId).name
+    }, {
+      title: '属性值',
+      dataIndex: 'valueCount',
+      render: (valueCount, record)=> {
+        const attributeName = selectlist.find(x=>x.id == record.productAttributeId).name;
+        return (
+          <a onClick={this.onShowValueModal.bind(this,record.id, attributeName)}>查看/编辑 ({valueCount})</a>
+        )
+      }
+    }, {
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -187,18 +340,61 @@ var ProductAttributeMapping = React.createClass({
         </span>
       )
     }];
+
+    const valueEditColumns = [{
+      title: 'Id',
+      dataIndex: 'id',
+      sorter: true,
+      width: '20%'
+    }, {
+      title: '名称',
+      dataIndex: 'name'
+    }, {
+      title: '价格调整',
+      dataIndex: 'priceAdjustment'
+    }, {
+      title: '图片',
+      dataIndex: 'imageUrl',
+      render: (url) => <img src={url} style={{ width:'30px' ,height:'30px'}}/>
+    }, {
+      title: '操作',
+      key: 'operation',
+      render: (text, record) => (
+        <span>
+          <Button type="ghost" shape="circle" icon="edit" size="small" title='编辑'
+                  onClick={this.onEditValue.bind(null,record)}/>
+          <span className="ant-divider"></span>
+          <Button type="ghost" shape="circle" icon="delete" size="small" title='删除'
+                  onClick={this.onRemoveValue.bind(null,record)}/>
+        </span>
+      )
+    }];
+    const valueList = this.props.productAttributeValue.list;
+    const valueEntity = this.props.productAttributeValue.entity;
+    const valueLoading = this.props.productAttributeValue.loading;
     const { productAttributeMapping:{ loading, list, entity }} = this.props;
     const product = this.props.product.entity;
-    const { title, visible, edit }=this.state;
+    const { title, visible, edit, showValueModal, showValueEditModal,valueTitle }=this.state;
 
     const data = list ? list.data : [];
-    const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0});
+    const valuePagination = Object.assign({}, this.state.valuePagination, {total: valueList ? valueList.recordCount : 0});
+    const valueData = valueList ? valueList.data : [];
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
       wrapperCol: {span: 20}
     };
+
+    const checkAttribute = (rule, value, callback)=> {
+      if (data.filter(item=>item.productAttributeId == value).length > 0) {
+        callback(new Error('当前属性已经添加!'));
+      } else {
+        callback();
+      }
+    };
+
     return (
       <div className='container'>
         <div className='ant-list-header' data-flex="main:justify">
@@ -213,10 +409,11 @@ var ProductAttributeMapping = React.createClass({
         </div>
         <div className='nav-tabs-container'>
           <ul className="nav nav-tabs">
-            <li ><Link to={`product/update/${product.id}`} >基本信息</Link></li>
-            <li><Link to={`productstoragequantity/${product.id}`} >管理库存</Link></li>
-            <li><Link to={`productcarcate/${product.id}`} >车型匹配</Link></li>  
-            <li className="active"><a>产品属性</a></li>  
+            <li ><Link to={`product/update/${product.id}`}>基本信息</Link></li>
+            <li><Link to={`productstoragequantity/${product.id}`}>管理库存</Link></li>
+            <li><Link to={`productcarcate/${product.id}`}>车型匹配</Link></li>
+            <li className="active"><a>产品属性</a></li>
+            <li><Link to={`productspecificationattribute/${product.id}`}>产品规格</Link></li>
           </ul>
         </div>
         <Table
@@ -235,20 +432,45 @@ var ProductAttributeMapping = React.createClass({
               {...formItemLayout}
               label="产品属性"
               >
-              <Select {...getFieldProps('productAttributeId', {
-                  initialValue: record.productAttributeId?`${record.productAttributeId}`:'',
-                  rules: [{required: true, message: '请选择产品属性'}]
+              {getFieldDecorator('productAttributeId', {
+                  initialValue: record.productAttributeId ? `${record.productAttributeId}` : '',
+                  rules: [{required: true, message: '请选择产品属性'}, {validator: checkAttribute}]
                 }
-              )} placeholder='请选择产品属性' >
-                {selectlist.map(item=>{
-                  return (
-                    <Option key={item.id} >{item.name}</Option>
-                  )
-                })}
-              </Select>
+              )(
+                <Select placeholder='请选择产品属性'>
+                  {selectlist.map(item=> {
+                    return (
+                      <Option key={item.id}>{item.name}</Option>
+                    )
+                  })}
+                </Select>
+              )}
             </FormItem>
-
           </Form>
+        </Modal>
+
+        <Modal title={valueTitle} visible={showValueModal} width={'80%'} footer={<div style={{border:'none'}}/>}
+               onCancel={this.onValueModalClose}>
+          <div className='ant-list-header' data-flex="dir:right">
+            <div className='ant-list-header-right'>
+              <Button type="primary" icon="plus" onClick={this.onAddValue}>添加属性值</Button>
+            </div>
+          </div>
+          <Table
+            ref='valueTable'
+            columns={valueEditColumns}
+            rowKey={record => record.id}
+            dataSource={valueData}
+            pagination={valuePagination}
+            loading={valueLoading}
+            onChange={this.handleValueTableChange}
+            />
+        </Modal>
+
+        <Modal title={title} visible={showValueEditModal}
+               onOk={this.onValueSubmit}
+               onCancel={this.onValueEditModalClose}>
+          <ProductAttributeValueForm ref='pavf' entity={edit?valueEntity:{}} product={product}/>
         </Modal>
       </div>
     );
@@ -260,6 +482,7 @@ function mapStateToProps(state) {
     auth: state.auth,
     productAttributeMapping: state.productAttributeMapping,
     productAttribute: state.productAttribute,
+    productAttributeValue: state.productAttributeValue,
     product: state.product
   }
 }
@@ -269,8 +492,9 @@ function mapDispatchToProps(dispatch) {
     authActions: bindActionCreators(authActions, dispatch),
     productActions: bindActionCreators(productActions, dispatch),
     productAttributeActions: bindActionCreators(productAttributeActions, dispatch),
+    productAttributeValueActions: bindActionCreators(productAttributeValueActions, dispatch),
     productAttributeMappingActions: bindActionCreators(productAttributeMappingActions, dispatch)
-  
+
   }
 }
 
