@@ -8,6 +8,7 @@ import category from './category';
 import carCate from './carCate';
 import cityCate from './cityCate';
 import storage from './storage';
+import member from './member'
 import product from './product'
 import productStorageQuantity from './productStorageQuantity'
 import productCarCate from './productCarCate' 
@@ -31,6 +32,7 @@ export default combineReducers({
     carCate,
     cityCate,
     storage,
+    member,
     product,
     productStorageQuantity,
     productCarCate,

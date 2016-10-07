@@ -266,8 +266,7 @@ var CarCate = React.createClass({
                 label="分类图片"
                 >
                 {getFieldDecorator('imageUrl', {
-                    initialValue: record.imageUrl,
-                    rules: [{required: true, message: '请上传分类图片'}]
+                    initialValue: record.imageUrl
                   }
                 )(
                   <UploadFile  origin={true}/>

@@ -7,10 +7,12 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select,Cascader } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as jobActions from '../actions/job'
+import * as departmentActions from '../actions/department'
+import { setCascadeValues, getCascaderName } from '../utils/biz';
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;
@@ -31,9 +33,13 @@ var Job = React.createClass({
   },
 
   fetchData(page){
-    this.props.jobActions.getAll({
-      results: this.state.pagination.pageSize,
-      page: page || this.state.pagination.current
+    const promise=[];
+    promise.push(this.props.departmentActions.getCascader());
+    Promise.all(promise).then(err=>{
+      this.props.jobActions.getAll({
+        results: this.state.pagination.pageSize,
+        page: page || this.state.pagination.current
+      });
     });
   },
 
@@ -58,7 +64,7 @@ var Job = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加Job',
+      title: '添加职位',
       record: {}
     });
   },
@@ -66,13 +72,13 @@ var Job = React.createClass({
   onEdit(record){
     this.props.jobActions.getById(record.id).then((err)=> {
       if (err) {
-        message.error('获取Job数据失败！请刷新页面尝试。');
+        message.error('获取职位数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑Job'
+          title: '编辑职位'
         });
       }
     });
@@ -84,7 +90,7 @@ var Job = React.createClass({
     let source = list.data;
     const remove = this.props.jobActions.remove;
     confirm({
-      title: '确认删除该Job？',
+      title: '确认删除该职位？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -116,6 +122,7 @@ var Job = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
+      formdata.departmentId = formdata.departmentId[formdata.departmentId.length - 1];
       if (edit) {
         formdata.id = entity.id;
         update(formdata).then((err)=> {
@@ -149,6 +156,7 @@ var Job = React.createClass({
   },
 
   render() {
+    const cascader = this.props.department.cascader;
     const columns = [{
       title: 'Id',
       dataIndex: 'id',
@@ -157,6 +165,16 @@ var Job = React.createClass({
     }, {
       title: '名称',
       dataIndex: 'name'
+    },{
+      title: '部门',
+      dataIndex: 'departmentId',
+      render: (departmentId)=> {
+        let cascaderIds = [];
+        setCascadeValues(cascader, departmentId, cascaderIds);
+        cascaderIds = cascaderIds.reverse();
+        let carCates = getCascaderName(cascaderIds, cascader);
+        return carCates.join('-');
+      }
     },{
       title: '操作',
       key: 'operation',
@@ -176,6 +194,12 @@ var Job = React.createClass({
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
     const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
+
+    let defaultValues = [];
+    if (record.departmentId) {
+      setCascadeValues(cascader, record.departmentId, defaultValues);
+      defaultValues = defaultValues.reverse();
+    }
     const formItemLayout = {
       labelCol: {span: 4},
       wrapperCol: {span: 20}
@@ -211,6 +235,23 @@ var Job = React.createClass({
                 <Input type="text"/>
               )}
             </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="选择部门"
+              >
+              {getFieldDecorator('departmentId', {
+                  initialValue: defaultValues,
+                  rules: [{
+                    required: true,
+                    type: 'array',
+                    message: '请选择部门'
+                  }]
+                }
+              )(
+                <Cascader placeholder='请选择部门' options={cascader} changeOnSelect/>
+              )}
+            </FormItem>
           </Form>
         </Modal>
       </div>
@@ -221,14 +262,16 @@ var Job = React.createClass({
 function mapStateToProps(state) {
   return {
     auth: state.auth,
-    job: state.job
+    job: state.job,
+    department:state.department
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     authActions: bindActionCreators(authActions, dispatch),
-    jobActions: bindActionCreators(jobActions, dispatch)
+    jobActions: bindActionCreators(jobActions, dispatch),
+    departmentActions: bindActionCreators(departmentActions, dispatch)
   }
 }
 
@@ -238,7 +281,7 @@ const statics = {
   breadcrumb: [{
     title: '系统设置'
   }, {
-    title: 'Job管理'
+    title: '职位管理'
   }]
 };
 

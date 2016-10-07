@@ -30,7 +30,8 @@ var ProductCarCate = React.createClass({
       pagination: {
         pageSize: 1000,
         current: 1
-      }
+      },
+      loading: true
     };
   },
 
@@ -44,7 +45,11 @@ var ProductCarCate = React.createClass({
         id,
         results: this.state.pagination.pageSize,
         page: page || this.state.pagination.current
-      });
+      }).then(err=>{
+        this.setState({
+          loading:false
+        })
+      })
     })
   },
 
@@ -195,9 +200,9 @@ var ProductCarCate = React.createClass({
         </span>
       )
     }];
-    const { productCarCate:{ loading, list, entity }} = this.props;
+    const { productCarCate:{  list, entity }} = this.props;
     const product = this.props.product.entity;
-    const { title, visible, edit }=this.state;
+    const { title, visible, edit, loading }=this.state;
     const data = list ? list.data : [];
     const record = edit ? entity : {};
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
@@ -233,7 +238,7 @@ var ProductCarCate = React.createClass({
           </div>
 
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加车型匹配</Button>
+            <Button type="primary" icon="plus"  onClick={this.onAdd}>添加车型匹配</Button>
           </div>
         </div>
         <div className='nav-tabs-container'>

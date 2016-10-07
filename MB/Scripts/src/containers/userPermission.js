@@ -193,6 +193,7 @@ var UserPermission = React.createClass({
       '系统设置',
       '业务中心',
       '产品中心',
+      '用户中心'
     ];
     return (
       <div className='container'>

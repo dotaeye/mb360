@@ -269,6 +269,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Controllers\ManufacturerController.cs" />
+    <Compile Include="Controllers\MemberController.cs" />
     <Compile Include="Controllers\ProductAttributeController.cs" />
     <Compile Include="Controllers\ProductAttributeMappingController.cs" />
     <Compile Include="Controllers\ProductAttributeValueController.cs" />

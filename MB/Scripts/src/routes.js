@@ -18,6 +18,8 @@ import {
   CityCate,
   Job,
   Storage,
+  Member,
+  MemberCreateOrUpdate,
   Product,
   ProductCreateOrUpdate,
   ProductStorageQuantity,
@@ -86,6 +88,12 @@ export default (store) => {
       <Route path='citycate' component={CityCate} onEnter={requireLogin.bind(null,'citycate','index')} />
 
       <Route path='storage' component={Storage} onEnter={requireLogin.bind(null,'storage','index')} />
+
+      <Route path='member' component={Member} onEnter={requireLogin.bind(null,'member','index')} />
+
+      <Route path='member/create' component={MemberCreateOrUpdate} onEnter={requireLogin.bind(null,'member','create')} />
+
+      <Route path='member/update/:id' component={MemberCreateOrUpdate} onEnter={requireLogin.bind(null,'member','update')} />
 
       <Route path='product' component={Product} onEnter={requireLogin.bind(null,'product','index')} />
 

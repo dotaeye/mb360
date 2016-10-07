@@ -20,6 +20,7 @@ using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
+using MB.Helpers;
 
 namespace MB.Controllers
 {
@@ -161,6 +162,14 @@ namespace MB.Controllers
             return Ok(entity.ToModel());
         }
 
+        [Route("selectlist")]
+        [HttpGet]
+        public List<UserRoleDTO> GetStorageSelectList()
+        {
+            var result = new List<UserRoleDTO>();
+            result = UserRoleService.GetAll().Where(x => !x.Deleted).ProjectTo<UserRoleDTO>().ToList();
+            return result;
+        }
     }
 }
 

@@ -31,5 +31,33 @@ namespace MB.Helpers
             int.TryParse(claims.First(c => c.Type == "userRoleId").Value, out userRoleId);
             return userRoleId;
         }
+
+
+        public static string GetCode(int number, int length, bool prepend = true)
+        {
+            var needZeroNum = 0;
+            var code = string.Empty;
+            if (number.ToString().Length >= length)
+            {
+                return number.ToString();
+            }
+            else
+            {
+                code = number.ToString();
+                needZeroNum = length - number.ToString().Length;
+                for (var i = 0; i < needZeroNum; i++)
+                {
+                    if (prepend)
+                    {
+                        code = "0" + code;
+                    }
+                    else
+                    {
+                        code += "0";
+                    }
+                }
+                return code;
+            }
+        }
     }
 }

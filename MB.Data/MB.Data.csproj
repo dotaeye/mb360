@@ -103,6 +103,7 @@
     <Compile Include="AutoMapper\JobProfile.cs" />
     <Compile Include="AutoMapper\ManufacturerProfile.cs" />
     <Compile Include="AutoMapper\MappingExtensions.cs" />
+    <Compile Include="AutoMapper\MemberProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeMappingProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeValueProfile.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="DTO\DepartmentDTO.cs" />
     <Compile Include="DTO\JobDTO.cs" />
     <Compile Include="DTO\ManufacturerDTO.cs" />
+    <Compile Include="DTO\MemberDTO.cs" />
     <Compile Include="DTO\ProductAttributeDTO.cs" />
     <Compile Include="DTO\ProductAttributeMappingDTO.cs" />
     <Compile Include="DTO\ProductAttributeValueDTO.cs" />
@@ -152,6 +154,8 @@
     <Compile Include="Impl\ProductService.cs" />
     <Compile Include="Impl\ProductSpecificationAttributeService.cs" />
     <Compile Include="Impl\ProductStorageQuantityService.cs" />
+    <Compile Include="Impl\SettingExtensions.cs" />
+    <Compile Include="Impl\SettingService.cs" />
     <Compile Include="Impl\SpecificationAttributeOptionService.cs" />
     <Compile Include="Impl\SpecificationAttributeService.cs" />
     <Compile Include="Impl\StorageService.cs" />
@@ -231,6 +235,18 @@
     <Compile Include="Migrations\201609290016417_AddDescriptionForCate.Designer.cs">
       <DependentUpon>201609290016417_AddDescriptionForCate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610040805175_ModifyImageUrlAsOptional.cs" />
+    <Compile Include="Migrations\201610040805175_ModifyImageUrlAsOptional.Designer.cs">
+      <DependentUpon>201610040805175_ModifyImageUrlAsOptional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610060956416_UpdateUserInfo.cs" />
+    <Compile Include="Migrations\201610060956416_UpdateUserInfo.Designer.cs">
+      <DependentUpon>201610060956416_UpdateUserInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610061106068_AddCreateInfoForUser.cs" />
+    <Compile Include="Migrations\201610061106068_AddCreateInfoForUser.Designer.cs">
+      <DependentUpon>201610061106068_AddCreateInfoForUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\CarCate.cs" />
@@ -247,6 +263,7 @@
     <Compile Include="Models\ProductManufacturer.cs" />
     <Compile Include="Models\ProductSpecificationAttribute.cs" />
     <Compile Include="Models\ProductStorageQuantity.cs" />
+    <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\SpecificationAttribute.cs" />
     <Compile Include="Models\SpecificationAttributeOption.cs" />
     <Compile Include="Models\Storage.cs" />
@@ -269,6 +286,7 @@
     <Compile Include="Service\IProductService.cs" />
     <Compile Include="Service\IProductSpecificationAttributeService.cs" />
     <Compile Include="Service\IProductStorageQuantityService.cs" />
+    <Compile Include="Service\ISettingService.cs" />
     <Compile Include="Service\ISpecificationAttributeOptionService.cs" />
     <Compile Include="Service\ISpecificationAttributeService.cs" />
     <Compile Include="Service\IStorageService.cs" />
@@ -282,6 +300,7 @@
     <Compile Include="Validator\DepartmentValidator.cs" />
     <Compile Include="Validator\JobValidator.cs" />
     <Compile Include="Validator\ManufacturerValidator.cs" />
+    <Compile Include="Validator\MemberValidator.cs" />
     <Compile Include="Validator\ProductAttributeMappingValidator.cs" />
     <Compile Include="Validator\ProductAttributeValidator.cs" />
     <Compile Include="Validator\ProductAttributeValueValidator.cs" />
@@ -345,6 +364,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609290016417_AddDescriptionForCate.resx">
       <DependentUpon>201609290016417_AddDescriptionForCate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610040805175_ModifyImageUrlAsOptional.resx">
+      <DependentUpon>201610040805175_ModifyImageUrlAsOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610060956416_UpdateUserInfo.resx">
+      <DependentUpon>201610060956416_UpdateUserInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610061106068_AddCreateInfoForUser.resx">
+      <DependentUpon>201610061106068_AddCreateInfoForUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

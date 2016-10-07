@@ -21,6 +21,7 @@ using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
+using SQ.Core.UI;
 
 namespace MB.Controllers
 {
@@ -28,11 +29,14 @@ namespace MB.Controllers
     public class JobController : ApiController
     {
         private IJobService JobService;
+        private IDepartmentService DepartmentService;
         public JobController(
-            IJobService _JobService
+            IJobService _JobService,
+            IDepartmentService _DepartmentService
           )
         {
             this.JobService = _JobService;
+            this.DepartmentService = _DepartmentService;
         }
 
         [Route("")]
@@ -138,6 +142,77 @@ namespace MB.Controllers
             return Ok(entity.ToModel());
         }
 
+
+        [Route("cascader/{id:int=0}")]
+        public List<Cascader> GetJobCascader(int Id)
+        {
+            var cascader = new List<Cascader>();
+            GenerateCascader(null, Id, cascader);
+            return cascader;
+        }
+
+
+        private void GenerateCascader(int? Id, int currentId, List<Cascader> cascader)
+        {
+            var query = DepartmentService.GetAll().Where(x => x.Id != currentId && !x.Deleted);
+            if (Id.HasValue)
+            {
+                query = query.Where(x => x.ParentId == Id.Value);
+            }
+            else
+            {
+                query = query.Where(x => x.ParentId.Equals(null));
+            }
+
+            var departments = query.ToList();
+
+            foreach (var depart in departments)
+            {
+                var item = new Cascader()
+                {
+                    Label = depart.Name,
+                    Key = "d_" + depart.Id.ToString(),
+                    Value = "d_" + depart.Id.ToString(),
+                    ParentId = depart.ParentId.HasValue ? depart.ParentId.Value.ToString() : null
+                };
+
+                if (DepartmentService.GetAll().Any(x => x.ParentId == depart.Id && x.Id != currentId && !x.Deleted))
+                {
+                    if (item.Children == null)
+                    {
+                        item.Children = new List<Cascader>();
+                    }
+                    GenerateCascader(depart.Id, currentId, item.Children);
+                }
+
+                if (JobService.GetAll().Any(x => x.DepartmentId == depart.Id && !x.Deleted))
+                {
+
+                    cascader.Add(item);
+
+                    if (item.Children == null)
+                    {
+                        item.Children = new List<Cascader>();
+                    }
+
+                    var jobs = JobService.GetAll().Where(x => x.DepartmentId == depart.Id && !x.Deleted).ToList();
+
+                    foreach (var job in jobs)
+                    {
+                        var jobItem = new Cascader()
+                        {
+                            Label = job.Name,
+                            Value = job.Id.ToString(),
+                            Key = job.Id.ToString(),
+                            ParentId = item.Value
+                        };
+                        item.Children.Add(jobItem);
+                    }
+                }
+
+               
+            }
+        }
     }
 }
 

@@ -322,6 +322,21 @@ namespace MB.Data.AutoMapper
 
 
 
+        public static MemberDTO ToModel(this ApplicationUser entity)
+        {
+            return Mapper.Map<ApplicationUser, MemberDTO>(entity);
+        }
+
+        public static ApplicationUser ToEntity(this MemberDTO dto)
+        {
+            return Mapper.Map<MemberDTO, ApplicationUser>(dto);
+        }
+
+        public static ApplicationUser ToEntity(this MemberDTO dto, ApplicationUser entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
 
     }
 }

@@ -15,6 +15,15 @@ export function getAll(params) {
     })
   };
 }
+export function getCascader(params) {
+  return {
+    types: [jobTypes.GET_JOB_CASCADER, jobTypes.GET_JOB_CASCADER_SUCCESS, jobTypes.GET_JOB_CASCADER_FAIL],
+    promise: (client) => client.get('/job/cascader', {
+      token: true,
+      params
+    })
+  };
+}
 
 export function getById(id) {
   return {

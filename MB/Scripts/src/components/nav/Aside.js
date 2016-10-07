@@ -115,6 +115,18 @@ var Aside = React.createClass({
             title: '产品规格'
           }
         ]
+      },
+      {
+        group: 'member',
+        title: '用户管理',
+        icon: 'hdd',
+        items: [
+          {
+            controller: 'member',
+            action: 'index',
+            title: '用户列表'
+          }
+        ]
       }
     ];
     this.setMenu(menus);
