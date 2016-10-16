@@ -23,6 +23,10 @@ namespace MB.Data.Models
 
         public string Code { get; set; }
 
+        public string PinYin { get; set; }
+
+        public int Level { get; set; }
+
         [DTO(false, true)]
         public string CreateUserId { get; set; }
 

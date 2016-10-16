@@ -265,6 +265,18 @@ var CityCate = React.createClass({
 
             <FormItem
               {...formItemLayout}
+              label="等级"
+              >
+              {getFieldDecorator('level', {
+                  initialValue: record.level || 0
+                }
+              )(
+                <InputNumber  />
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
               label="排序"
               >
               {getFieldDecorator('displayOrder', {
@@ -274,6 +286,7 @@ var CityCate = React.createClass({
               <InputNumber  />
             )}
             </FormItem>
+
           </Form>
         </Modal>
       </div>

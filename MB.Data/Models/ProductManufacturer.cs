@@ -4,6 +4,7 @@ using SQ.Core.DTO;
 using System.Collections.Generic;
 namespace MB.Data.Models
 {
+    [DTOIgnore]
     public class ProductManufacturer : BaseEntity
     {
         /// <summary>

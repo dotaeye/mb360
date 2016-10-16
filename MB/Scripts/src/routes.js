@@ -54,6 +54,8 @@ export default (store) => {
         store.dispatch(loadPermission()).then(()=>{
           store.dispatch(loadAuthToken(authToken));
           checkAuth();
+        }).catch(err=>{
+          baseStorage.getStorage(configs.storage).remove(configs.authToken);
         })
       }else{
         checkAuth();

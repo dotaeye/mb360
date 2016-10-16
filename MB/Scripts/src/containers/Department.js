@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select, Cascader  } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, InputNumber, Checkbox, message,Select, Cascader  } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as departmentActions from '../actions/department'
@@ -249,6 +249,28 @@ var Department = React.createClass({
                 }
               )(
                 <Cascader  placeholder='请选择父级类别' options={cascader} changeOnSelect/>
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="等级"
+              >
+              {getFieldDecorator('level', {
+                  initialValue: record.level || 0
+                }
+              )(
+                <InputNumber  />
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="排序"
+              >
+              {getFieldDecorator('displayOrder', {
+                  initialValue: record.displayOrder || 0
+                }
+              )(
+                <InputNumber  />
               )}
             </FormItem>
           </Form>

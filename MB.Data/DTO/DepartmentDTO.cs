@@ -15,6 +15,10 @@ namespace MB.Data.DTO
         public string ImageUrl { get; set; }
         public int? ParentId { get; set; }
         public string Code { get; set; }
+
+        public int Level { get; set; }
+
+        public string PinYin { get; set; }
         public int Id { get; set; }
     }
 }

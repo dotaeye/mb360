@@ -7,6 +7,7 @@ using System.Data.Entity.Spatial;
 
 namespace MB.Data.Models
 {
+    [DTOIgnore]
     public class Storage : BaseEntity
     {
 

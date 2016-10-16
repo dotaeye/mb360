@@ -104,6 +104,7 @@
     <Compile Include="AutoMapper\ManufacturerProfile.cs" />
     <Compile Include="AutoMapper\MappingExtensions.cs" />
     <Compile Include="AutoMapper\MemberProfile.cs" />
+    <Compile Include="AutoMapper\ProductAttributeCategoryMappingProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeMappingProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeValueProfile.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="AutoMapper\ProductProfile.cs" />
     <Compile Include="AutoMapper\ProductSpecificationAttributeProfile.cs" />
     <Compile Include="AutoMapper\ProductStorageQuantityProfile.cs" />
+    <Compile Include="AutoMapper\SpecificationAttributeCategoryMappingProfile.cs" />
     <Compile Include="AutoMapper\SpecificationAttributeOptionProfile.cs" />
     <Compile Include="AutoMapper\SpecificationAttributeProfile.cs" />
     <Compile Include="AutoMapper\StorageProfile.cs" />
@@ -125,6 +127,7 @@
     <Compile Include="DTO\JobDTO.cs" />
     <Compile Include="DTO\ManufacturerDTO.cs" />
     <Compile Include="DTO\MemberDTO.cs" />
+    <Compile Include="DTO\ProductAttributeCategoryMappingDTO.cs" />
     <Compile Include="DTO\ProductAttributeDTO.cs" />
     <Compile Include="DTO\ProductAttributeMappingDTO.cs" />
     <Compile Include="DTO\ProductAttributeValueDTO.cs" />
@@ -133,6 +136,7 @@
     <Compile Include="DTO\ProductManufacturerDTO.cs" />
     <Compile Include="DTO\ProductSpecificationAttributeDTO.cs" />
     <Compile Include="DTO\ProductStorageQuantityDTO.cs" />
+    <Compile Include="DTO\SpecificationAttributeCategoryMappingDTO.cs" />
     <Compile Include="DTO\SpecificationAttributeDTO.cs" />
     <Compile Include="DTO\SpecificationAttributeOptionDTO.cs" />
     <Compile Include="DTO\StorageDTO.cs" />
@@ -146,6 +150,7 @@
     <Compile Include="Impl\DepartmentService.cs" />
     <Compile Include="Impl\JobService.cs" />
     <Compile Include="Impl\ManufacturerService.cs" />
+    <Compile Include="Impl\ProductAttributeCategoryMappingService.cs" />
     <Compile Include="Impl\ProductAttributeMappingService.cs" />
     <Compile Include="Impl\ProductAttributeService.cs" />
     <Compile Include="Impl\ProductAttributeValueService.cs" />
@@ -156,6 +161,7 @@
     <Compile Include="Impl\ProductStorageQuantityService.cs" />
     <Compile Include="Impl\SettingExtensions.cs" />
     <Compile Include="Impl\SettingService.cs" />
+    <Compile Include="Impl\SpecificationAttributeCategoryMappingService.cs" />
     <Compile Include="Impl\SpecificationAttributeOptionService.cs" />
     <Compile Include="Impl\SpecificationAttributeService.cs" />
     <Compile Include="Impl\StorageService.cs" />
@@ -247,6 +253,18 @@
     <Compile Include="Migrations\201610061106068_AddCreateInfoForUser.Designer.cs">
       <DependentUpon>201610061106068_AddCreateInfoForUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610161116520_AddLevelForCategory.cs" />
+    <Compile Include="Migrations\201610161116520_AddLevelForCategory.Designer.cs">
+      <DependentUpon>201610161116520_AddLevelForCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610161128568_AddPYForCategory.cs" />
+    <Compile Include="Migrations\201610161128568_AddPYForCategory.Designer.cs">
+      <DependentUpon>201610161128568_AddPYForCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610161148331_AddPYForCategory2.cs" />
+    <Compile Include="Migrations\201610161148331_AddPYForCategory2.Designer.cs">
+      <DependentUpon>201610161148331_AddPYForCategory2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\CarCate.cs" />
@@ -257,6 +275,7 @@
     <Compile Include="Models\Manufacturer.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductAttribute.cs" />
+    <Compile Include="Models\ProductAttributeCategoryMapping.cs" />
     <Compile Include="Models\ProductAttributeMapping.cs" />
     <Compile Include="Models\ProductAttributeValue.cs" />
     <Compile Include="Models\ProductCarCate.cs" />
@@ -265,6 +284,7 @@
     <Compile Include="Models\ProductStorageQuantity.cs" />
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\SpecificationAttribute.cs" />
+    <Compile Include="Models\SpecificationAttributeCategoryMapping.cs" />
     <Compile Include="Models\SpecificationAttributeOption.cs" />
     <Compile Include="Models\Storage.cs" />
     <Compile Include="Models\UserActivities.cs" />
@@ -278,6 +298,7 @@
     <Compile Include="Service\IDepartmentService.cs" />
     <Compile Include="Service\IJobService.cs" />
     <Compile Include="Service\IManufacturerService.cs" />
+    <Compile Include="Service\IProductAttributeCategoryMappingService.cs" />
     <Compile Include="Service\IProductAttributeMappingService.cs" />
     <Compile Include="Service\IProductAttributeService.cs" />
     <Compile Include="Service\IProductAttributeValueService.cs" />
@@ -287,6 +308,7 @@
     <Compile Include="Service\IProductSpecificationAttributeService.cs" />
     <Compile Include="Service\IProductStorageQuantityService.cs" />
     <Compile Include="Service\ISettingService.cs" />
+    <Compile Include="Service\ISpecificationAttributeCategoryMappingService.cs" />
     <Compile Include="Service\ISpecificationAttributeOptionService.cs" />
     <Compile Include="Service\ISpecificationAttributeService.cs" />
     <Compile Include="Service\IStorageService.cs" />
@@ -301,6 +323,7 @@
     <Compile Include="Validator\JobValidator.cs" />
     <Compile Include="Validator\ManufacturerValidator.cs" />
     <Compile Include="Validator\MemberValidator.cs" />
+    <Compile Include="Validator\ProductAttributeCategoryMappingValidator.cs" />
     <Compile Include="Validator\ProductAttributeMappingValidator.cs" />
     <Compile Include="Validator\ProductAttributeValidator.cs" />
     <Compile Include="Validator\ProductAttributeValueValidator.cs" />
@@ -308,6 +331,7 @@
     <Compile Include="Validator\ProductSpecificationAttributeValidator.cs" />
     <Compile Include="Validator\ProductStorageQuantityValidator.cs" />
     <Compile Include="Validator\ProductValidator.cs" />
+    <Compile Include="Validator\SpecificationAttributeCategoryMappingValidator.cs" />
     <Compile Include="Validator\SpecificationAttributeOptionValidator.cs" />
     <Compile Include="Validator\SpecificationAttributeValidator.cs" />
     <Compile Include="Validator\StorageValidator.cs" />
@@ -373,6 +397,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610061106068_AddCreateInfoForUser.resx">
       <DependentUpon>201610061106068_AddCreateInfoForUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610161116520_AddLevelForCategory.resx">
+      <DependentUpon>201610161116520_AddLevelForCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610161128568_AddPYForCategory.resx">
+      <DependentUpon>201610161128568_AddPYForCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610161148331_AddPYForCategory2.resx">
+      <DependentUpon>201610161148331_AddPYForCategory2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

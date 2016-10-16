@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
+    [DTOIgnore]
     public class ProductSpecificationAttribute : BaseEntity
     {
 

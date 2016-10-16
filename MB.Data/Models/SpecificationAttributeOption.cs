@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
+    [DTOIgnore]
     public class SpecificationAttributeOption:BaseEntity
     { /// <summary>
       /// Gets or sets the specification attribute identifier

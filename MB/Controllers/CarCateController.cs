@@ -66,7 +66,7 @@ namespace MB.Controllers
                 {
                     if (string.IsNullOrEmpty(option.SortField))
                     {
-                        query = query.OrderBy(x => x.Id);
+                        query = query.OrderBy(x => x.Level).ThenBy(x=>x.Id);
                     }
                 }
             }
@@ -79,108 +79,112 @@ namespace MB.Controllers
             return new ApiListResult<CarCateDTO>(result, result.PageIndex, result.PageSize, count);
         }
 
-        [Route("ExcelFileImport")]
-        [HttpGet]
-        [ResponseType(typeof(string))]
-        public async Task<IHttpActionResult> ExcelFileImport()
-        {
+        #region ExcelFileImport
 
-            var excelFilePath = HttpContext.Current.Server.MapPath("~/App_Data/carcate.xlsx");
-            string strConn =
-              @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + excelFilePath + ";" +
-              @"Extended Properties='Excel 12.0;HDR=No;'";
+        //[Route("ExcelFileImport")]
+        //[HttpGet]
+        //[ResponseType(typeof(string))]
+        //public async Task<IHttpActionResult> ExcelFileImport()
+        //{
 
-            OleDbConnection conn = new OleDbConnection(strConn);
-            conn.Open();
-            string strExcel = "";
-            OleDbDataAdapter myCommand = null;
-            DataSet ds = null;
-            strExcel = "select * from [sheet1$]";
-            myCommand = new OleDbDataAdapter(strExcel, strConn);
-            ds = new DataSet();
-            myCommand.Fill(ds, "table1");
-            var column1Index = 100;
+        //    var excelFilePath = HttpContext.Current.Server.MapPath("~/App_Data/carcate.xlsx");
+        //    string strConn =
+        //      @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + excelFilePath + ";" +
+        //      @"Extended Properties='Excel 12.0;HDR=No;'";
 
-            var table = ds.Tables[0].AsEnumerable();
-            var columns1 = table.Select(x => x[0].ToString()).Distinct();
-            int rowNumber = 0;
-            try
-            {
-                foreach (var column1 in columns1)
-                {
-                    Console.WriteLine(column1 + "开始");
-                    var carcate1 = new CarCate()
-                    {
-                        Name = column1,
-                        Code = MBHelper.GetCode(column1Index, 9, false),
-                        CreateTime = DateTime.Now
-                    };
+        //    OleDbConnection conn = new OleDbConnection(strConn);
+        //    conn.Open();
+        //    string strExcel = "";
+        //    OleDbDataAdapter myCommand = null;
+        //    DataSet ds = null;
+        //    strExcel = "select * from [sheet1$]";
+        //    myCommand = new OleDbDataAdapter(strExcel, strConn);
+        //    ds = new DataSet();
+        //    myCommand.Fill(ds, "table1");
+        //    var column1Index = 100;
 
-                    await CarCateService.InsertAsync(carcate1);
+        //    var table = ds.Tables[0].AsEnumerable();
+        //    var columns1 = table.Select(x => x[0].ToString()).Distinct();
+        //    int rowNumber = 0;
+        //    try
+        //    {
+        //        foreach (var column1 in columns1)
+        //        {
+        //            Console.WriteLine(column1 + "开始");
+        //            var carcate1 = new CarCate()
+        //            {
+        //                Name = column1,
+        //                Code = MBHelper.GetCode(column1Index, 9, false),
+        //                CreateTime = DateTime.Now
+        //            };
 
-                    rowNumber++;
+        //            await CarCateService.InsertAsync(carcate1);
 
-                    var columns2 = table.Where(x => x[0].ToString() == column1).Select(x => x[1].ToString()).Distinct();
-                    var column2Index = 1;
-                    foreach (var column2 in columns2)
-                    {
-                        var carcate2 = new CarCate()
-                        {
-                            Name = column2,
-                            Code = MBHelper.GetCode(column1Index, 3) + MBHelper.GetCode(column2Index, 2) + "0000",
-                            CreateTime = DateTime.Now,
-                            ParentId = carcate1.Id
+        //            rowNumber++;
 
-                        };
+        //            var columns2 = table.Where(x => x[0].ToString() == column1).Select(x => x[1].ToString()).Distinct();
+        //            var column2Index = 1;
+        //            foreach (var column2 in columns2)
+        //            {
+        //                var carcate2 = new CarCate()
+        //                {
+        //                    Name = column2,
+        //                    Code = MBHelper.GetCode(column1Index, 3) + MBHelper.GetCode(column2Index, 2) + "0000",
+        //                    CreateTime = DateTime.Now,
+        //                    ParentId = carcate1.Id
 
-                        await CarCateService.InsertAsync(carcate2);
-                        rowNumber++;
+        //                };
 
-                        var columns3 = table.Where(x => x[0].ToString() == column1 && x[1].ToString() == column2).Select(x => x[2].ToString()).Distinct();
-                        var column3Index = 1;
-                        foreach (var column3 in columns3)
-                        {
-                            var carcate3 = new CarCate()
-                            {
-                                Name = column3,
-                                Code = MBHelper.GetCode(column1Index, 3) + MBHelper.GetCode(column2Index, 2) + MBHelper.GetCode(column3Index, 2) + "00",
-                                CreateTime = DateTime.Now,
-                                ParentId = carcate2.Id
+        //                await CarCateService.InsertAsync(carcate2);
+        //                rowNumber++;
 
-                            };
+        //                var columns3 = table.Where(x => x[0].ToString() == column1 && x[1].ToString() == column2).Select(x => x[2].ToString()).Distinct();
+        //                var column3Index = 1;
+        //                foreach (var column3 in columns3)
+        //                {
+        //                    var carcate3 = new CarCate()
+        //                    {
+        //                        Name = column3,
+        //                        Code = MBHelper.GetCode(column1Index, 3) + MBHelper.GetCode(column2Index, 2) + MBHelper.GetCode(column3Index, 2) + "00",
+        //                        CreateTime = DateTime.Now,
+        //                        ParentId = carcate2.Id
 
-                            await CarCateService.InsertAsync(carcate3);
-                            rowNumber++;
-                            var columns4 = table.Where(x => x[0].ToString() == column1 && x[1].ToString() == column2 && x[2].ToString() == column3).Select(x => x[3].ToString()).Distinct();
-                            var column4Index = 1;
+        //                    };
 
-                            foreach (var column4 in columns4)
-                            {
-                                var carcate4 = new CarCate()
-                                {
-                                    Name = column4,
-                                    Code = MBHelper.GetCode(column1Index, 3) + MBHelper.GetCode(column2Index, 2) + MBHelper.GetCode(column3Index, 2) + MBHelper.GetCode(column4Index, 2),
-                                    CreateTime = DateTime.Now,
-                                    ParentId = carcate3.Id
+        //                    await CarCateService.InsertAsync(carcate3);
+        //                    rowNumber++;
+        //                    var columns4 = table.Where(x => x[0].ToString() == column1 && x[1].ToString() == column2 && x[2].ToString() == column3).Select(x => x[3].ToString()).Distinct();
+        //                    var column4Index = 1;
 
-                                };
-                                await CarCateService.InsertAsync(carcate4);
-                                rowNumber++;
-                                column4Index++;
-                            }
-                            column3Index++;
-                        }
-                        column2Index++;
-                    }
-                    column1Index++;
-                }
-                return Ok("success"+rowNumber.ToString());
-            }
-            catch (Exception ex)
-            {
-                return Ok(ex.Message);
-            }
-        }
+        //                    foreach (var column4 in columns4)
+        //                    {
+        //                        var carcate4 = new CarCate()
+        //                        {
+        //                            Name = column4,
+        //                            Code = MBHelper.GetCode(column1Index, 3) + MBHelper.GetCode(column2Index, 2) + MBHelper.GetCode(column3Index, 2) + MBHelper.GetCode(column4Index, 2),
+        //                            CreateTime = DateTime.Now,
+        //                            ParentId = carcate3.Id
+
+        //                        };
+        //                        await CarCateService.InsertAsync(carcate4);
+        //                        rowNumber++;
+        //                        column4Index++;
+        //                    }
+        //                    column3Index++;
+        //                }
+        //                column2Index++;
+        //            }
+        //            column1Index++;
+        //        }
+        //        return Ok("success"+rowNumber.ToString());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(ex.Message);
+        //    }
+        //}
+
+        #endregion
 
         [Route("cascader/{id:int=0}")]
         public List<Cascader> GetCarCateCascader(int Id)

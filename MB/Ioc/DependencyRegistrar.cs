@@ -75,6 +75,7 @@ namespace MB.Ioc
             builder.RegisterType<StorageService>().As<IStorageService>().InstancePerRequest();
             builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerRequest();
             builder.RegisterType<SpecificationAttributeOptionService>().As<ISpecificationAttributeOptionService>().InstancePerRequest();
+            builder.RegisterType<SpecificationAttributeCategoryMappingService>().As<ISpecificationAttributeCategoryMappingService>().InstancePerRequest();
 
 
             builder.RegisterType<ProductStorageQuantityService>().As<IProductStorageQuantityService>().InstancePerRequest();
@@ -85,6 +86,9 @@ namespace MB.Ioc
             builder.RegisterType<ProductAttributeValueService>().As<IProductAttributeValueService>().InstancePerRequest();
             builder.RegisterType<ProductManufacturerService>().As<IProductManufacturerService>().InstancePerRequest();
 
+
+            builder.RegisterType<ProductAttributeCategoryMappingService>().As<IProductAttributeCategoryMappingService>().InstancePerRequest();
+   
             builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerRequest();
         
            

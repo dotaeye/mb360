@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select, Cascader } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, InputNumber, Checkbox, message,Select, Cascader } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as carCateActions from '../actions/carCate'
@@ -170,7 +170,7 @@ var CarCate = React.createClass({
     }, {
       title: '名称',
       dataIndex: 'name'
-    },{
+    }, {
       title: '图片',
       dataIndex: 'imageUrl',
       render: (url) => <img src={url} style={{ width:'30px' ,height:'30px'}}/>
@@ -234,7 +234,7 @@ var CarCate = React.createClass({
                   rules: [{required: true, message: '请输入名称'}]
                 }
               )(
-                <Input  type="text"/>
+                <Input type="text"/>
               )}
             </FormItem>
             <FormItem
@@ -246,7 +246,7 @@ var CarCate = React.createClass({
                   rules: [{required: true, message: '请输入类别编码'}]
                 }
               )(
-                <Input  type="text"/>
+                <Input type="text"/>
               )}
             </FormItem>
             <FormItem
@@ -257,7 +257,42 @@ var CarCate = React.createClass({
                   initialValue: defaultValues
                 }
               )(
-                <Cascader  placeholder='请选择父级类别' options={cascader} changeOnSelect/>
+                <Cascader placeholder='请选择父级类别' options={cascader} changeOnSelect/>
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="等级"
+              >
+              {getFieldDecorator('level', {
+                  initialValue: record.level || 0
+                }
+              )(
+                <InputNumber  />
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="排序"
+              >
+              {getFieldDecorator('displayOrder', {
+                  initialValue: record.displayOrder || 0
+                }
+              )(
+                <InputNumber  />
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="拼音缩写"
+              >
+              {getFieldDecorator('pinYin', {
+                  initialValue: record.pinYin
+                }
+              )(
+                <Input type="text"/>
               )}
             </FormItem>
             {visible && (
@@ -269,7 +304,7 @@ var CarCate = React.createClass({
                     initialValue: record.imageUrl
                   }
                 )(
-                  <UploadFile  origin={true}/>
+                  <UploadFile origin={true}/>
                 )}
               </FormItem>
             )}

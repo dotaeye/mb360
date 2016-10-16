@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
+    [DTOIgnore]
     public class Category : BaseEntity
     {
         public Category()
@@ -19,11 +20,15 @@ namespace MB.Data.Models
 
         public string Code { get; set; }
 
+        public string PinYin { get; set; }
+
         public string ImageUrl { get; set; }
 
         public int DisplayOrder { get; set; }
 
         public string Description { get; set; }
+
+        public int Level { get; set; }
 
         [DTO(false, true)]
         public string CreateUserId { get; set; }
