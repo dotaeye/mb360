@@ -7,6 +7,7 @@ using System.Linq;
 using SQ.Core.Data;
 using MB.Data.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MB.Data.Service
 {
@@ -19,6 +20,8 @@ namespace MB.Data.Service
         Task<int> InsertAsync(ProductAttributeMapping entity);
 
         Task<int> UpdateAsync(ProductAttributeMapping entity);
+
+        IList<ProductAttributeMapping> GetProductAttributeMappingsByProductId(int productId);
 
         IQueryable<ProductAttributeMapping> GetAll();
 

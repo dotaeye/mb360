@@ -21,21 +21,49 @@ using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
+using SQ.Core.Caching;
+using MB.Models;
 
 namespace MB.Controllers
 {
+
     [RoutePrefix("api/Product")]
     public class ProductController : ApiController
     {
+
+        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY = "SQ.pres.product.hasproductattributes-{0}";
+
+
         private IProductService ProductService;
         private IProductManufacturerService ProductManufacturerService;
+        private ICacheManager CacheManager;
+        private IProductAttributeService ProductAttributeService;
+        private IProductAttributeMappingService ProductAttributeMappingService;
+        private IProductAttributeValueService ProductAttributeValueService;
+        private ISpecificationAttributeService SpecificationAttributeService;
+        private ISpecificationAttributeOptionService SpecificationAttributeOptionService;
+        private IProductSpecificationAttributeService ProductSpecificationAttributeService;
         public ProductController(
             IProductService _ProductService,
-            IProductManufacturerService _ProductManufacturerService
+            IProductManufacturerService _ProductManufacturerService,
+            ICacheManager _CacheManager,
+            IProductAttributeService _ProductAttributeService,
+            IProductAttributeMappingService _ProductAttributeMappingService,
+            IProductAttributeValueService _ProductAttributeValueService,
+            ISpecificationAttributeService _SpecificationAttributeService,
+            ISpecificationAttributeOptionService _SpecificationAttributeOptionService,
+            IProductSpecificationAttributeService _ProductSpecificationAttributeService
           )
         {
             this.ProductService = _ProductService;
             this.ProductManufacturerService = _ProductManufacturerService;
+            this.CacheManager = _CacheManager;
+            this.ProductAttributeService = _ProductAttributeService;
+            this.ProductAttributeMappingService = _ProductAttributeMappingService;
+            this.ProductAttributeValueService = _ProductAttributeValueService;
+            this.SpecificationAttributeService = _SpecificationAttributeService;
+            this.SpecificationAttributeOptionService = _SpecificationAttributeOptionService;
+            this.ProductSpecificationAttributeService = _ProductSpecificationAttributeService;
         }
 
         [Route("")]
@@ -182,6 +210,125 @@ namespace MB.Controllers
             return Ok(entity.ToModel());
         }
 
+
+        [Route("detail/{id:int}")]
+        [HttpGet]
+        [ResponseType(typeof(ProductDetailModel))]
+        public async Task<IHttpActionResult> Detail(int id)
+        {
+            var product = await ProductService.GetAll()
+                  .Where(x => x.Id == id)
+                  .FirstOrDefaultAsync();
+
+            if (product == null || product.Deleted)
+            {
+                return NotFound();
+            }
+            var model = new ProductDetailModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                CategoryId = product.CategoryId,
+                Description = product.Description,
+                DetailUrl = product.DetailUrl,
+                ImageUrl = product.ImageUrl,
+                isAgreeActive = product.isAgreeActive,
+                Price = product.Price,
+                SKU = product.SKU,
+                Status = product.Status,
+                VipPrice = product.VipPrice,
+                UrgencyPrice = product.UrgencyPrice
+            };
+
+            #region attribute
+            //performance optimization
+            //We cache a value indicating whether a product has attributes
+            IList<ProductAttributeMapping> productAttributeMapping = null;
+            string cacheKey = string.Format(PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY, product.Id);
+            var hasProductAttributesCache = CacheManager.Get<bool?>(cacheKey);
+            if (!hasProductAttributesCache.HasValue)
+            {
+                //no value in the cache yet
+                //let's load attributes and cache the result (true/false)
+                productAttributeMapping = ProductAttributeMappingService.GetProductAttributeMappingsByProductId(product.Id);
+                hasProductAttributesCache = productAttributeMapping.Any();
+                CacheManager.Set(cacheKey, hasProductAttributesCache, 60);
+            }
+            if (hasProductAttributesCache.Value && productAttributeMapping == null)
+            {
+                //cache indicates that the product has attributes
+                //let's load them
+                productAttributeMapping = ProductAttributeMappingService.GetProductAttributeMappingsByProductId(product.Id);
+            }
+            if (productAttributeMapping == null)
+            {
+                productAttributeMapping = new List<ProductAttributeMapping>();
+            }
+            foreach (var attribute in productAttributeMapping)
+            {
+                var attributeModel = new ProductAttributeModel
+                {
+                    Id = attribute.Id,
+                    ProductId = product.Id,
+                    ProductAttributeId = attribute.ProductAttributeId,
+                    Name = attribute.ProductAttribute.Name,
+                    Description = attribute.ProductAttribute.Description
+                };
+
+                //values
+                var attributeValues = ProductAttributeValueService.GetAll().Where(x => x.ProductAttributeMappingId == attribute.Id);
+                foreach (var attributeValue in attributeValues)
+                {
+                    var valueModel = new ProductAttributeValueModel
+                    {
+                        Id = attributeValue.Id,
+                        Name = attributeValue.Name,
+                        PriceAdjustment = attributeValue.PriceAdjustment,
+                        ImageUrl = attributeValue.ImageUrl
+                    };
+                    attributeModel.Values.Add(valueModel);
+                }
+                model.ProductAttributes.Add(attributeModel);
+            }
+
+            #endregion
+
+            #region specification
+            //var specs=ProductSpecificationAttributeService
+            // .GetAll().Where(x => x.ProductId == product.Id)
+            // .Join(
+            //    SpecificationAttributeOptionService.GetAll(),
+            //    psa => psa.SpecificationAttributeOptionId,
+            //    sao => sao.Id,
+            //    (psa, sao) => new {
+            //        psa.SpecificationAttributeOption,
+            //        sao.SpecificationAttribute
+            //    }
+            // ).ToList();
+
+            var specs = from psa in ProductSpecificationAttributeService.GetAll()
+                        join sao in SpecificationAttributeOptionService.GetAll()
+                        on psa.SpecificationAttributeOptionId equals sao.Id
+                        join sa in SpecificationAttributeService.GetAll()
+                        on sao.SpecificationAttributeId equals sa.Id
+                        select new {
+                            sa,
+                            psa,
+                            sao
+                        };
+
+            model.ProductSpecifications = specs.ToList().Select(x => new ProductSpecificationModel()
+            {
+                SpecificationAttributeId = x.sa.Id,
+                SpecificationAttributeName = x.sa.Name,
+                Value = x.sao.Name
+
+            }).ToList();
+
+            #endregion
+
+            return Ok(model);
+        }
     }
 }
 

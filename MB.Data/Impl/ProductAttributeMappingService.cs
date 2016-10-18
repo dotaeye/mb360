@@ -8,25 +8,29 @@ using System.Linq;
 using SQ.Core.Data;
 using MB.Data.Service;
 using MB.Data.Models;
+using SQ.Core.Caching;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MB.Data.Impl
 {
 	public class ProductAttributeMappingService : IProductAttributeMappingService
     {
-		   #region Fields
-
+        #region Fields
+        private const string PRODUCTATTRIBUTEMAPPINGS_ALL_KEY = "Nop.productattributemapping.all-{0}";
         private readonly IRepository<ProductAttributeMapping> _ProductAttributeMappingRepository;
-
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
 
-        public ProductAttributeMappingService(IRepository<ProductAttributeMapping> ProductAttributeMappingRepository
+        public ProductAttributeMappingService(
+            ICacheManager cacheManager,
+            IRepository<ProductAttributeMapping> ProductAttributeMappingRepository
            )
         {
             this._ProductAttributeMappingRepository = ProductAttributeMappingRepository;
-
+            this._cacheManager = cacheManager;
         }
         #endregion
 
@@ -74,5 +78,26 @@ namespace MB.Data.Impl
 
             return await _ProductAttributeMappingRepository.UpdateAsync(entity);
         }
+
+        /// <summary>
+        /// Gets product attribute mappings by product identifier
+        /// </summary>
+        /// <param name="productId">The product identifier</param>
+        /// <returns>Product attribute mapping collection</returns>
+        public virtual IList<ProductAttributeMapping> GetProductAttributeMappingsByProductId(int productId)
+        {
+            string key = string.Format(PRODUCTATTRIBUTEMAPPINGS_ALL_KEY, productId);
+
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from pam in _ProductAttributeMappingRepository.Table
+                            orderby pam.DisplayOrder
+                            where pam.ProductId == productId
+                            select pam;
+                var productAttributeMappings = query.ToList();
+                return productAttributeMappings;
+            });
+        }
+
     }
 }

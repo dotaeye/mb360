@@ -13,6 +13,7 @@ using SQ.Core;
 using SQ.Core.Data;
 using SQ.Core.Config;
 using SQ.Core.Infrastructure;
+using SQ.Core.Caching;
 using SQ.Core.Ioc;
 using SQ.Core.Reflection;
 using MB.Data;
@@ -60,8 +61,9 @@ namespace MB.Ioc
             builder.RegisterGeneric(typeof(EfRepository<>))
                 .As(typeof(IRepository<>)).InstancePerRequest();
 
+            builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
 
-
+       
             builder.RegisterType<UserActivitiesService>().As<IUserActivitiesService>().InstancePerRequest();
             builder.RegisterType<DepartmentService>().As<IDepartmentService>().InstancePerRequest();
             builder.RegisterType<JobService>().As<IJobService>().InstancePerRequest();
