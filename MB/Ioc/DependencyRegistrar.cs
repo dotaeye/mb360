@@ -75,15 +75,25 @@ namespace MB.Ioc
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerRequest();
 
             builder.RegisterType<StorageService>().As<IStorageService>().InstancePerRequest();
+            builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerRequest();
+            builder.RegisterType<SpecificationAttributeOptionService>().As<ISpecificationAttributeOptionService>().InstancePerRequest();
+            builder.RegisterType<SpecificationAttributeCategoryMappingService>().As<ISpecificationAttributeCategoryMappingService>().InstancePerRequest();
+
+
             builder.RegisterType<ProductStorageQuantityService>().As<IProductStorageQuantityService>().InstancePerRequest();
             builder.RegisterType<ProductCarCateService>().As<IProductCarCateService>().InstancePerRequest();
-
+            builder.RegisterType<ProductSpecificationAttributeService>().As<IProductSpecificationAttributeService>().InstancePerRequest();
             builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerRequest();
             builder.RegisterType<ProductAttributeMappingService>().As<IProductAttributeMappingService>().InstancePerRequest();
-
-            builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerRequest();
+            builder.RegisterType<ProductAttributeValueService>().As<IProductAttributeValueService>().InstancePerRequest();
             builder.RegisterType<ProductManufacturerService>().As<IProductManufacturerService>().InstancePerRequest();
 
+
+            builder.RegisterType<ProductAttributeCategoryMappingService>().As<IProductAttributeCategoryMappingService>().InstancePerRequest();
+   
+            builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerRequest();
+        
+           
         }
 
         public int Order

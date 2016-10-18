@@ -269,6 +269,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Controllers\ManufacturerController.cs" />
+    <Compile Include="Controllers\MemberController.cs" />
+    <Compile Include="Controllers\ProductAttributeCategoryMappingController.cs" />
     <Compile Include="Controllers\ProductAttributeController.cs" />
     <Compile Include="Controllers\ProductAttributeMappingController.cs" />
     <Compile Include="Controllers\ProductAttributeValueController.cs" />
@@ -276,7 +278,9 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ProductSpecificationAttributeController.cs" />
     <Compile Include="Controllers\ProductStorageQuantityController.cs" />
+    <Compile Include="Controllers\SpecificationAttributeCategoryMappingController.cs" />
     <Compile Include="Controllers\SpecificationAttributeController.cs" />
+    <Compile Include="Controllers\SpecificationAttributeOptionController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\UserActivitiesController.cs" />
