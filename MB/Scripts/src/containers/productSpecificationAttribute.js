@@ -6,11 +6,16 @@
 
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select,Cascader,InputNumber } from 'antd';
 import connectStatic from '../utils/connectStatic'
+import { setCascadeValues, getCascaderName, getSelectedOption } from '../utils/biz';
 import * as authActions from '../actions/auth'
+import * as productActions from '../actions/product'
 import * as productSpecificationAttributeActions from '../actions/productSpecificationAttribute'
+import * as specificationAttributeOptionActions from '../actions/specificationAttributeOption'
+import * as specificationAttributeActions from '../actions/specificationAttribute'
 import _ from 'lodash';
 const FormItem = Form.Item;
 const createForm = Form.create;
@@ -31,10 +36,22 @@ var ProductSpecificationAttribute = React.createClass({
   },
 
   fetchData(page){
-    this.props.productSpecificationAttributeActions.getAll({
-      results: this.state.pagination.pageSize,
-      page: page || this.state.pagination.current
-    });
+
+    const {routeParams:{id}}=this.props;
+    var promise = [];
+    promise.push(this.props.specificationAttributeOptionActions.getCascader());
+    promise.push(this.props.productActions.getById(id));
+    //promise.push(this.props.specificationAttributeActions.getAll({
+    //  results: 1000,
+    //  page: 1
+    //}));
+    Promise.all(promise).then(err=> {
+      this.props.productSpecificationAttributeActions.getAll({
+        id,
+        results: this.state.pagination.pageSize,
+        page: page || this.state.pagination.current
+      });
+    })
   },
 
   componentDidMount(){
@@ -43,11 +60,13 @@ var ProductSpecificationAttribute = React.createClass({
 
   handleTableChange(pagination, filters, sorter) {
     const pager = this.state.pagination;
+    const {routeParams:{id}}=this.props;
     pager.current = pagination.current;
     this.setState({
       pagination: pager
     });
     this.props.productSpecificationAttributeActions.getAll({
+      id,
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
@@ -58,7 +77,7 @@ var ProductSpecificationAttribute = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加ProductSpecificationAttribute',
+      title: '添加产品规格',
       record: {}
     });
   },
@@ -66,13 +85,13 @@ var ProductSpecificationAttribute = React.createClass({
   onEdit(record){
     this.props.productSpecificationAttributeActions.getById(record.id).then((err)=> {
       if (err) {
-        message.error('获取ProductSpecificationAttribute数据失败！请刷新页面尝试。');
+        message.error('获取产品规格数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑ProductSpecificationAttribute'
+          title: '编辑产品规格'
         });
       }
     });
@@ -84,7 +103,7 @@ var ProductSpecificationAttribute = React.createClass({
     let source = list.data;
     const remove = this.props.productSpecificationAttributeActions.remove;
     confirm({
-      title: '确认删除该ProductSpecificationAttribute？',
+      title: '确认删除该产品规格？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -108,6 +127,7 @@ var ProductSpecificationAttribute = React.createClass({
   },
 
   onModalSubmit(){
+    const {routeParams:{id}}=this.props;
     const { edit }=this.state;
     const { update, create} =this.props.productSpecificationAttributeActions;
     const { entity }= this.props.productSpecificationAttribute;
@@ -116,6 +136,8 @@ var ProductSpecificationAttribute = React.createClass({
         console.log('Errors in form!!!');
         return;
       }
+      formdata.productId = id;
+      formdata.specificationAttributeOptionId = formdata.specificationAttributeOptionId[formdata.specificationAttributeOptionId.length - 1];
       if (edit) {
         formdata.id = entity.id;
         update(formdata).then((err)=> {
@@ -149,6 +171,8 @@ var ProductSpecificationAttribute = React.createClass({
   },
 
   render() {
+    const cascader = this.props.specificationAttributeOption.cascader;
+    //const specificationAttributeList = this.props.specificationAttribute.list;
     const columns = [{
       title: 'Id',
       dataIndex: 'id',
@@ -156,8 +180,18 @@ var ProductSpecificationAttribute = React.createClass({
       width: '20%'
     }, {
       title: '名称',
-      dataIndex: 'name'
-    },{
+      dataIndex: 'specificationAttributeOptionId',
+      render: (specificationAttributeOptionId)=> {
+        let specificationAttributeOptionIds = [];
+        setCascadeValues(cascader, specificationAttributeOptionId, specificationAttributeOptionIds);
+        specificationAttributeOptionIds = specificationAttributeOptionIds.reverse();
+        let cates = getCascaderName(specificationAttributeOptionIds, cascader);
+        return cates.join('-');
+      }
+    }, {
+      title: '排序',
+      dataIndex: 'displayOrder'
+    }, {
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -171,21 +205,58 @@ var ProductSpecificationAttribute = React.createClass({
       )
     }];
     const { productSpecificationAttribute:{ loading, list, entity }} = this.props;
+    const product = this.props.product.entity;
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
+
+    let defaultValues = [];
+    if (record.specificationAttributeOptionId) {
+      setCascadeValues(cascader, record.specificationAttributeOptionId, defaultValues);
+      defaultValues = defaultValues.reverse();
+    }
+
+    const parentIds = data.map(item=> {
+      if (edit && item.specificationAttributeOptionId == entity.specificationAttributeOptionId) {
+        return '';
+      } else {
+        return getSelectedOption(cascader, item.specificationAttributeOptionId).parentId;
+      }
+    });
+
+    const checkSpec = (rule, value, callback)=> {
+      if (parentIds.filter(pid=>pid == value[0]).length > 0) {
+        const label = getSelectedOption(cascader, value[0]).label;
+        callback(new Error(`当前规格类别${label}已经添加!`));
+      } else {
+        callback();
+      }
+    };
+
     const formItemLayout = {
       labelCol: {span: 4},
       wrapperCol: {span: 20}
     };
     return (
       <div className='container'>
-        <div className='ant-list-header' data-flex="dir:right">
+        <div className='ant-list-header' data-flex="main:justify">
+          <Link to='product'>
+            <Icon type='arrow-left'/> 返回列表</Link>
+
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加ProductSpecificationAttribute</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加产品规格</Button>
           </div>
+        </div>
+        <div className='nav-tabs-container'>
+          <ul className="nav nav-tabs">
+            <li><Link to={`product/update/${product.id}`}>基本信息</Link></li>
+            <li><Link to={`productstoragequantity/${product.id}`}>管理库存</Link></li>
+            <li><Link to={`productcarcate/${entity.id}`}>车型匹配</Link></li>
+            <li><Link to={`productattributemapping/${product.id}`}>产品属性</Link></li>
+            <li className="active"><a>产品规格</a></li>
+          </ul>
         </div>
         <Table
           ref='table'
@@ -201,13 +272,33 @@ var ProductSpecificationAttribute = React.createClass({
           <Form horizontal>
             <FormItem
               {...formItemLayout}
-              label="名称"
+              label="规格"
               >
-              <Input  {...getFieldProps('name', {
-                  initialValue: record.name,
-                  rules: [{required: true, message: '请输入名称'}]
+              {getFieldDecorator('specificationAttributeOptionId', {
+                  initialValue: defaultValues,
+                  rules: [{
+                    required: true,
+                    type: 'array',
+                    message: '请选择车型'
+                  }, {
+                    validator: checkSpec
+                  }]
                 }
-              )} type="text"/>
+              )(
+                <Cascader placeholder='请选择规格值' options={cascader}/>
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="排序"
+              >
+              {getFieldDecorator('displayOrder', {
+                  initialValue: record.displayOrder || 0
+                }
+              )(
+                <InputNumber  />
+              )}
             </FormItem>
           </Form>
         </Modal>
@@ -219,24 +310,30 @@ var ProductSpecificationAttribute = React.createClass({
 function mapStateToProps(state) {
   return {
     auth: state.auth,
-    productSpecificationAttribute: state.productSpecificationAttribute
+    product: state.product,
+    productSpecificationAttribute: state.productSpecificationAttribute,
+    specificationAttribute: state.specificationAttribute,
+    specificationAttributeOption: state.specificationAttributeOption
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     authActions: bindActionCreators(authActions, dispatch),
-    productSpecificationAttributeActions: bindActionCreators(productSpecificationAttributeActions, dispatch)
+    productActions: bindActionCreators(productActions, dispatch),
+    productSpecificationAttributeActions: bindActionCreators(productSpecificationAttributeActions, dispatch),
+    specificationAttributeActions: bindActionCreators(specificationAttributeActions, dispatch),
+    specificationAttributeOptionActions: bindActionCreators(specificationAttributeOptionActions, dispatch)
   }
 }
 
 const statics = {
-  path: 'userpermission',
-  menuGroup: 'system',
+  path: 'productspecificationattribute',
+  menuGroup: 'product',
   breadcrumb: [{
     title: '系统设置'
   }, {
-    title: 'ProductSpecificationAttribute管理'
+    title: '产品规格'
   }]
 };
 

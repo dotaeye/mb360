@@ -9,7 +9,8 @@ import * as jobTypes from '../contants/job';
 
 const initialState = {
   loaded: false,
-  entity: {}
+  entity: {},
+  cascader:[]
 };
 
 export default function job(state = initialState, action = {}) {
@@ -32,6 +33,12 @@ export default function job(state = initialState, action = {}) {
         ...state,
         loading: false,
         error: action.error
+      };
+    case jobTypes.GET_JOB_CASCADER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        cascader: action.result
       };
     case jobTypes.GET_ALL_JOB_SUCCESS:
       return {

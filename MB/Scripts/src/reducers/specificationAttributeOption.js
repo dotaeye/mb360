@@ -9,7 +9,8 @@ import * as specificationAttributeOptionTypes from '../contants/specificationAtt
 
 const initialState = {
   loaded: false,
-  entity: {}
+  entity: {},
+  cascader:[]
 };
 
 export default function specificationAttributeOption(state = initialState, action = {}) {
@@ -51,6 +52,12 @@ export default function specificationAttributeOption(state = initialState, actio
         ...state,
         loading: false,
         entity: action.result
+      };
+    case specificationAttributeOptionTypes.GET_SPECIFICATIONATTRIBUTEOPTION_CASCADER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        cascader: action.result
       };
     case specificationAttributeOptionTypes.UPDATE_SPECIFICATIONATTRIBUTEOPTION_SUCCESS:
       return {

@@ -6,8 +6,9 @@
 
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select, InputNumber } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as specificationAttributeActions from '../actions/specificationAttribute'
@@ -58,7 +59,7 @@ var SpecificationAttribute = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加SpecificationAttribute',
+      title: '添加产品规格',
       record: {}
     });
   },
@@ -66,13 +67,13 @@ var SpecificationAttribute = React.createClass({
   onEdit(record){
     this.props.specificationAttributeActions.getById(record.id).then((err)=> {
       if (err) {
-        message.error('获取SpecificationAttribute数据失败！请刷新页面尝试。');
+        message.error('获取产品规格数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑SpecificationAttribute'
+          title: '编辑产品规格'
         });
       }
     });
@@ -84,7 +85,7 @@ var SpecificationAttribute = React.createClass({
     let source = list.data;
     const remove = this.props.specificationAttributeActions.remove;
     confirm({
-      title: '确认删除该SpecificationAttribute？',
+      title: '确认删除该产品规格？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -158,10 +159,17 @@ var SpecificationAttribute = React.createClass({
       title: '名称',
       dataIndex: 'name'
     },{
+      title: '排序',
+      dataIndex: 'displayOrder'
+    },{
       title: '操作',
       key: 'operation',
       render: (text, record) => (
         <span>
+          <Link to={`specificationattributeoption/${record.id}`}>
+            <Button type="ghost" shape="circle" icon="tags" size="small" title='设置规格值' />
+          </Link>
+          <span className="ant-divider"></span>
           <Button type="ghost" shape="circle" icon="edit" size="small" title='编辑'
                   onClick={this.onEdit.bind(null,record)}/>
           <span className="ant-divider"></span>
@@ -174,7 +182,7 @@ var SpecificationAttribute = React.createClass({
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
@@ -184,7 +192,7 @@ var SpecificationAttribute = React.createClass({
       <div className='container'>
         <div className='ant-list-header' data-flex="dir:right">
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加SpecificationAttribute</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加产品规格</Button>
           </div>
         </div>
         <Table
@@ -203,11 +211,24 @@ var SpecificationAttribute = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                   initialValue: record.name,
                   rules: [{required: true, message: '请输入名称'}]
                 }
-              )} type="text"/>
+              )(
+                <Input type="text"/>
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="排序"
+              >
+              {getFieldDecorator('displayOrder', {
+                  initialValue: record.displayOrder || 0
+                }
+              )(
+                <InputNumber  />
+              )}
             </FormItem>
           </Form>
         </Modal>
@@ -231,12 +252,12 @@ function mapDispatchToProps(dispatch) {
 }
 
 const statics = {
-  path: 'userpermission',
-  menuGroup: 'system',
+  path: 'specificationattribute',
+  menuGroup: 'product',
   breadcrumb: [{
-    title: '系统设置'
+    title: '产品中心'
   }, {
-    title: 'SpecificationAttribute管理'
+    title: '产品规格'
   }]
 };
 

@@ -38,7 +38,9 @@ namespace MB.Controllers
         [Route("")]
         public ApiListResult<ProductSpecificationAttributeDTO> Get([FromUri] AntPageOption option = null)
         {
-            var query = ProductSpecificationAttributeService.GetAll().ProjectTo<ProductSpecificationAttributeDTO>();
+            var query = ProductSpecificationAttributeService.GetAll()
+                .Where(x => x.ProductId == option.Id)
+                .ProjectTo<ProductSpecificationAttributeDTO>();
             if (option != null)
             {
                 if (!string.IsNullOrEmpty(option.SortField))
@@ -78,7 +80,7 @@ namespace MB.Controllers
         [ResponseType(typeof(ProductSpecificationAttributeDTO))]
         public async Task<IHttpActionResult> GetById(int id)
         {
-            ProductSpecificationAttributeDTO ProductSpecificationAttribute = await ProductSpecificationAttributeService.GetAll().Where(x => x.Id == id ).ProjectTo<ProductSpecificationAttributeDTO>().FirstOrDefaultAsync();
+            ProductSpecificationAttributeDTO ProductSpecificationAttribute = await ProductSpecificationAttributeService.GetAll().Where(x => x.Id == id).ProjectTo<ProductSpecificationAttributeDTO>().FirstOrDefaultAsync();
             if (ProductSpecificationAttribute == null)
             {
                 return NotFound();
@@ -115,7 +117,7 @@ namespace MB.Controllers
             }
             var entity = await ProductSpecificationAttributeService.FindOneAsync(ProductSpecificationAttributeDto.Id);
             entity = ProductSpecificationAttributeDto.ToEntity(entity);
-          
+
             await ProductSpecificationAttributeService.UpdateAsync(entity);
             return Ok(entity.ToModel());
         }

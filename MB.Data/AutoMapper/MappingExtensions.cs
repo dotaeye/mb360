@@ -322,6 +322,50 @@ namespace MB.Data.AutoMapper
 
 
 
+        public static MemberDTO ToModel(this ApplicationUser entity)
+        {
+            return Mapper.Map<ApplicationUser, MemberDTO>(entity);
+        }
+
+        public static ApplicationUser ToEntity(this MemberDTO dto)
+        {
+            return Mapper.Map<MemberDTO, ApplicationUser>(dto);
+        }
+
+        public static ApplicationUser ToEntity(this MemberDTO dto, ApplicationUser entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static SpecificationAttributeCategoryMappingDTO ToModel(this SpecificationAttributeCategoryMapping entity)
+        {
+            return Mapper.Map<SpecificationAttributeCategoryMapping, SpecificationAttributeCategoryMappingDTO>(entity);
+        }
+
+        public static SpecificationAttributeCategoryMapping ToEntity(this SpecificationAttributeCategoryMappingDTO dto)
+        {
+            return Mapper.Map<SpecificationAttributeCategoryMappingDTO, SpecificationAttributeCategoryMapping>(dto);
+        }
+
+        public static SpecificationAttributeCategoryMapping ToEntity(this SpecificationAttributeCategoryMappingDTO dto, SpecificationAttributeCategoryMapping entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static ProductAttributeCategoryMappingDTO ToModel(this ProductAttributeCategoryMapping entity)
+        {
+            return Mapper.Map<ProductAttributeCategoryMapping, ProductAttributeCategoryMappingDTO>(entity);
+        }
+
+        public static ProductAttributeCategoryMapping ToEntity(this ProductAttributeCategoryMappingDTO dto)
+        {
+            return Mapper.Map<ProductAttributeCategoryMappingDTO, ProductAttributeCategoryMapping>(dto);
+        }
+
+        public static ProductAttributeCategoryMapping ToEntity(this ProductAttributeCategoryMappingDTO dto, ProductAttributeCategoryMapping entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
 
     }
 }

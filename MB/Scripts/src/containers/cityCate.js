@@ -197,7 +197,7 @@ var CityCate = React.createClass({
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
@@ -231,41 +231,62 @@ var CityCate = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                   initialValue: record.name,
                   rules: [{required: true, message: '请输入名称'}]
                 }
-              )} type="text"/>
+              )(
+                <Input  type="text"/>
+              )}
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="编码"
               >
-              <Input  {...getFieldProps('code', {
+              {getFieldDecorator('code', {
                   initialValue: record.code,
                   rules: [{required: true, message: '请输入类别编码'}]
                 }
-              )} type="text"/>
+              )(
+                <Input  type="text"/>
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="父级类别"
+              >
+              {getFieldDecorator('parentId', {
+                  initialValue: defaultValues
+                }
+              )(
+                <Cascader  placeholder='请选择父级类别' options={cascader} changeOnSelect/>
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="等级"
+              >
+              {getFieldDecorator('level', {
+                  initialValue: record.level || 0
+                }
+              )(
+                <InputNumber  />
+              )}
             </FormItem>
 
             <FormItem
               {...formItemLayout}
               label="排序"
               >
-              <InputNumber  {...getFieldProps('displayOrder', {
-                  initialValue: record.displayOrder || 0
-                }
-              )} />
+              {getFieldDecorator('displayOrder', {
+                initialValue: record.displayOrder || 0
+              }
+            )(
+              <InputNumber  />
+            )}
             </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="父级部门"
-              >
-              <Cascader {...getFieldProps('parentId', {
-                  initialValue: defaultValues
-                }
-              )} placeholder='请选择父级类别' options={cascader} changeOnSelect/>
-            </FormItem>
+
           </Form>
         </Modal>
       </div>

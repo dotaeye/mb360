@@ -16,6 +16,10 @@ namespace MB.Data.DTO
         public string Code { get; set; }
         public int DisplayOrder { get; set; }
 
+        public int Level { get; set; }
+
+        public string PinYin { get; set; }
+
         public string Description { get; set; }
 
         public string ImageUrl { get; set; }

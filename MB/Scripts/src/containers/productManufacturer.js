@@ -58,7 +58,7 @@ var ProductManufacturer = React.createClass({
     this.setState({
       visible: true,
       edit: false,
-      title: '添加ProductManufacturer',
+      title: '添加品牌',
       record: {}
     });
   },
@@ -66,13 +66,13 @@ var ProductManufacturer = React.createClass({
   onEdit(record){
     this.props.productManufacturerActions.getById(record.id).then((err)=> {
       if (err) {
-        message.error('获取ProductManufacturer数据失败！请刷新页面尝试。');
+        message.error('获取品牌数据失败！请刷新页面尝试。');
       }
       else {
         this.setState({
           visible: true,
           edit: true,
-          title: '编辑ProductManufacturer'
+          title: '编辑品牌'
         });
       }
     });
@@ -84,7 +84,7 @@ var ProductManufacturer = React.createClass({
     let source = list.data;
     const remove = this.props.productManufacturerActions.remove;
     confirm({
-      title: '确认删除该ProductManufacturer？',
+      title: '确认删除该品牌？',
       onOk() {
         remove(record.id).then((err)=> {
           if (err) {
@@ -174,7 +174,7 @@ var ProductManufacturer = React.createClass({
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
@@ -184,7 +184,7 @@ var ProductManufacturer = React.createClass({
       <div className='container'>
         <div className='ant-list-header' data-flex="dir:right">
           <div className='ant-list-header-right'>
-            <Button type="primary" icon="plus" onClick={this.onAdd}>添加ProductManufacturer</Button>
+            <Button type="primary" icon="plus" onClick={this.onAdd}>添加品牌</Button>
           </div>
         </div>
         <Table
@@ -203,11 +203,13 @@ var ProductManufacturer = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                   initialValue: record.name,
                   rules: [{required: true, message: '请输入名称'}]
                 }
-              )} type="text"/>
+              )(
+                <Input type="text"/>
+              )}
             </FormItem>
           </Form>
         </Modal>
@@ -236,7 +238,7 @@ const statics = {
   breadcrumb: [{
     title: '系统设置'
   }, {
-    title: 'ProductManufacturer管理'
+    title: '品牌管理'
   }]
 };
 

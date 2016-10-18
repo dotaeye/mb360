@@ -182,7 +182,7 @@ var UserPermission = React.createClass({
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
@@ -190,11 +190,10 @@ var UserPermission = React.createClass({
     };
     const permissionGroups = [
       '后台权限',
-      '权限管理',
-      '角色管理',
-      '部门管理',
-      '产品类别管理',
-      '产品管理'
+      '系统设置',
+      '业务中心',
+      '产品中心',
+      '用户中心'
     ];
     return (
       <div className='container'>
@@ -219,50 +218,62 @@ var UserPermission = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                   initialValue: record.name,
                   rules: [{required: true, message: '请输入名称'}]
                 }
-              )} type="text"/>
+              )(
+                <Input type="text"/>
+              )}
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="控制器"
               >
-              <Input  {...getFieldProps('controller', {
+              {getFieldDecorator('controller', {
                 initialValue: record.controller,
                 rules: [{required: true, message: '请输入控制器'}]
-              })} type="text"/>
+              })(
+                <Input type="text"/>
+              )}
+
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="Action"
               >
-              <Input  {...getFieldProps('action', {
+              {getFieldDecorator('action', {
                 initialValue: record.action,
                 rules: [{required: true, message: '请输入Action'}]
-              })} type="text"/>
+              })(
+                <Input type="text"/>
+              )}
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="分组"
               >
-              <Select  {...getFieldProps('group', {
+              {getFieldDecorator('group', {
                 initialValue: record.group,
                 rules: [{required: true, message: '请选择权限分组'}]
-              })} >
-                {permissionGroups.map((g,gIndex)=>{
-                  return (
-                    <Option key={gIndex} value={g}>{g}</Option>
-                  )
-                })}
-              </Select>
+              })(
+                <Select>
+                  {permissionGroups.map((g,gIndex)=>{
+                    return (
+                      <Option key={gIndex} value={g}>{g}</Option>
+                    )
+                  })}
+                </Select>
+              )}
+
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="是否为API"
               >
-              <Checkbox {...getFieldProps('isApi', {initialValue: record.isApi, valuePropName: 'checked'})}/>
+              {getFieldDecorator('isApi', {initialValue: record.isApi, valuePropName: 'checked'})(
+                <Checkbox />
+              )}
             </FormItem>
           </Form>
         </Modal>

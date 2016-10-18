@@ -18,12 +18,17 @@ import {
   CityCate,
   Job,
   Storage,
+  Member,
+  MemberCreateOrUpdate,
   Product,
   ProductCreateOrUpdate,
   ProductStorageQuantity,
   ProductCarCate,
   ProductAttribute,
   ProductAttributeMapping,
+  ProductSpecificationAttribute,
+  SpecificationAttribute,
+  SpecificationAttributeOption,
   Manufacturer,
   NotFound
 } from './containers';
@@ -49,6 +54,8 @@ export default (store) => {
         store.dispatch(loadPermission()).then(()=>{
           store.dispatch(loadAuthToken(authToken));
           checkAuth();
+        }).catch(err=>{
+          baseStorage.getStorage(configs.storage).remove(configs.authToken);
         })
       }else{
         checkAuth();
@@ -84,6 +91,12 @@ export default (store) => {
 
       <Route path='storage' component={Storage} onEnter={requireLogin.bind(null,'storage','index')} />
 
+      <Route path='member' component={Member} onEnter={requireLogin.bind(null,'member','index')} />
+
+      <Route path='member/create' component={MemberCreateOrUpdate} onEnter={requireLogin.bind(null,'member','create')} />
+
+      <Route path='member/update/:id' component={MemberCreateOrUpdate} onEnter={requireLogin.bind(null,'member','update')} />
+
       <Route path='product' component={Product} onEnter={requireLogin.bind(null,'product','index')} />
 
       <Route path='product/create' component={ProductCreateOrUpdate} onEnter={requireLogin.bind(null,'product','create')} />
@@ -98,7 +111,13 @@ export default (store) => {
       
       <Route path='productattributemapping/:id' component={ProductAttributeMapping} onEnter={requireLogin.bind(null,'productattributemapping','index')} />
 
+      <Route path='productspecificationattribute/:id' component={ProductSpecificationAttribute} onEnter={requireLogin.bind(null,'productspecificationattribute','index')} />
+
       <Route path='manufacturer' component={Manufacturer} onEnter={requireLogin.bind(null,'manufacturer','index')} />
+
+      <Route path='specificationattribute' component={SpecificationAttribute} onEnter={requireLogin.bind(null,'specificationattribute','index')} />
+
+      <Route path='specificationattributeoption/:id' component={SpecificationAttributeOption} onEnter={requireLogin.bind(null,'specificationattributeoption','index')} />
 
       <Route path='login' component={Login}/>
 

@@ -8,17 +8,19 @@ using MB.Data.Models;
 
 namespace MB.Data.DTO
 {
-	public class CarCateDTO
+    public class CarCateDTO
     {
-         
-       public string Name  { get; set; } 
-       public int? ParentId  { get; set; } 
-       public string Code  { get; set; }
+
+        public string Name { get; set; }
+        public int? ParentId { get; set; }
+        public string Code { get; set; }
         public string Description { get; set; }
         public int DisplayOrder { get; set; }
 
+        public string PinYin { get; set; }
 
+        public int Level { get; set; }
         public string ImageUrl { get; set; }
-        public int Id  { get; set; } 
+        public int Id { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
+    [DTOIgnore]
     public class ProductAttributeValue : BaseEntity
     {
 

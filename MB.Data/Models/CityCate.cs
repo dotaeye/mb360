@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
+    [DTOIgnore]
     public class CityCate : BaseEntity
     {
         public CityCate()
@@ -21,8 +22,13 @@ namespace MB.Data.Models
 
         public string Description { get; set; }
 
+        public int Level { get; set; }
+
         public string ImageUrl { get; set; }
+
         public string Code { get; set; }
+
+        public string PinYin { get; set; }
 
         [DTO(false, true)]
         public string CreateUserId { get; set; }

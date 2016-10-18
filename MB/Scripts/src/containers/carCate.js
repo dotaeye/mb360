@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select, Cascader } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input, InputNumber, Checkbox, message,Select, Cascader } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as carCateActions from '../actions/carCate'
@@ -170,7 +170,7 @@ var CarCate = React.createClass({
     }, {
       title: '名称',
       dataIndex: 'name'
-    },{
+    }, {
       title: '图片',
       dataIndex: 'imageUrl',
       render: (url) => <img src={url} style={{ width:'30px' ,height:'30px'}}/>
@@ -195,7 +195,7 @@ var CarCate = React.createClass({
     const { title, visible, edit }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const record = edit ? entity : {};
     const formItemLayout = {
       labelCol: {span: 4},
@@ -229,41 +229,83 @@ var CarCate = React.createClass({
               {...formItemLayout}
               label="名称"
               >
-              <Input  {...getFieldProps('name', {
+              {getFieldDecorator('name', {
                   initialValue: record.name,
                   rules: [{required: true, message: '请输入名称'}]
                 }
-              )} type="text"/>
+              )(
+                <Input type="text"/>
+              )}
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="编码"
               >
-              <Input  {...getFieldProps('code', {
+              {getFieldDecorator('code', {
                   initialValue: record.code,
                   rules: [{required: true, message: '请输入类别编码'}]
                 }
-              )} type="text"/>
+              )(
+                <Input type="text"/>
+              )}
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="父级部门"
+              label="父级类别"
               >
-              <Cascader {...getFieldProps('parentId', {
+              {getFieldDecorator('parentId', {
                   initialValue: defaultValues
                 }
-              )} placeholder='请选择父级类别' options={cascader} changeOnSelect/>
+              )(
+                <Cascader placeholder='请选择父级类别' options={cascader} changeOnSelect/>
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="等级"
+              >
+              {getFieldDecorator('level', {
+                  initialValue: record.level || 0
+                }
+              )(
+                <InputNumber  />
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="排序"
+              >
+              {getFieldDecorator('displayOrder', {
+                  initialValue: record.displayOrder || 0
+                }
+              )(
+                <InputNumber  />
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="拼音缩写"
+              >
+              {getFieldDecorator('pinYin', {
+                  initialValue: record.pinYin
+                }
+              )(
+                <Input type="text"/>
+              )}
             </FormItem>
             {visible && (
               <FormItem
                 {...formItemLayout}
                 label="分类图片"
                 >
-                <UploadFile  {...getFieldProps('imageUrl', {
-                    initialValue: record.imageUrl,
-                    rules: [{required: true, message: '请上传分类图片'}]
+                {getFieldDecorator('imageUrl', {
+                    initialValue: record.imageUrl
                   }
-                )} origin={true}/>
+                )(
+                  <UploadFile origin={true}/>
+                )}
               </FormItem>
             )}
           </Form>

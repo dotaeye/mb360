@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
+    [DTOIgnore]
     public class CarCate : BaseEntity
     {
         public CarCate()
@@ -20,6 +21,10 @@ namespace MB.Data.Models
         public string Description { get; set; }
 
         public string Code { get; set; }
+
+        public int Level { get; set; }
+
+        public string PinYin { get; set; }
 
         public string ImageUrl { get; set; }
 

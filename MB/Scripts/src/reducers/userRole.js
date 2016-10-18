@@ -6,7 +6,8 @@
 import * as userRoleTypes from '../contants/userRole';
 
 const initialState = {
-  entity: {}
+  entity: {},
+  selectlist:[]
 };
 
 export default function userRole(state = initialState, action = {}) {
@@ -14,6 +15,7 @@ export default function userRole(state = initialState, action = {}) {
     case userRoleTypes.GET_ALL_USERROLE:
     case userRoleTypes.GET_ONE_USERROLE:
     case userRoleTypes.CREATE_USERROLE:
+    case userRoleTypes.GET_USERROLE_SELECTLIST:
     case userRoleTypes.UPDATE_USERROLE:
     case userRoleTypes.DELETE_USERROLE:
       return {
@@ -25,6 +27,7 @@ export default function userRole(state = initialState, action = {}) {
     case userRoleTypes.CREATE_USERROLE_FAIL:
     case userRoleTypes.UPDATE_USERROLE_FAIL:
     case userRoleTypes.DELETE_USERROLE_FAIL:
+    case userRoleTypes.GET_USERROLE_SELECTLIST_FAIL:
       return {
         ...state,
         loading: false,
@@ -54,6 +57,14 @@ export default function userRole(state = initialState, action = {}) {
         loading: false,
         entity: action.result
       };
+    case userRoleTypes.GET_USERROLE_SELECTLIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        selectlist: action.result
+      };
+
     case userRoleTypes.DELETE_USERROLE_SUCCESS:
       return {
         ...state,

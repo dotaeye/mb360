@@ -25,6 +25,15 @@ export function getById(id) {
   };
 }
 
+export function getSelectList() {
+  return {
+    types: [userRoleTypes.GET_USERROLE_SELECTLIST, userRoleTypes.GET_USERROLE_SELECTLIST_SUCCESS, userRoleTypes.GET_USERROLE_SELECTLIST_FAIL],
+    promise: (client) => client.get('/userRole/selectlist',{
+      token: true
+    })
+  };
+}
+
 export function create(data) {
   return {
     types: [userRoleTypes.CREATE_USERROLE, userRoleTypes.CREATE_USERROLE_SUCCESS, userRoleTypes.CREATE_USERROLE_FAIL],
