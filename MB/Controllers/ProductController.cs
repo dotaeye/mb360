@@ -224,6 +224,7 @@ namespace MB.Controllers
             {
                 return NotFound();
             }
+
             var model = new ProductDetailModel
             {
                 Id = product.Id,
@@ -244,22 +245,11 @@ namespace MB.Controllers
             //performance optimization
             //We cache a value indicating whether a product has attributes
             IList<ProductAttributeMapping> productAttributeMapping = null;
-            string cacheKey = string.Format(PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY, product.Id);
-            var hasProductAttributesCache = CacheManager.Get<bool?>(cacheKey);
-            if (!hasProductAttributesCache.HasValue)
-            {
+         
                 //no value in the cache yet
                 //let's load attributes and cache the result (true/false)
-                productAttributeMapping = ProductAttributeMappingService.GetProductAttributeMappingsByProductId(product.Id);
-                hasProductAttributesCache = productAttributeMapping.Any();
-                CacheManager.Set(cacheKey, hasProductAttributesCache, 60);
-            }
-            if (hasProductAttributesCache.Value && productAttributeMapping == null)
-            {
-                //cache indicates that the product has attributes
-                //let's load them
-                productAttributeMapping = ProductAttributeMappingService.GetProductAttributeMappingsByProductId(product.Id);
-            }
+            productAttributeMapping = ProductAttributeMappingService.GetProductAttributeMappingsByProductId(product.Id);
+              
             if (productAttributeMapping == null)
             {
                 productAttributeMapping = new List<ProductAttributeMapping>();
