@@ -3,17 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
+using MB.Data.Models;
 
 namespace MB.Helpers
 {
-
-    public enum RoleType
-    {
-        Admin = 1,
-        Employee = 2,
-        Member = 3,
-        Normal = 4
-    }
 
     public enum StorageType
     {

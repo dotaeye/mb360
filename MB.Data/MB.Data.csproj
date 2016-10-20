@@ -280,8 +280,11 @@
     <Compile Include="Models\ProductAttributeValue.cs" />
     <Compile Include="Models\ProductCarCate.cs" />
     <Compile Include="Models\ProductManufacturer.cs" />
+    <Compile Include="Models\ProductSortingEnum.cs" />
     <Compile Include="Models\ProductSpecificationAttribute.cs" />
+    <Compile Include="Models\ProductStatus.cs" />
     <Compile Include="Models\ProductStorageQuantity.cs" />
+    <Compile Include="Models\RoleType.cs" />
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\SpecificationAttribute.cs" />
     <Compile Include="Models\SpecificationAttributeCategoryMapping.cs" />

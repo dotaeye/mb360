@@ -9,23 +9,26 @@ using SQ.Core.Data;
 using MB.Data.Service;
 using MB.Data.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MB.Data.Impl
 {
-	public class ProductService : IProductService
+    public class ProductService : IProductService
     {
-		   #region Fields
+        #region Fields
 
         private readonly IRepository<Product> _ProductRepository;
-
+        private readonly IRepository<SpecificationAttributeOption> _SpecificationAttributeOptionRepository;
         #endregion
 
         #region Ctor
 
-        public ProductService(IRepository<Product> ProductRepository
+        public ProductService(IRepository<Product> ProductRepository,
+            IRepository<SpecificationAttributeOption> SpecificationAttributeOptionRepository
            )
         {
             this._ProductRepository = ProductRepository;
+            this._SpecificationAttributeOptionRepository = SpecificationAttributeOptionRepository;
 
         }
         #endregion
@@ -36,7 +39,7 @@ namespace MB.Data.Impl
                 throw new ArgumentNullException("Product");
 
             entity.Deleted = true;
-           return await UpdateAsync(entity);
+            return await UpdateAsync(entity);
         }
 
         public async Task<Product> FindOneAsync(int Id)
@@ -75,5 +78,208 @@ namespace MB.Data.Impl
 
             return await _ProductRepository.UpdateAsync(entity);
         }
+
+        /// <summary>
+        /// Search products
+        /// </summary>
+        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="categoryIds">Category identifiers</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="RoleType">会员类型</param>
+        /// <param name="isAgreeActive">是否同意参与活动</param>
+        /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
+        /// <param name="priceMin">Minimum price; null to load all records</param>
+        /// <param name="priceMax">Maximum price; null to load all records</param>
+        /// <param name="keywords">Keywords</param>
+        /// <param name="filteredSpecs">Filtered product specification identifiers</param>
+        /// <param name="orderBy">Order by</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Products</returns>
+        public virtual IPagedList<Product> SearchProducts(
+            out IList<int> filterableSpecificationAttributeOptionIds,
+            int pageIndex = 0,
+            int pageSize = int.MaxValue,
+            IList<int> categoryIds = null,
+            int manufacturerId = 0,
+            int RoleId = 0,
+            bool isAgreeActive = false,
+            bool? featuredProducts = null,
+            decimal? priceMin = null,
+            decimal? priceMax = null,
+            string keywords = null,
+            IList<int> filteredSpecs = null,
+            ProductSortingEnum orderBy = ProductSortingEnum.Position,
+            bool showHidden = false)
+        {
+            filterableSpecificationAttributeOptionIds = new List<int>();
+
+            //validate "categoryIds" parameter
+            if (categoryIds != null && categoryIds.Contains(0))
+                categoryIds.Remove(0);
+
+
+            //stored procedures aren't supported. Use LINQ
+
+            #region Search products
+
+            //products
+            var query = _ProductRepository.Table;
+            query = query.Where(p => !p.Deleted);
+
+            //只有审核通过的才可以显示
+            if (!showHidden)
+            {
+                query = query.Where(p => p.Status > (int)ProductStatus.Published);
+            }
+
+
+            //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+
+            if (priceMin.HasValue)
+            {
+                bool searchVipPrice = RoleId >= (int)RoleType.Member;
+                //min price
+                query = query.Where(p =>
+                                    //特价之后要实现的
+                                    //special price (specified price and valid date range)
+                                    //((p.SpecialPrice.HasValue &&
+                                    //  ((!p.SpecialPriceStartDateTimeUtc.HasValue ||
+                                    //    p.SpecialPriceStartDateTimeUtc.Value < nowUtc) &&
+                                    //   (!p.SpecialPriceEndDateTimeUtc.HasValue ||
+                                    //    p.SpecialPriceEndDateTimeUtc.Value > nowUtc))) &&
+                                    // (p.SpecialPrice >= priceMin.Value))
+                                    //||
+                                    //regular price (price isn't specified or date range isn't valid)
+                                    (p.Price >= priceMin.Value) || (searchVipPrice && p.VipPrice >= priceMin.Value));
+
+
+            }
+
+
+            if (priceMax.HasValue)
+            {
+                bool searchVipPrice = RoleId >= (int)RoleType.Member;
+                //max price
+                query = query.Where(p =>
+                                     //special price (specified price and valid date range)
+
+                                     //regular price (price isn't specified or date range isn't valid)
+                                     (p.Price <= priceMax.Value) || (searchVipPrice && p.VipPrice <= priceMax));
+            }
+
+
+            //searching by keyword
+            if (!String.IsNullOrWhiteSpace(keywords))
+            {
+                query = query.Where(p => p.Name.Contains(keywords));
+            }
+
+
+
+            //category filtering
+            if (categoryIds != null && categoryIds.Any())
+            {
+                query = query.Where(p => categoryIds.Contains(p.CategoryId));
+            }
+            if (isAgreeActive)
+            {
+                query = query.Where(p => p.isAgreeActive);
+            }
+            //manufacturer filtering
+            if (manufacturerId > 0)
+            {
+                query = from p in query
+                        from pm in p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId)
+                        where (!featuredProducts.HasValue || featuredProducts.Value == pm.IsFeaturedProduct)
+                        select p;
+            }
+
+
+            //search by specs
+            if (filteredSpecs != null && filteredSpecs.Any())
+            {
+                var filteredAttributes = _SpecificationAttributeOptionRepository.Table
+                    .Where(sao => filteredSpecs.Contains(sao.Id)).Select(sao => sao.SpecificationAttributeId).Distinct();
+
+                query = query.Where(p => !filteredAttributes.Except
+                                    (
+                                        _SpecificationAttributeOptionRepository.Table.Where(
+                                            sao => p.ProductSpecificationAttributes.Where(
+                                                psa => filteredSpecs.Contains(psa.SpecificationAttributeOptionId))
+                                            .Select(psa => psa.SpecificationAttributeOptionId).Contains(sao.Id))
+                                        .Select(sao => sao.SpecificationAttributeId).Distinct()
+                                    ).Any());
+            }
+
+            //only distinct products (group by ID)
+            //if we use standard Distinct() method, then all fields will be compared (low performance)
+            //it'll not work in SQL Server Compact when searching products by a keyword)
+            query = from p in query
+                    group p by p.Id
+                    into pGroup
+                    orderby pGroup.Key
+                    select pGroup.FirstOrDefault();
+
+            //sort products
+            if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Any())
+            {
+                //category position
+                var firstCategoryId = categoryIds[0];
+                query = query.OrderBy(p => p.Category.DisplayOrder);
+            }
+            else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
+            {
+                //manufacturer position
+                query =
+                    query.OrderBy(p => p.ProductManufacturers.FirstOrDefault(pm => pm.ManufacturerId == manufacturerId).DisplayOrder);
+            }
+            else if (orderBy == ProductSortingEnum.Position)
+            {
+                //otherwise sort by name
+                query = query.OrderBy(p => p.Name);
+            }
+            else if (orderBy == ProductSortingEnum.NameAsc)
+            {
+                //Name: A to Z
+                query = query.OrderBy(p => p.Name);
+            }
+            else if (orderBy == ProductSortingEnum.NameDesc)
+            {
+                //Name: Z to A
+                query = query.OrderByDescending(p => p.Name);
+            }
+            else if (orderBy == ProductSortingEnum.PriceAsc)
+            {
+                //Price: Low to High
+                query = query.OrderBy(p => p.Price);
+            }
+            else if (orderBy == ProductSortingEnum.PriceDesc)
+            {
+                //Price: High to Low
+                query = query.OrderByDescending(p => p.Price);
+            }
+            else if (orderBy == ProductSortingEnum.CreatedOn)
+            {
+                //creation date
+                query = query.OrderByDescending(p => p.CreateTime);
+            }
+            else
+            {
+                //actually this code is not reachable
+                query = query.OrderBy(p => p.Name);
+            }
+
+            var products = new PagedList<Product>(query, pageIndex, pageSize);
+
+
+            //return products
+            return products;
+
+            #endregion
+
+        }
+
     }
 }
