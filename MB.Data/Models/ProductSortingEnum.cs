@@ -8,6 +8,8 @@ namespace MB.Data.Models
 {
     public enum ProductSortingEnum
     {
+
+     
         /// <summary>
         /// Position (display order)
         /// </summary>
@@ -32,5 +34,7 @@ namespace MB.Data.Models
         /// Product creation date
         /// </summary>
         CreatedOn = 15,
+
+        Distance = 20
     }
 }

@@ -8,12 +8,13 @@ using SQ.Core.Data;
 using MB.Data.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 
 namespace MB.Data.Service
 {
-	public interface IProductService
+    public interface IProductService
     {
-		Task<int> DeleteAsync(Product entity);
+        Task<int> DeleteAsync(Product entity);
 
         IPagedList<Product> GetPageList(int pageIndex, int pageSize);
 
@@ -44,7 +45,8 @@ namespace MB.Data.Service
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
         IPagedList<Product> SearchProducts(
-           out IList<int> filterableSpecificationAttributeOptionIds,
+            out IList<int> filterableSpecificationAttributeOptionIds,
+            bool loadFilterableSpecificationAttributeOptionIds,
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
@@ -57,7 +59,12 @@ namespace MB.Data.Service
             string keywords = null,
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
+            DbGeography location = null,
             bool showHidden = false);
+
+
+        IEnumerable<Product> TestProductSearch(int PageIndex, int PageSize);
+
 
     }
 }

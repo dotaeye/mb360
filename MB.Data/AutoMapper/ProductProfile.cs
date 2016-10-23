@@ -10,34 +10,34 @@ using MB.Data.DTO;
 
 namespace MB.Data.AutoMapper
 {
-	public class ProductProfile : BaseProfile
+    public class ProductProfile : BaseProfile
     {
         public ProductProfile() : base("ProductProfile")
         {
         }
 
-		protected override void CreateMaps()
+        protected override void CreateMaps()
         {
-			 
-			CreateMap<Product, ProductDTO>()
+
+            CreateMap<Product, ProductDTO>()
                    .ForMember(dto => dto.ManufacturerId, e => e.Ignore())
                    .ForMember(dto => dto.IsFeaturedProduct, e => e.Ignore())
 ;
 
-			 
-			CreateMap<ProductDTO, Product>()
-                 
+
+            CreateMap<ProductDTO, Product>()
+                    .ForMember(entity => entity.Distance, o => o.Ignore())
                     .ForMember(entity => entity.CreateUserId, o => o.Ignore())
-					.ForMember(entity => entity.CreateTime, o => o.Ignore())
-					.ForMember(entity => entity.LastUserId, o => o.Ignore())
-					.ForMember(entity => entity.LastTime, o => o.Ignore())
-					.ForMember(entity => entity.Deleted, o => o.Ignore())
-					.ForMember(entity => entity.Category, o => o.Ignore())
-					.ForMember(entity => entity.ProductManufacturers, o => o.Ignore())
+                    .ForMember(entity => entity.CreateTime, o => o.Ignore())
+                    .ForMember(entity => entity.LastUserId, o => o.Ignore())
+                    .ForMember(entity => entity.LastTime, o => o.Ignore())
+                    .ForMember(entity => entity.Deleted, o => o.Ignore())
+                    .ForMember(entity => entity.Category, o => o.Ignore())
+                    .ForMember(entity => entity.ProductManufacturers, o => o.Ignore())
                     .ForMember(entity => entity.ProductCarCate, o => o.Ignore())
                     .ForMember(entity => entity.ProductStorageQuantity, o => o.Ignore())
-					.ForMember(entity => entity.ProductSpecificationAttributes, o => o.Ignore())
-					.ForMember(entity => entity.ProductAttributeMappings, o => o.Ignore())
+                    .ForMember(entity => entity.ProductSpecificationAttributes, o => o.Ignore())
+                    .ForMember(entity => entity.ProductAttributeMappings, o => o.Ignore())
 ;
         }
     }

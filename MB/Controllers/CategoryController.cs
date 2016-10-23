@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Data.Entity;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Data.Entity.Spatial;
 using Microsoft.AspNet.Identity;
 using MB.Data.Service;
 using MB.Data.DTO;
@@ -22,6 +23,9 @@ using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
 using SQ.Core.UI;
+using SQ.Core.Caching;
+using MB.Models;
+using MB.Helpers;
 
 namespace MB.Controllers
 {
@@ -29,11 +33,20 @@ namespace MB.Controllers
     public class CategoryController : ApiController
     {
         private ICategoryService CategoryService;
+        private IProductService ProductService;
+        private ISpecificationAttributeOptionService SpecificationAttributeOptionService;
+        private ICacheManager CacheManager;
         public CategoryController(
-            ICategoryService _CategoryService
+            ICategoryService _CategoryService,
+             IProductService _ProductService,
+             ISpecificationAttributeOptionService _SpecificationAttributeOptionService,
+             ICacheManager _CacheManager
           )
         {
             this.CategoryService = _CategoryService;
+            this.ProductService = _ProductService;
+            this.SpecificationAttributeOptionService = _SpecificationAttributeOptionService;
+            this.CacheManager = _CacheManager;
         }
 
         [Route("")]
@@ -182,6 +195,103 @@ namespace MB.Controllers
             await CategoryService.DeleteAsync(entity);
 
             return Ok(entity.ToModel());
+        }
+
+
+
+        [Route("list/")]
+        [HttpGet]
+        [ResponseType(typeof(CategoryModel))]
+        public async Task<IHttpActionResult> List([FromUri] CatalogPagingFilteringModel command)
+        {
+            Category entity = await CategoryService.FindOneAsync(command.Id);
+
+            var location = DbGeography.FromText("POINT(121.606485 31.129087)");
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            var model = new CategoryModel()
+            {
+                Id = entity.Id,
+                Description = entity.Description,
+                Name = entity.Name,
+                ImageUrl = entity.ImageUrl
+
+            };
+
+            if (command.PageSize == 0)
+            {
+                command.PageSize = 20;
+            }
+
+            model.SubCategories = CategoryService.GetAll()
+                .Where(x => !x.Deleted && x.ParentId.Value == entity.Id)
+                .ProjectTo<CategoryDTO>().OrderBy(x => x.DisplayOrder).ToList();
+
+            var categoryIds = new List<int>();
+            categoryIds.Add(entity.Id);
+            categoryIds.AddRange(model.SubCategories.Select(x => x.Id));
+
+
+
+            int RoleId = 2;
+            IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.GetAlreadyFilteredSpecOptionIds();
+            IList<int> filterableSpecificationAttributeOptionIds;
+            var products = ProductService.SearchProducts(out filterableSpecificationAttributeOptionIds,
+                loadFilterableSpecificationAttributeOptionIds: true,
+                showHidden: true,
+                location: location,
+                featuredProducts: null,
+                //RoleId: MBHelper.GetUserRoleId(User),
+                RoleId: RoleId,
+                priceMin: command.MinPrice,
+                priceMax: command.MaxPrice,
+                filteredSpecs: alreadyFilteredSpecOptionIds,
+                //orderBy: (ProductSortingEnum)command.OrderBy,
+                orderBy: ProductSortingEnum.Position,
+                pageIndex: command.PageNumber,
+                pageSize: command.PageSize);
+            //model.Products = PrepareProductOverviewModels(products).ToList();
+            model.Products = products.Select(x => new ProductOverviewModel()
+            {
+                Description = x.Description,
+                Id = x.Id,
+                ImageUrl = x.ImageUrl,
+                Name = x.Name,
+                Price = x.Price,
+                VipPrice = x.VipPrice,
+                Distance = x.Distance
+
+            }).ToList();
+
+            model.PagingFilteringContext.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+       filterableSpecificationAttributeOptionIds != null ? filterableSpecificationAttributeOptionIds.ToArray() : null,
+       SpecificationAttributeOptionService, CacheManager);
+
+
+            return Ok(model);
+        }
+
+
+
+
+        [Route("test")]
+        [HttpGet]
+        [ResponseType(typeof(IEnumerable<ProductOverviewModel>))]
+        public IEnumerable<ProductOverviewModel> Test()
+        {
+
+            var result = ProductService.TestProductSearch(0, 20).Select(x => new ProductOverviewModel()
+            {
+
+                Description = x.Description,
+                Distance = x.Distance,
+                Id = x.Id,
+                Name = x.Name
+            });
+
+            return result;
         }
 
     }

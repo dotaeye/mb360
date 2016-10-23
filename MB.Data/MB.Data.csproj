@@ -273,6 +273,7 @@
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Job.cs" />
     <Compile Include="Models\Manufacturer.cs" />
+    <Compile Include="Models\PriceRange.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductAttribute.cs" />
     <Compile Include="Models\ProductAttributeCategoryMapping.cs" />

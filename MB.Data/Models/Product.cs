@@ -44,6 +44,8 @@ namespace MB.Data.Models
 
         public string DetailUrl { get; set; }
 
+        public double? Distance { get; set; }
+
         [DTO(false, true)]
         public string CreateUserId { get; set; }
 

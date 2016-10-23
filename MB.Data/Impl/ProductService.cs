@@ -10,6 +10,7 @@ using MB.Data.Service;
 using MB.Data.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 
 namespace MB.Data.Impl
 {
@@ -18,16 +19,25 @@ namespace MB.Data.Impl
         #region Fields
 
         private readonly IRepository<Product> _ProductRepository;
+        private readonly IRepository<ProductStorageQuantity> _ProductStorageQuantityRepository;
+        private readonly IRepository<ProductSpecificationAttribute> _ProductSpecificationAttributeRepository;
+        private readonly IRepository<Storage> _StorageRepository;
         private readonly IRepository<SpecificationAttributeOption> _SpecificationAttributeOptionRepository;
         #endregion
 
         #region Ctor
 
         public ProductService(IRepository<Product> ProductRepository,
+            IRepository<ProductStorageQuantity> ProductStorageQuantityRepository,
+            IRepository<ProductSpecificationAttribute> ProductSpecificationAttributeRepository,
+            IRepository<Storage> StorageRepository,
             IRepository<SpecificationAttributeOption> SpecificationAttributeOptionRepository
            )
         {
             this._ProductRepository = ProductRepository;
+            this._ProductStorageQuantityRepository = ProductStorageQuantityRepository;
+            this._ProductSpecificationAttributeRepository = ProductSpecificationAttributeRepository;
+            this._StorageRepository = StorageRepository;
             this._SpecificationAttributeOptionRepository = SpecificationAttributeOptionRepository;
 
         }
@@ -99,6 +109,7 @@ namespace MB.Data.Impl
         /// <returns>Products</returns>
         public virtual IPagedList<Product> SearchProducts(
             out IList<int> filterableSpecificationAttributeOptionIds,
+            bool loadFilterableSpecificationAttributeOptionIds,
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
@@ -111,6 +122,7 @@ namespace MB.Data.Impl
             string keywords = null,
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
+            DbGeography location = null,
             bool showHidden = false)
         {
             filterableSpecificationAttributeOptionIds = new List<int>();
@@ -196,6 +208,15 @@ namespace MB.Data.Impl
                         select p;
             }
 
+            if (loadFilterableSpecificationAttributeOptionIds)
+            {
+                var querySpecs = from p in query
+                                 join psa in _ProductSpecificationAttributeRepository.Table on p.Id equals psa.ProductId
+                                 select psa.SpecificationAttributeOptionId;
+                //only distinct attributes
+                filterableSpecificationAttributeOptionIds = querySpecs.Distinct().ToList();
+            }
+
 
             //search by specs
             if (filteredSpecs != null && filteredSpecs.Any())
@@ -213,6 +234,9 @@ namespace MB.Data.Impl
                                     ).Any());
             }
 
+
+
+
             //only distinct products (group by ID)
             //if we use standard Distinct() method, then all fields will be compared (low performance)
             //it'll not work in SQL Server Compact when searching products by a keyword)
@@ -222,64 +246,163 @@ namespace MB.Data.Impl
                     orderby pGroup.Key
                     select pGroup.FirstOrDefault();
 
-            //sort products
-            if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Any())
+
+            if (location != null)
             {
-                //category position
-                var firstCategoryId = categoryIds[0];
-                query = query.OrderBy(p => p.Category.DisplayOrder);
-            }
-            else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
-            {
-                //manufacturer position
-                query =
-                    query.OrderBy(p => p.ProductManufacturers.FirstOrDefault(pm => pm.ManufacturerId == manufacturerId).DisplayOrder);
-            }
-            else if (orderBy == ProductSortingEnum.Position)
-            {
-                //otherwise sort by name
-                query = query.OrderBy(p => p.Name);
-            }
-            else if (orderBy == ProductSortingEnum.NameAsc)
-            {
-                //Name: A to Z
-                query = query.OrderBy(p => p.Name);
-            }
-            else if (orderBy == ProductSortingEnum.NameDesc)
-            {
-                //Name: Z to A
-                query = query.OrderByDescending(p => p.Name);
-            }
-            else if (orderBy == ProductSortingEnum.PriceAsc)
-            {
-                //Price: Low to High
-                query = query.OrderBy(p => p.Price);
-            }
-            else if (orderBy == ProductSortingEnum.PriceDesc)
-            {
-                //Price: High to Low
-                query = query.OrderByDescending(p => p.Price);
-            }
-            else if (orderBy == ProductSortingEnum.CreatedOn)
-            {
-                //creation date
-                query = query.OrderByDescending(p => p.CreateTime);
+
+                var tempQuery = from p in query
+                                join d in (from t in
+                                               (from s in _StorageRepository.Table
+                                                join psq in _ProductStorageQuantityRepository.Table on s.Id equals psq.StorageId
+                                                select new { s, psq })
+                                           group t by t.psq.ProductId into g
+                                           select new
+                                           {
+                                               ProductId = g.Key,
+                                               distance = g.Min(z => z.s.Location.Distance(location))
+                                           }) on p.Id equals d.ProductId
+                                select new
+                                {
+                                    p,
+                                    d.distance
+                                };
+
+                var count = tempQuery.Count();
+                var source = tempQuery.OrderBy(x => x.distance)
+
+                    .Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+
+                var products = source.Select(x => x.p).ToList(); ;
+                foreach (var sr in source)
+                {
+                    var product = products.First(x => x.Id == sr.p.Id);
+                    product.Distance = sr.distance;
+                }
+
+                var result = new PagedList<Product>(products, pageIndex, pageSize, count);
+
+                return result;
             }
             else
             {
-                //actually this code is not reachable
-                query = query.OrderBy(p => p.Name);
+
+
+                //sort products
+                if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Any())
+                {
+                    //category position
+                    var firstCategoryId = categoryIds[0];
+                    query = query.OrderBy(p => p.Category.DisplayOrder);
+                }
+                else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
+                {
+                    //manufacturer position
+                    query =
+                        query.OrderBy(p => p.ProductManufacturers.FirstOrDefault(pm => pm.ManufacturerId == manufacturerId).DisplayOrder);
+                }
+                else if (orderBy == ProductSortingEnum.Position)
+                {
+                    //otherwise sort by name
+                    query = query.OrderBy(p => p.Name);
+                }
+                else if (orderBy == ProductSortingEnum.NameAsc)
+                {
+                    //Name: A to Z
+                    query = query.OrderBy(p => p.Name);
+                }
+                else if (orderBy == ProductSortingEnum.NameDesc)
+                {
+                    //Name: Z to A
+                    query = query.OrderByDescending(p => p.Name);
+                }
+                else if (orderBy == ProductSortingEnum.PriceAsc)
+                {
+                    //Price: Low to High
+                    query = query.OrderBy(p => p.Price);
+                }
+                else if (orderBy == ProductSortingEnum.PriceDesc)
+                {
+                    //Price: High to Low
+                    query = query.OrderByDescending(p => p.Price);
+                }
+                else if (orderBy == ProductSortingEnum.CreatedOn)
+                {
+                    //creation date
+                    query = query.OrderByDescending(p => p.CreateTime);
+                }
+                else
+                {
+                    //actually this code is not reachable
+                    query = query.OrderBy(p => p.Name);
+                }
+
+                var products = new PagedList<Product>(query, pageIndex, pageSize);
+
+
+                //return products
+                return products;
+
             }
 
-            var products = new PagedList<Product>(query, pageIndex, pageSize);
 
-
-            //return products
-            return products;
 
             #endregion
 
         }
+
+
+        public IEnumerable<Product> TestProductSearch(int PageIndex, int PageSize)
+        {
+            var location = DbGeography.FromText("POINT(121.606485 31.129087)");
+
+            //select t1.ProductID,t2.ProductName,t1.Quantity
+
+            // from
+            // (select[Order Details].ProductID, max([Order Details].Quantity) as Quantity
+
+            // from[Order Details] group by ProductID)t1
+            //left join
+            //Products t2
+            //on t1.ProductID = t2.ProductID
+
+            var query = from p in _ProductRepository.Table
+                        join d in (from t in
+                                       (from s in _StorageRepository.Table
+                                        join psq in _ProductStorageQuantityRepository.Table on s.Id equals psq.StorageId
+                                        select new { s, psq })
+                                   group t by t.psq.ProductId into g
+                                   select new
+                                   {
+                                       ProductId = g.Key,
+                                       distance = g.Min(z => z.s.Location.Distance(location))
+                                   }) on p.Id equals d.ProductId
+                        select new
+                        {
+                            p,
+                            d.distance
+                        };
+
+            //group s_p by s_p.prod
+
+            //join p in _ProductRepository.Table on psq.ProductId equals p.Id
+            //group psq by new { product = p, storage = s } into g
+            //select new
+            //{
+            //    p = g.Key.product,
+            //    distance = g.Min(z => g.Key.storage.Location.Distance(location))
+            //};
+            var source = query.OrderBy(x => x.distance).Skip(PageIndex * PageSize).Take(PageSize).ToList();
+            var products = source.Select(x => x.p).ToList(); ;
+            foreach (var sr in source)
+            {
+                var product = products.First(x => x.Id == sr.p.Id);
+                product.Distance = sr.distance;
+            }
+
+            return products;
+        }
+
 
     }
 }

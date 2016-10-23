@@ -294,7 +294,11 @@
     <Compile Include="Ioc\DependencyRegistrar.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BasePageableModel.cs" />
+    <Compile Include="Models\CatalogPagingFilteringModel.cs" />
+    <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\ProductDetailsModel.cs" />
+    <Compile Include="Models\ProductOverviewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
