@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
+import { Spin, Table, Icon, Button, Modal, Form, Input,InputNumber, Checkbox, message,Select } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as manufacturerActions from '../actions/manufacturer'
@@ -166,6 +166,14 @@ var Manufacturer = React.createClass({
       title: '描述',
       dataIndex: 'description'
     },{
+      title: '热门',
+      dataIndex: 'isHot',
+      render: isHot=>isHot ? '是' : '否'
+    },{
+      title: '热门排序',
+      dataIndex: 'hotOrder',
+      sorter: true
+    },{
       title: '操作',
       key: 'operation',
       render: (text, record) => (
@@ -245,6 +253,28 @@ var Manufacturer = React.createClass({
                 )}
               </FormItem>
             )}
+
+
+            <FormItem
+              {...formItemLayout}
+              label="热门"
+              >
+              {getFieldDecorator('isHot', {initialValue: record.isHot, valuePropName: 'checked'})(
+                <Checkbox />
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="热门排序"
+              >
+              {getFieldDecorator('hotOrder', {
+                  initialValue: record.hotOrder || 0
+                }
+              )(
+                <InputNumber  />
+              )}
+            </FormItem>
           </Form>
         </Modal>
       </div>

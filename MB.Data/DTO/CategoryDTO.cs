@@ -19,6 +19,10 @@ namespace MB.Data.DTO
         public string PinYin { get; set; }
         public string Description { get; set; }
 
+        public bool IsHot { get; set; }
+
+        public int HotOrder { get; set; }
+
         public string ImageUrl { get; set; }
         public string Code { get; set; }
         public int Id { get; set; }

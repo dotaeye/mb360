@@ -67,41 +67,56 @@ namespace MB.Controllers
         }
 
         [Route("")]
-        public ApiListResult<ProductDTO> Get([FromUri] AntPageOption option = null)
+        public ApiListResult<ProductDTO> Get([FromUri] ProductPageOption option = null)
         {
-            var query = ProductService.GetAll().Where(x => !x.Deleted).ProjectTo<ProductDTO>();
-            if (option != null)
-            {
-                if (!string.IsNullOrEmpty(option.SortField))
-                {
-                    //for example
-                    if (option.SortField == "id")
-                    {
-                        if (option.SortOrder == PageSortTyoe.DESC)
-                        {
-                            query = query.OrderByDescending(x => x.Id);
-                        }
-                        else
-                        {
-                            query = query.OrderBy(x => x.Id);
-                        }
-                    }
-                }
+            var query = ProductService.GetAll().Where(x => !x.Deleted);
 
-                if (option.Page > 0 && option.Results > 0)
+
+            if (!string.IsNullOrEmpty(option.Name))
+            {
+                query = query.Where(x => x.Name.Contains(option.Name));
+            }
+            if (option.CategoryId > 0)
+            {
+                query = query.Where(x => option.CategoryId == x.CategoryId);
+            }
+            if (option.ManufacturerId > 0)
+            {
+                query = from p in query
+                        from pm in p.ProductManufacturers.Where(pm => pm.ManufacturerId == option.ManufacturerId)
+                        select p;
+            }
+
+           var queryDto = query.ProjectTo<ProductDTO>();
+
+            if (!string.IsNullOrEmpty(option.SortField))
+            {
+                //for example
+                if (option.SortField == "id")
                 {
-                    if (string.IsNullOrEmpty(option.SortField))
+                    if (option.SortOrder == PageSortTyoe.DESC)
                     {
-                        query = query.OrderBy(x => x.Id);
+                        queryDto = queryDto.OrderByDescending(x => x.Id);
+                    }
+                    else
+                    {
+                        queryDto = queryDto.OrderBy(x => x.Id);
                     }
                 }
             }
-            else
+
+            if (option.Page > 0 && option.Results > 0)
             {
-                query = query.OrderBy(x => x.Id);
+                if (string.IsNullOrEmpty(option.SortField))
+                {
+                    queryDto = queryDto.OrderBy(x => x.Id);
+                }
             }
-            var count = query.Count();
-            var result = query.Paging<ProductDTO>(option.Page - 1, option.Results, count);
+
+
+
+            var count = queryDto.Count();
+            var result = queryDto.Paging<ProductDTO>(option.Page - 1, option.Results, count);
             return new ApiListResult<ProductDTO>(result, result.PageIndex, result.PageSize, count);
         }
 
@@ -245,11 +260,11 @@ namespace MB.Controllers
             //performance optimization
             //We cache a value indicating whether a product has attributes
             IList<ProductAttributeMapping> productAttributeMapping = null;
-         
-                //no value in the cache yet
-                //let's load attributes and cache the result (true/false)
+
+            //no value in the cache yet
+            //let's load attributes and cache the result (true/false)
             productAttributeMapping = ProductAttributeMappingService.GetProductAttributeMappingsByProductId(product.Id);
-              
+
             if (productAttributeMapping == null)
             {
                 productAttributeMapping = new List<ProductAttributeMapping>();
@@ -301,7 +316,8 @@ namespace MB.Controllers
                         on psa.SpecificationAttributeOptionId equals sao.Id
                         join sa in SpecificationAttributeService.GetAll()
                         on sao.SpecificationAttributeId equals sa.Id
-                        select new {
+                        select new
+                        {
                             sa,
                             psa,
                             sao

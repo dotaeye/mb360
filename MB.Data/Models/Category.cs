@@ -28,6 +28,11 @@ namespace MB.Data.Models
 
         public string Description { get; set; }
 
+
+        public bool IsHot { get; set; }
+
+        public int HotOrder { get; set; }
+
         public int Level { get; set; }
 
         [DTO(false, true)]

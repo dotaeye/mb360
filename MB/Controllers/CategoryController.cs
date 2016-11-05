@@ -69,6 +69,30 @@ namespace MB.Controllers
                             query = query.OrderBy(x => x.Id);
                         }
                     }
+                    else if (option.SortField == "code")
+                    {
+
+                        if (option.SortOrder == PageSortTyoe.DESC)
+                        {
+                            query = query.OrderByDescending(x => x.Code);
+                        }
+                        else
+                        {
+                            query = query.OrderBy(x => x.Code);
+                        }
+                    }
+                    else if (option.SortField == "hotOrder")
+                    {
+
+                        if (option.SortOrder == PageSortTyoe.DESC)
+                        {
+                            query = query.OrderByDescending(x => x.HotOrder);
+                        }
+                        else
+                        {
+                            query = query.OrderBy(x => x.HotOrder);
+                        }
+                    }
                 }
 
                 if (option.Page > 0 && option.Results > 0)
@@ -293,6 +317,9 @@ namespace MB.Controllers
 
             return result;
         }
+
+
+
 
     }
 }

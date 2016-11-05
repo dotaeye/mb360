@@ -2,10 +2,13 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { Link } from 'react-router';
-import { Spin, Table, Icon, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
+import { Spin, Table, Icon, Row, Col, Button, Modal, Form, Input, Checkbox, message,Select } from 'antd';
 import connectStatic from '../utils/connectStatic'
 import * as authActions from '../actions/auth'
 import * as productActions from '../actions/product'
+import * as categoryActions from '../actions/category'
+import * as manufacturerActions from '../actions/manufacturer'
+import ProductSearchFrom from '../components/form/ProductSearch'
 
 import _ from 'lodash';
 const FormItem = Form.Item;
@@ -22,15 +25,32 @@ var Product = React.createClass({
       pagination: {
         pageSize: 10,
         current: 1
-      }
+      },
+      hasLoad:false,
+      loading:true
     };
   },
 
-  fetchData(page){
-    this.props.productActions.getAll({
-      results: this.state.pagination.pageSize,
-      page: page || this.state.pagination.current
+  fetchData(option){
+    const page= (option&&option.page)||this.state.pagination.current;
+    const promise = [];
+    if(!this.state.hasLoad){
+      promise.push(this.props.categoryActions.getCascader());
+      promise.push(this.props.manufacturerActions.getSelectList());
+    }
+    Promise.all(promise).then(err=> {
+      const params=Object.assign({
+        results: this.state.pagination.pageSize,
+        page: page
+      },option);
+      this.props.productActions.getAll(params).then(err=>{
+        this.setState({
+          loading:false,
+          hasLoad:true
+        })
+      });
     });
+    
   },
 
   componentDidMount(){
@@ -48,29 +68,6 @@ var Product = React.createClass({
       page: pagination.current,
       sortField: sorter.field,
       sortOrder: sorter.order
-    });
-  },
-  onAdd(){
-    this.setState({
-      visible: true,
-      edit: false,
-      title: '添加Product',
-      record: {}
-    });
-  },
-
-  onEdit(record){
-    this.props.productActions.getById(record.id).then((err)=> {
-      if (err) {
-        message.error('获取Product数据失败！请刷新页面尝试。');
-      }
-      else {
-        this.setState({
-          visible: true,
-          edit: true,
-          title: '编辑Product'
-        });
-      }
     });
   },
 
@@ -94,7 +91,9 @@ var Product = React.createClass({
             if (data.length === 0) {
               page = page - 1;
             }
-            self.fetchData(_.max([page - 1, 1]));
+            self.fetchData({
+              page:_.max([page - 1, 1])
+            });
           }
         });
       },
@@ -103,45 +102,13 @@ var Product = React.createClass({
     });
   },
 
-  onModalSubmit(){
-    const { edit }=this.state;
-    const { update, create} =this.props.productActions;
-    const { entity }= this.props.product;
-    this.props.form.validateFields((errors, formdata) => {
-      if (!!errors) {
-        console.log('Errors in form!!!');
-        return;
-      }
-      if (edit) {
-        formdata.id = entity.id;
-        update(formdata).then((err)=> {
-          if (err) {
-            message.error('更新数据失败。');
-          } else {
-            message.success('更新数据成功！');
-            this.props.form.resetFields();
-            this.fetchData();
-          }
-        });
-      } else {
-        create(formdata).then((err)=> {
-          if (err) {
-            message.error('创建数据失败。');
-          } else {
-            message.success('创建数据成功！');
-            this.props.form.resetFields();
-            this.fetchData();
-          }
-        });
-      }
-      this.onModalClose();
-    });
-  },
 
-  onModalClose(){
-    this.setState({visible: false}, ()=> {
-      this.props.form.resetFields();
-    });
+  onSearchSubmit(formdata){
+    this.setState({
+      search:formdata
+    },()=>{
+      this.fetchData(Object.assign({},{page:1},formdata))
+    })
   },
 
   render() {
@@ -192,8 +159,10 @@ var Product = React.createClass({
         </span>
       )
     }];
-    const { product:{ loading, list, entity }} = this.props;
-    const { title, visible, edit }=this.state;
+    const { cascader }=this.props.category;
+    const { selectlist }= this.props.manufacturer;
+    const { product:{list, entity }} = this.props;
+    const { title, visible, edit, loading,hasLoad }=this.state;
     const data = list ? list.data : [];
     const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
     const { getFieldDecorator } = this.props.form;
@@ -204,13 +173,16 @@ var Product = React.createClass({
     };
     return (
       <div className='container'>
-        <div className='ant-list-header' data-flex="dir:right">
-          <div className='ant-list-header-right'>
-            <Link to='product/create'>
-              <Button type="primary" icon="plus" >添加产品</Button>
-            </Link>
+         {hasLoad&&(
+          <div className='ant-list-header'>
+            <ProductSearchFrom  
+              ref='search'
+              categoryCascader={cascader}
+              manufacturerList={selectlist}
+              onSearchSubmit={this.onSearchSubmit}
+              />
           </div>
-        </div>
+          )}
         <Table
           ref='table'
           columns={columns}
@@ -228,14 +200,18 @@ var Product = React.createClass({
 function mapStateToProps(state) {
   return {
     auth: state.auth,
-    product: state.product
+    product: state.product,
+    category: state.category,
+    manufacturer: state.manufacturer
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     authActions: bindActionCreators(authActions, dispatch),
-    productActions: bindActionCreators(productActions, dispatch)
+    productActions: bindActionCreators(productActions, dispatch),
+    categoryActions: bindActionCreators(categoryActions, dispatch),
+    manufacturerActions: bindActionCreators(manufacturerActions, dispatch)
   }
 }
 

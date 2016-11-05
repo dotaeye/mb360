@@ -1,28 +1,24 @@
-﻿using System;
+﻿
+using System;
 using SQ.Core.Data;
 using SQ.Core.DTO;
 using System.Collections.Generic;
 
+
 namespace MB.Data.Models
 {
     [DTOIgnore]
-    public class Manufacturer : BaseEntity
+    public class  Banner : BaseEntity
     {
-        /// <summary>
-        /// Gets or sets the name
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the description
-        /// </summary>
-        public string Description { get; set; }
+        public string Url { get; set; }
 
         public string ImageUrl { get; set; }
 
-        public bool IsHot { get; set; }
+        public bool NativeRoute { get; set; }
 
-        public int HotOrder { get; set; }
+        public int DisplayOrder { get; set; }
+
+        public int Status { get; set; }
 
         [DTO(false, true)]
         public string CreateUserId { get; set; }

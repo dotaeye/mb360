@@ -8,12 +8,16 @@ using MB.Data.Models;
 
 namespace MB.Data.DTO
 {
-	public class ManufacturerDTO
+    public class ManufacturerDTO
     {
-         
-       public string Name  { get; set; } 
-       public string Description  { get; set; } 
-       public string ImageUrl  { get; set; } 
-       public int Id  { get; set; } 
+
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string ImageUrl { get; set; }
+        public int Id { get; set; }
+
+        public bool IsHot { get; set; }
+
+        public int HotOrder { get; set; }
     }
 }

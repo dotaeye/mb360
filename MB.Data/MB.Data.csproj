@@ -120,6 +120,7 @@
     <Compile Include="AutoMapper\UserActivitiesProfile.cs" />
     <Compile Include="AutoMapper\UserPermissionProfile.cs" />
     <Compile Include="AutoMapper\UserRoleProfile.cs" />
+    <Compile Include="DTO\BannerDTO.cs" />
     <Compile Include="DTO\CarCateDTO.cs" />
     <Compile Include="DTO\CategoryDTO.cs" />
     <Compile Include="DTO\CityCateDTO.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Impl\UserPermissionService.cs" />
     <Compile Include="Impl\UserRoleService.cs" />
     <Compile Include="Mapping\ApplicationUserMap.cs" />
+    <Compile Include="Mapping\BannerMap.cs" />
     <Compile Include="Mapping\CarCateMap.cs" />
     <Compile Include="Mapping\CategoryMap.cs" />
     <Compile Include="Mapping\CityCate.cs" />
@@ -265,8 +267,13 @@
     <Compile Include="Migrations\201610161148331_AddPYForCategory2.Designer.cs">
       <DependentUpon>201610161148331_AddPYForCategory2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611021140467_AddIsHotForCategoryAndManufacture.cs" />
+    <Compile Include="Migrations\201611021140467_AddIsHotForCategoryAndManufacture.Designer.cs">
+      <DependentUpon>201611021140467_AddIsHotForCategoryAndManufacture.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\Banner.cs" />
     <Compile Include="Models\CarCate.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CityCate.cs" />
@@ -410,6 +417,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610161148331_AddPYForCategory2.resx">
       <DependentUpon>201610161148331_AddPYForCategory2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611021140467_AddIsHotForCategoryAndManufacture.resx">
+      <DependentUpon>201611021140467_AddIsHotForCategoryAndManufacture.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
