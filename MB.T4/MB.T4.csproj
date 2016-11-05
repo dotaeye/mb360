@@ -40,6 +40,49 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="code\AutoMapper\AddressProfile.cs" />
+    <Compile Include="code\AutoMapper\BannerProfile.cs" />
+    <Compile Include="code\AutoMapper\MappingExtensions.cs" />
+    <Compile Include="code\AutoMapper\OrderItemProfile.cs" />
+    <Compile Include="code\AutoMapper\OrderProfile.cs" />
+    <Compile Include="code\AutoMapper\ProductAttributeCategoryMappingProfile.cs" />
+    <Compile Include="code\AutoMapper\ShoppingCartItemProfile.cs" />
+    <Compile Include="code\AutoMapper\SpecificationAttributeCategoryMappingProfile.cs" />
+    <Compile Include="code\Controllers\AddressController.cs" />
+    <Compile Include="code\Controllers\BannerController.cs" />
+    <Compile Include="code\Controllers\OrderController.cs" />
+    <Compile Include="code\Controllers\OrderItemController.cs" />
+    <Compile Include="code\Controllers\ProductAttributeCategoryMappingController.cs" />
+    <Compile Include="code\Controllers\ShoppingCartItemController.cs" />
+    <Compile Include="code\Controllers\SpecificationAttributeCategoryMappingController.cs" />
+    <Compile Include="code\DTO\AddressDTO.cs" />
+    <Compile Include="code\DTO\BannerDTO.cs" />
+    <Compile Include="code\DTO\OrderDTO.cs" />
+    <Compile Include="code\DTO\OrderItemDTO.cs" />
+    <Compile Include="code\DTO\ProductAttributeCategoryMappingDTO.cs" />
+    <Compile Include="code\DTO\ShoppingCartItemDTO.cs" />
+    <Compile Include="code\DTO\SpecificationAttributeCategoryMappingDTO.cs" />
+    <Compile Include="code\Impl\AddressService.cs" />
+    <Compile Include="code\Impl\BannerService.cs" />
+    <Compile Include="code\Impl\OrderItemService.cs" />
+    <Compile Include="code\Impl\OrderService.cs" />
+    <Compile Include="code\Impl\ProductAttributeCategoryMappingService.cs" />
+    <Compile Include="code\Impl\ShoppingCartItemService.cs" />
+    <Compile Include="code\Impl\SpecificationAttributeCategoryMappingService.cs" />
+    <Compile Include="code\Service\IAddressService.cs" />
+    <Compile Include="code\Service\IBannerService.cs" />
+    <Compile Include="code\Service\IOrderItemService.cs" />
+    <Compile Include="code\Service\IOrderService.cs" />
+    <Compile Include="code\Service\IProductAttributeCategoryMappingService.cs" />
+    <Compile Include="code\Service\IShoppingCartItemService.cs" />
+    <Compile Include="code\Service\ISpecificationAttributeCategoryMappingService.cs" />
+    <Compile Include="code\Validator\AddressValidator.cs" />
+    <Compile Include="code\Validator\BannerValidator.cs" />
+    <Compile Include="code\Validator\OrderItemValidator.cs" />
+    <Compile Include="code\Validator\OrderValidator.cs" />
+    <Compile Include="code\Validator\ProductAttributeCategoryMappingValidator.cs" />
+    <Compile Include="code\Validator\ShoppingCartItemValidator.cs" />
+    <Compile Include="code\Validator\SpecificationAttributeCategoryMappingValidator.cs" />
     <Compile Include="Generator\Entry1.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -128,40 +171,108 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="code\src\actions\address.js" />
+    <Content Include="code\src\actions\banner.js" />
+    <Content Include="code\src\actions\order.js" />
+    <Content Include="code\src\actions\orderItem.js" />
+    <Content Include="code\src\actions\productAttributeCategoryMapping.js" />
+    <Content Include="code\src\actions\shoppingCartItem.js" />
+    <Content Include="code\src\actions\specificationAttributeCategoryMapping.js" />
+    <Content Include="code\src\containers\address.js" />
+    <Content Include="code\src\containers\banner.js" />
+    <Content Include="code\src\containers\order.js" />
+    <Content Include="code\src\containers\orderItem.js" />
+    <Content Include="code\src\containers\productAttributeCategoryMapping.js" />
+    <Content Include="code\src\containers\shoppingCartItem.js" />
+    <Content Include="code\src\containers\specificationAttributeCategoryMapping.js" />
+    <Content Include="code\src\contants\address.js" />
+    <Content Include="code\src\contants\banner.js" />
+    <Content Include="code\src\contants\order.js" />
+    <Content Include="code\src\contants\orderItem.js" />
+    <Content Include="code\src\contants\productAttributeCategoryMapping.js" />
+    <Content Include="code\src\contants\shoppingCartItem.js" />
+    <Content Include="code\src\contants\specificationAttributeCategoryMapping.js" />
+    <Content Include="code\src\reducers\address.js" />
+    <Content Include="code\src\reducers\banner.js" />
+    <Content Include="code\src\reducers\order.js" />
+    <Content Include="code\src\reducers\orderItem.js" />
+    <Content Include="code\src\reducers\productAttributeCategoryMapping.js" />
+    <Content Include="code\src\reducers\shoppingCartItem.js" />
+    <Content Include="code\src\reducers\specificationAttributeCategoryMapping.js" />
     <Content Include="Generator\Entry.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Entry1.cs</LastGenOutput>
       <LastOutputs>
+..\code\AutoMapper\AddressProfile.cs
+..\code\AutoMapper\BannerProfile.cs
 ..\code\AutoMapper\MappingExtensions.cs
+..\code\AutoMapper\OrderItemProfile.cs
+..\code\AutoMapper\OrderProfile.cs
 ..\code\AutoMapper\ProductAttributeCategoryMappingProfile.cs
-..\code\AutoMapper\SettingProfile.cs
+..\code\AutoMapper\ShoppingCartItemProfile.cs
 ..\code\AutoMapper\SpecificationAttributeCategoryMappingProfile.cs
+..\code\Controllers\AddressController.cs
+..\code\Controllers\BannerController.cs
+..\code\Controllers\OrderController.cs
+..\code\Controllers\OrderItemController.cs
 ..\code\Controllers\ProductAttributeCategoryMappingController.cs
-..\code\Controllers\SettingController.cs
+..\code\Controllers\ShoppingCartItemController.cs
 ..\code\Controllers\SpecificationAttributeCategoryMappingController.cs
+..\code\DTO\AddressDTO.cs
+..\code\DTO\BannerDTO.cs
+..\code\DTO\OrderDTO.cs
+..\code\DTO\OrderItemDTO.cs
 ..\code\DTO\ProductAttributeCategoryMappingDTO.cs
-..\code\DTO\SettingDTO.cs
+..\code\DTO\ShoppingCartItemDTO.cs
 ..\code\DTO\SpecificationAttributeCategoryMappingDTO.cs
+..\code\Impl\AddressService.cs
+..\code\Impl\BannerService.cs
+..\code\Impl\OrderItemService.cs
+..\code\Impl\OrderService.cs
 ..\code\Impl\ProductAttributeCategoryMappingService.cs
-..\code\Impl\SettingService.cs
+..\code\Impl\ShoppingCartItemService.cs
 ..\code\Impl\SpecificationAttributeCategoryMappingService.cs
+..\code\Service\IAddressService.cs
+..\code\Service\IBannerService.cs
+..\code\Service\IOrderItemService.cs
+..\code\Service\IOrderService.cs
 ..\code\Service\IProductAttributeCategoryMappingService.cs
-..\code\Service\ISettingService.cs
+..\code\Service\IShoppingCartItemService.cs
 ..\code\Service\ISpecificationAttributeCategoryMappingService.cs
+..\code\src\actions\address.js
+..\code\src\actions\banner.js
+..\code\src\actions\order.js
+..\code\src\actions\orderItem.js
 ..\code\src\actions\productAttributeCategoryMapping.js
-..\code\src\actions\setting.js
+..\code\src\actions\shoppingCartItem.js
 ..\code\src\actions\specificationAttributeCategoryMapping.js
+..\code\src\containers\address.js
+..\code\src\containers\banner.js
+..\code\src\containers\order.js
+..\code\src\containers\orderItem.js
 ..\code\src\containers\productAttributeCategoryMapping.js
-..\code\src\containers\setting.js
+..\code\src\containers\shoppingCartItem.js
 ..\code\src\containers\specificationAttributeCategoryMapping.js
+..\code\src\contants\address.js
+..\code\src\contants\banner.js
+..\code\src\contants\order.js
+..\code\src\contants\orderItem.js
 ..\code\src\contants\productAttributeCategoryMapping.js
-..\code\src\contants\setting.js
+..\code\src\contants\shoppingCartItem.js
 ..\code\src\contants\specificationAttributeCategoryMapping.js
+..\code\src\reducers\address.js
+..\code\src\reducers\banner.js
+..\code\src\reducers\order.js
+..\code\src\reducers\orderItem.js
 ..\code\src\reducers\productAttributeCategoryMapping.js
-..\code\src\reducers\setting.js
+..\code\src\reducers\shoppingCartItem.js
 ..\code\src\reducers\specificationAttributeCategoryMapping.js
+..\code\Validator\AddressValidator.cs
+..\code\Validator\BannerValidator.cs
+..\code\Validator\OrderItemValidator.cs
+..\code\Validator\OrderValidator.cs
 ..\code\Validator\ProductAttributeCategoryMappingValidator.cs
-..\code\Validator\SettingValidator.cs
+..\code\Validator\ShoppingCartItemValidator.cs
 ..\code\Validator\SpecificationAttributeCategoryMappingValidator.cs
 .\Entry1.cs
 </LastOutputs>
