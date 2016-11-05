@@ -10,6 +10,8 @@ namespace MB.Data.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        private ICollection<UserActivities> _userActivities;
+        private ICollection<ShoppingCartItem> _shoppingCartItems;
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -55,6 +57,17 @@ namespace MB.Data.Models
 
         public virtual Job Job { get; set; }
 
-        public virtual ICollection<UserActivities> UserActivities { get; set; }
+        public virtual ICollection<UserActivities> UserActivities
+        {
+            get { return _userActivities ?? (_userActivities = new List<UserActivities>()); }
+            protected set { _userActivities = value; }
+        }
+
+        public virtual ICollection<ShoppingCartItem> ShoppingCartItems
+        {
+            get { return _shoppingCartItems ?? (_shoppingCartItems = new List<ShoppingCartItem>()); }
+            protected set { _shoppingCartItems = value; }
+        }
+
     }
 }

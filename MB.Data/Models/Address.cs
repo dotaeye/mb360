@@ -7,18 +7,20 @@ using System.Collections.Generic;
 
 namespace MB.Data.Models
 {
-
-    public class  Banner : BaseEntity
+   
+    public class Address : BaseEntity
     {
-        public string Url { get; set; }
+        public string Name { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string PhoneNumber { get; set; }
 
-        public bool NativeRoute { get; set; }
+        public int CityId { get; set; }
 
-        public int DisplayOrder { get; set; }
+        public CityCate CityCate { get; set; }
 
-        public int Status { get; set; }
+        public string Detail { get; set; }
+
+        public bool Default { get; set; }
 
         [DTO(false, true)]
         public string CreateUserId { get; set; }
@@ -34,5 +36,6 @@ namespace MB.Data.Models
 
         [DTO(false, true)]
         public bool Deleted { get; set; }
+
     }
 }

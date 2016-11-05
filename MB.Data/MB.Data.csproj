@@ -169,6 +169,7 @@
     <Compile Include="Impl\UserActivitiesService.cs" />
     <Compile Include="Impl\UserPermissionService.cs" />
     <Compile Include="Impl\UserRoleService.cs" />
+    <Compile Include="Mapping\AddressMap.cs" />
     <Compile Include="Mapping\ApplicationUserMap.cs" />
     <Compile Include="Mapping\BannerMap.cs" />
     <Compile Include="Mapping\CarCateMap.cs" />
@@ -177,6 +178,8 @@
     <Compile Include="Mapping\DepartmentMap.cs" />
     <Compile Include="Mapping\JobMap.cs" />
     <Compile Include="Mapping\ManufacturerMap.cs" />
+    <Compile Include="Mapping\OrderItemMap.cs" />
+    <Compile Include="Mapping\OrderMap.cs" />
     <Compile Include="Mapping\ProductAttributeMap.cs" />
     <Compile Include="Mapping\ProductAttributeMappingMap.cs" />
     <Compile Include="Mapping\ProductAttributeValueMap.cs" />
@@ -185,6 +188,7 @@
     <Compile Include="Mapping\ProductMap.cs" />
     <Compile Include="Mapping\ProductSpecificationAttributeMap.cs" />
     <Compile Include="Mapping\ProductStorageQuantityMap.cs" />
+    <Compile Include="Mapping\ShoppingCartItemMap.cs" />
     <Compile Include="Mapping\SpecificationAttributeMap.cs" />
     <Compile Include="Mapping\SpecificationAttributeOptionMap.cs" />
     <Compile Include="Mapping\StorageMap.cs" />
@@ -271,7 +275,12 @@
     <Compile Include="Migrations\201611021140467_AddIsHotForCategoryAndManufacture.Designer.cs">
       <DependentUpon>201611021140467_AddIsHotForCategoryAndManufacture.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611050912002_AddShopCatAndOrder.cs" />
+    <Compile Include="Migrations\201611050912002_AddShopCatAndOrder.Designer.cs">
+      <DependentUpon>201611050912002_AddShopCatAndOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Banner.cs" />
     <Compile Include="Models\CarCate.cs" />
@@ -280,6 +289,9 @@
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Job.cs" />
     <Compile Include="Models\Manufacturer.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderItem.cs" />
+    <Compile Include="Models\OrderStatus.cs" />
     <Compile Include="Models\PriceRange.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductAttribute.cs" />
@@ -294,6 +306,8 @@
     <Compile Include="Models\ProductStorageQuantity.cs" />
     <Compile Include="Models\RoleType.cs" />
     <Compile Include="Models\Setting.cs" />
+    <Compile Include="Models\ShoppingCartItem.cs" />
+    <Compile Include="Models\ShoppingCartType.cs" />
     <Compile Include="Models\SpecificationAttribute.cs" />
     <Compile Include="Models\SpecificationAttributeCategoryMapping.cs" />
     <Compile Include="Models\SpecificationAttributeOption.cs" />
@@ -420,6 +434,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611021140467_AddIsHotForCategoryAndManufacture.resx">
       <DependentUpon>201611021140467_AddIsHotForCategoryAndManufacture.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611050912002_AddShopCatAndOrder.resx">
+      <DependentUpon>201611050912002_AddShopCatAndOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
