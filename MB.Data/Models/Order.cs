@@ -18,11 +18,6 @@ namespace MB.Data.Models
         public Guid OrderGuid { get; set; }
 
         /// <summary>
-        /// Gets or sets the store identifier
-        /// </summary>
-        public string OwnerId { get; set; }
-
-        /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
         public string CustomerId { get; set; }
@@ -90,19 +85,6 @@ namespace MB.Data.Models
         /// </summary>
         public DateTime CreateTime { get; set; }
 
-
-
-        public string TrackingNumber { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shipped date and time
-        /// </summary>
-        public DateTime? ShippedTime { get; set; }
-
-        /// <summary>
-        /// Gets or sets the delivery date and time
-        /// </summary>
-        public DateTime? DeliveryTime { get; set; }
 
         #endregion
 

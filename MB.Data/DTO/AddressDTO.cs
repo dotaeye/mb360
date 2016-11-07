@@ -8,14 +8,15 @@ using MB.Data.Models;
 
 namespace MB.Data.DTO
 {
-	public class BannerDTO
+	public class AddressDTO
     {
          
-       public string Url  { get; set; } 
-       public string ImageUrl  { get; set; } 
-       public Boolean NativeRoute  { get; set; } 
-       public int DisplayOrder  { get; set; } 
-       public int Status  { get; set; } 
+       public string Name  { get; set; } 
+       public string PhoneNumber  { get; set; } 
+       public int CityId  { get; set; } 
+       public CityCate CityCate  { get; set; } 
+       public string Detail  { get; set; } 
+       public Boolean Default  { get; set; } 
        public int Id  { get; set; } 
     }
 }

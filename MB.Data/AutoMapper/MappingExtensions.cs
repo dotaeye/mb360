@@ -367,5 +367,81 @@ namespace MB.Data.AutoMapper
             return Mapper.Map(dto, entity);
         }
 
+
+        public static ShoppingCartItemDTO ToModel(this ShoppingCartItem entity)
+        {
+            return Mapper.Map<ShoppingCartItem, ShoppingCartItemDTO>(entity);
+        }
+
+        public static ShoppingCartItem ToEntity(this ShoppingCartItemDTO dto)
+        {
+            return Mapper.Map<ShoppingCartItemDTO, ShoppingCartItem>(dto);
+        }
+
+        public static ShoppingCartItem ToEntity(this ShoppingCartItemDTO dto, ShoppingCartItem entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+        public static OrderDTO ToModel(this Order entity)
+        {
+            return Mapper.Map<Order, OrderDTO>(entity);
+        }
+
+        public static Order ToEntity(this OrderDTO dto)
+        {
+            return Mapper.Map<OrderDTO, Order>(dto);
+        }
+
+        public static Order ToEntity(this OrderDTO dto, Order entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static OrderItemDTO ToModel(this OrderItem entity)
+        {
+            return Mapper.Map<OrderItem, OrderItemDTO>(entity);
+        }
+
+        public static OrderItem ToEntity(this OrderItemDTO dto)
+        {
+            return Mapper.Map<OrderItemDTO, OrderItem>(dto);
+        }
+
+        public static OrderItem ToEntity(this OrderItemDTO dto, OrderItem entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+
+        public static AddressDTO ToModel(this Address entity)
+        {
+            return Mapper.Map<Address, AddressDTO>(entity);
+        }
+
+        public static Address ToEntity(this AddressDTO dto)
+        {
+            return Mapper.Map<AddressDTO, Address>(dto);
+        }
+
+        public static Address ToEntity(this AddressDTO dto, Address entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
+        public static BannerDTO ToModel(this Banner entity)
+        {
+            return Mapper.Map<Banner, BannerDTO>(entity);
+        }
+
+        public static Banner ToEntity(this BannerDTO dto)
+        {
+            return Mapper.Map<BannerDTO, Banner>(dto);
+        }
+
+        public static Banner ToEntity(this BannerDTO dto, Banner entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
     }
 }

@@ -95,7 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppContext.cs" />
+    <Compile Include="AutoMapper\AddressProfile.cs" />
     <Compile Include="AutoMapper\AutoMapperStartupTask.cs" />
+    <Compile Include="AutoMapper\BannerProfile.cs" />
     <Compile Include="AutoMapper\CarCateProfile.cs" />
     <Compile Include="AutoMapper\CategoryProfile.cs" />
     <Compile Include="AutoMapper\CityCateProfile.cs" />
@@ -104,6 +106,8 @@
     <Compile Include="AutoMapper\ManufacturerProfile.cs" />
     <Compile Include="AutoMapper\MappingExtensions.cs" />
     <Compile Include="AutoMapper\MemberProfile.cs" />
+    <Compile Include="AutoMapper\OrderItemProfile.cs" />
+    <Compile Include="AutoMapper\OrderProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeCategoryMappingProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeMappingProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeProfile.cs" />
@@ -113,6 +117,7 @@
     <Compile Include="AutoMapper\ProductProfile.cs" />
     <Compile Include="AutoMapper\ProductSpecificationAttributeProfile.cs" />
     <Compile Include="AutoMapper\ProductStorageQuantityProfile.cs" />
+    <Compile Include="AutoMapper\ShoppingCartItemProfile.cs" />
     <Compile Include="AutoMapper\SpecificationAttributeCategoryMappingProfile.cs" />
     <Compile Include="AutoMapper\SpecificationAttributeOptionProfile.cs" />
     <Compile Include="AutoMapper\SpecificationAttributeProfile.cs" />
@@ -120,6 +125,7 @@
     <Compile Include="AutoMapper\UserActivitiesProfile.cs" />
     <Compile Include="AutoMapper\UserPermissionProfile.cs" />
     <Compile Include="AutoMapper\UserRoleProfile.cs" />
+    <Compile Include="DTO\AddressDTO.cs" />
     <Compile Include="DTO\BannerDTO.cs" />
     <Compile Include="DTO\CarCateDTO.cs" />
     <Compile Include="DTO\CategoryDTO.cs" />
@@ -128,6 +134,8 @@
     <Compile Include="DTO\JobDTO.cs" />
     <Compile Include="DTO\ManufacturerDTO.cs" />
     <Compile Include="DTO\MemberDTO.cs" />
+    <Compile Include="DTO\OrderDTO.cs" />
+    <Compile Include="DTO\OrderItemDTO.cs" />
     <Compile Include="DTO\ProductAttributeCategoryMappingDTO.cs" />
     <Compile Include="DTO\ProductAttributeDTO.cs" />
     <Compile Include="DTO\ProductAttributeMappingDTO.cs" />
@@ -137,6 +145,7 @@
     <Compile Include="DTO\ProductManufacturerDTO.cs" />
     <Compile Include="DTO\ProductSpecificationAttributeDTO.cs" />
     <Compile Include="DTO\ProductStorageQuantityDTO.cs" />
+    <Compile Include="DTO\ShoppingCartItemDTO.cs" />
     <Compile Include="DTO\SpecificationAttributeCategoryMappingDTO.cs" />
     <Compile Include="DTO\SpecificationAttributeDTO.cs" />
     <Compile Include="DTO\SpecificationAttributeOptionDTO.cs" />
@@ -145,12 +154,16 @@
     <Compile Include="DTO\UserPermissionDTO.cs" />
     <Compile Include="DTO\UserRoleDTO.cs" />
     <Compile Include="EfStartUpTask.cs" />
+    <Compile Include="Impl\AddressService.cs" />
+    <Compile Include="Impl\BannerService.cs" />
     <Compile Include="Impl\CarCateService.cs" />
     <Compile Include="Impl\CategoryService.cs" />
     <Compile Include="Impl\CityCateService.cs" />
     <Compile Include="Impl\DepartmentService.cs" />
     <Compile Include="Impl\JobService.cs" />
     <Compile Include="Impl\ManufacturerService.cs" />
+    <Compile Include="Impl\OrderItemService.cs" />
+    <Compile Include="Impl\OrderService.cs" />
     <Compile Include="Impl\ProductAttributeCategoryMappingService.cs" />
     <Compile Include="Impl\ProductAttributeMappingService.cs" />
     <Compile Include="Impl\ProductAttributeService.cs" />
@@ -162,6 +175,7 @@
     <Compile Include="Impl\ProductStorageQuantityService.cs" />
     <Compile Include="Impl\SettingExtensions.cs" />
     <Compile Include="Impl\SettingService.cs" />
+    <Compile Include="Impl\ShoppingCartItemService.cs" />
     <Compile Include="Impl\SpecificationAttributeCategoryMappingService.cs" />
     <Compile Include="Impl\SpecificationAttributeOptionService.cs" />
     <Compile Include="Impl\SpecificationAttributeService.cs" />
@@ -279,6 +293,14 @@
     <Compile Include="Migrations\201611050912002_AddShopCatAndOrder.Designer.cs">
       <DependentUpon>201611050912002_AddShopCatAndOrder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611070740566_ModifyOrder.cs" />
+    <Compile Include="Migrations\201611070740566_ModifyOrder.Designer.cs">
+      <DependentUpon>201611070740566_ModifyOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611070752004_AddDeletedForOrderItem.cs" />
+    <Compile Include="Migrations\201611070752004_AddDeletedForOrderItem.Designer.cs">
+      <DependentUpon>201611070752004_AddDeletedForOrderItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -317,12 +339,16 @@
     <Compile Include="Models\UserPermission.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\IAddressService.cs" />
+    <Compile Include="Service\IBannerService.cs" />
     <Compile Include="Service\ICarCateService.cs" />
     <Compile Include="Service\ICategoryService.cs" />
     <Compile Include="Service\ICityCateService.cs" />
     <Compile Include="Service\IDepartmentService.cs" />
     <Compile Include="Service\IJobService.cs" />
     <Compile Include="Service\IManufacturerService.cs" />
+    <Compile Include="Service\IOrderItemService.cs" />
+    <Compile Include="Service\IOrderService.cs" />
     <Compile Include="Service\IProductAttributeCategoryMappingService.cs" />
     <Compile Include="Service\IProductAttributeMappingService.cs" />
     <Compile Include="Service\IProductAttributeService.cs" />
@@ -333,6 +359,7 @@
     <Compile Include="Service\IProductSpecificationAttributeService.cs" />
     <Compile Include="Service\IProductStorageQuantityService.cs" />
     <Compile Include="Service\ISettingService.cs" />
+    <Compile Include="Service\IShoppingCartItemService.cs" />
     <Compile Include="Service\ISpecificationAttributeCategoryMappingService.cs" />
     <Compile Include="Service\ISpecificationAttributeOptionService.cs" />
     <Compile Include="Service\ISpecificationAttributeService.cs" />
@@ -341,6 +368,8 @@
     <Compile Include="Service\IUserPermissionService.cs" />
     <Compile Include="Service\IUserRoleService.cs" />
     <Compile Include="SqlServerDataProvider.cs" />
+    <Compile Include="Validator\AddressValidator.cs" />
+    <Compile Include="Validator\BannerValidator.cs" />
     <Compile Include="Validator\CarCateValidator.cs" />
     <Compile Include="Validator\CategoryValidator.cs" />
     <Compile Include="Validator\CityCateValidator.cs" />
@@ -348,6 +377,8 @@
     <Compile Include="Validator\JobValidator.cs" />
     <Compile Include="Validator\ManufacturerValidator.cs" />
     <Compile Include="Validator\MemberValidator.cs" />
+    <Compile Include="Validator\OrderItemValidator.cs" />
+    <Compile Include="Validator\OrderValidator.cs" />
     <Compile Include="Validator\ProductAttributeCategoryMappingValidator.cs" />
     <Compile Include="Validator\ProductAttributeMappingValidator.cs" />
     <Compile Include="Validator\ProductAttributeValidator.cs" />
@@ -356,6 +387,7 @@
     <Compile Include="Validator\ProductSpecificationAttributeValidator.cs" />
     <Compile Include="Validator\ProductStorageQuantityValidator.cs" />
     <Compile Include="Validator\ProductValidator.cs" />
+    <Compile Include="Validator\ShoppingCartItemValidator.cs" />
     <Compile Include="Validator\SpecificationAttributeCategoryMappingValidator.cs" />
     <Compile Include="Validator\SpecificationAttributeOptionValidator.cs" />
     <Compile Include="Validator\SpecificationAttributeValidator.cs" />
@@ -437,6 +469,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611050912002_AddShopCatAndOrder.resx">
       <DependentUpon>201611050912002_AddShopCatAndOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611070740566_ModifyOrder.resx">
+      <DependentUpon>201611070740566_ModifyOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611070752004_AddDeletedForOrderItem.resx">
+      <DependentUpon>201611070752004_AddDeletedForOrderItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
