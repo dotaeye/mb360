@@ -43,6 +43,8 @@ namespace MB.Controllers
         private ISpecificationAttributeService SpecificationAttributeService;
         private ISpecificationAttributeOptionService SpecificationAttributeOptionService;
         private IProductSpecificationAttributeService ProductSpecificationAttributeService;
+        private IProductStorageQuantityService ProductStorageQuantityService;
+        private IStorageService StorageService;
         public ProductController(
             IProductService _ProductService,
             IProductManufacturerService _ProductManufacturerService,
@@ -52,7 +54,9 @@ namespace MB.Controllers
             IProductAttributeValueService _ProductAttributeValueService,
             ISpecificationAttributeService _SpecificationAttributeService,
             ISpecificationAttributeOptionService _SpecificationAttributeOptionService,
-            IProductSpecificationAttributeService _ProductSpecificationAttributeService
+            IProductSpecificationAttributeService _ProductSpecificationAttributeService,
+            IProductStorageQuantityService _ProductStorageQuantityService,
+            IStorageService _StorageService
           )
         {
             this.ProductService = _ProductService;
@@ -64,6 +68,8 @@ namespace MB.Controllers
             this.SpecificationAttributeService = _SpecificationAttributeService;
             this.SpecificationAttributeOptionService = _SpecificationAttributeOptionService;
             this.ProductSpecificationAttributeService = _ProductSpecificationAttributeService;
+            this.ProductStorageQuantityService = _ProductStorageQuantityService;
+            this.StorageService = _StorageService;
         }
 
         [Route("")]
@@ -87,7 +93,7 @@ namespace MB.Controllers
                         select p;
             }
 
-           var queryDto = query.ProjectTo<ProductDTO>();
+            var queryDto = query.ProjectTo<ProductDTO>();
 
             if (!string.IsNullOrEmpty(option.SortField))
             {
@@ -155,6 +161,7 @@ namespace MB.Controllers
 
             var entity = ProductDto.ToEntity();
 
+            entity.OwnerId = User.Identity.GetUserId();
             entity.CreateUserId = User.Identity.GetUserId();
             entity.CreateTime = DateTime.Now;
             await ProductService.InsertAsync(entity);
@@ -243,6 +250,7 @@ namespace MB.Controllers
             var model = new ProductDetailModel
             {
                 Id = product.Id,
+                OwnerId = product.CreateUserId,
                 Name = product.Name,
                 CategoryId = product.CategoryId,
                 Description = product.Description,
@@ -299,18 +307,6 @@ namespace MB.Controllers
             #endregion
 
             #region specification
-            //var specs=ProductSpecificationAttributeService
-            // .GetAll().Where(x => x.ProductId == product.Id)
-            // .Join(
-            //    SpecificationAttributeOptionService.GetAll(),
-            //    psa => psa.SpecificationAttributeOptionId,
-            //    sao => sao.Id,
-            //    (psa, sao) => new {
-            //        psa.SpecificationAttributeOption,
-            //        sao.SpecificationAttribute
-            //    }
-            // ).ToList();
-
             var specs = from psa in ProductSpecificationAttributeService.GetAll()
                         join sao in SpecificationAttributeOptionService.GetAll()
                         on psa.SpecificationAttributeOptionId equals sao.Id
@@ -323,7 +319,7 @@ namespace MB.Controllers
                             sao
                         };
 
-            model.ProductSpecifications = specs.ToList().Select(x => new ProductSpecificationModel()
+            model.ProductSpecifications = specs.Where(x => x.psa.ProductId == id).ToList().Select(x => new ProductSpecificationModel()
             {
                 SpecificationAttributeId = x.sa.Id,
                 SpecificationAttributeName = x.sa.Name,
@@ -332,6 +328,31 @@ namespace MB.Controllers
             }).ToList();
 
             #endregion
+
+
+            #region Storage Quatity
+
+            var storageQuatities = from psq in ProductStorageQuantityService.GetAll()
+                                   join ss in StorageService.GetAll()
+                                   on psq.StorageId equals ss.Id
+                                   select new
+                                   {
+                                       psq,
+                                       ss,
+                                   };
+
+            model.ProductStorages = storageQuatities.Where(x => x.psq.ProductId == id).ToList().Select(x => new ProductStorageModel()
+            {
+                Name = x.ss.Name,
+                ProductId = x.psq.ProductId,
+                StorageId = x.ss.Id,
+                Quantity = x.psq.Quantity,
+                Id = x.psq.Id
+
+            }).ToList();
+
+            #endregion
+
 
             return Ok(model);
         }

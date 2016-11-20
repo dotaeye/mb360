@@ -25,7 +25,9 @@ namespace MB.Data.AutoMapper
 			 
 			CreateMap<AddressDTO, Address>()
 					.ForMember(entity => entity.CreateUserId, o => o.Ignore())
-					.ForMember(entity => entity.CreateTime, o => o.Ignore())
+                    .ForMember(entity => entity.CityCate, o => o.Ignore())
+                    .ForMember(entity => entity.User, o => o.Ignore())
+                    .ForMember(entity => entity.CreateTime, o => o.Ignore())
 					.ForMember(entity => entity.LastUserId, o => o.Ignore())
 					.ForMember(entity => entity.LastTime, o => o.Ignore())
 					.ForMember(entity => entity.Deleted, o => o.Ignore())

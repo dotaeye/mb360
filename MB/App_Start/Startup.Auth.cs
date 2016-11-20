@@ -7,6 +7,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
+using Microsoft.Owin.Security.WeChat;
 using Owin;
 using MB.Providers;
 using MB.Data;
@@ -64,6 +65,9 @@ namespace MB
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+
+
+         
         }
     }
 }

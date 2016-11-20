@@ -40,6 +40,8 @@ namespace MB.Data.Models
         /// </summary>
         public string AttributesXml { get; set; }
 
+        public string AttributesIds { get; set; }
+
 
         /// <summary>
         /// Gets or sets the quantity
@@ -82,6 +84,7 @@ namespace MB.Data.Models
         /// Gets or sets the customer
         /// </summary>
         public virtual ApplicationUser Customer { get; set; }
-     
+
+
     }
 }

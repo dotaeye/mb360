@@ -13,6 +13,8 @@ namespace MB.Data.Mapping
 
             this.Ignore(sci => sci.ShoppingCartType);
 
+            this.Property(p => p.OwnerId).HasMaxLength(128);
+
             this.HasRequired(sci => sci.Customer)
               .WithMany(c => c.ShoppingCartItems)
               .HasForeignKey(sci => sci.CustomerId);

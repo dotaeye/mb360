@@ -12,8 +12,8 @@ namespace MB.Data.Validator
     {
         public BannerValidator()
         {
-
-	    }
+			RuleFor(Banner => Banner.ImageUrl).NotEmpty().WithMessage("{PropertyName} is required");
+        }
     }
 }
 

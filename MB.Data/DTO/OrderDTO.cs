@@ -12,7 +12,6 @@ namespace MB.Data.DTO
     {
          
        public Guid OrderGuid  { get; set; } 
-       public string OwnerId  { get; set; } 
        public string CustomerId  { get; set; } 
        public int AddressId  { get; set; } 
        public Boolean PickUpInStore  { get; set; } 
@@ -27,9 +26,8 @@ namespace MB.Data.DTO
        public string ShippingMethod  { get; set; } 
        public Boolean Deleted  { get; set; } 
        public DateTime CreateTime  { get; set; } 
-       public string TrackingNumber  { get; set; } 
-       public int? ShippedTime  { get; set; } 
-       public int? DeliveryTime  { get; set; } 
+
+
        public OrderStatus OrderStatus  { get; set; } 
        public int Id  { get; set; } 
     }

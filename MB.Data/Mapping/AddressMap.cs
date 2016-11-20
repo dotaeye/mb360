@@ -14,6 +14,11 @@ namespace MB.Data.Mapping
             this.HasRequired(a => a.CityCate)
                 .WithMany()
                 .HasForeignKey(a => a.CityId).WillCascadeOnDelete(false);
+
+            this.HasRequired(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId).WillCascadeOnDelete(false);
+
         }
 
     }

@@ -16,11 +16,15 @@ namespace MB.Data.Models
 
         public int CityId { get; set; }
 
-        public CityCate CityCate { get; set; }
+        public virtual CityCate CityCate { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
 
         public string Detail { get; set; }
 
         public bool Default { get; set; }
+
+        public string UserId { get; set; }
 
         [DTO(false, true)]
         public string CreateUserId { get; set; }

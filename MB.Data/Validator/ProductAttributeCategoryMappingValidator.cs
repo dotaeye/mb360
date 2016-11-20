@@ -12,7 +12,8 @@ namespace MB.Data.Validator
     {
         public ProductAttributeCategoryMappingValidator()
         {
-		 }
+			//RuleFor(ProductAttributeCategoryMapping => ProductAttributeCategoryMapping.Name).NotEmpty().WithMessage("{PropertyName} is required");
+        }
     }
 }
 

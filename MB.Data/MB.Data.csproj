@@ -55,27 +55,20 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Owin">
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Owin.Security">
       <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -301,6 +294,22 @@
     <Compile Include="Migrations\201611070752004_AddDeletedForOrderItem.Designer.cs">
       <DependentUpon>201611070752004_AddDeletedForOrderItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611190937439_AddressUpdate.cs" />
+    <Compile Include="Migrations\201611190937439_AddressUpdate.Designer.cs">
+      <DependentUpon>201611190937439_AddressUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611191023327_AddOwnerIdForProduct.cs" />
+    <Compile Include="Migrations\201611191023327_AddOwnerIdForProduct.Designer.cs">
+      <DependentUpon>201611191023327_AddOwnerIdForProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611191039253_UpdateATypError.cs" />
+    <Compile Include="Migrations\201611191039253_UpdateATypError.Designer.cs">
+      <DependentUpon>201611191039253_UpdateATypError.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611191322323_ShopCartAddIds.cs" />
+    <Compile Include="Migrations\201611191322323_ShopCartAddIds.Designer.cs">
+      <DependentUpon>201611191322323_ShopCartAddIds.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -475,6 +484,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611070752004_AddDeletedForOrderItem.resx">
       <DependentUpon>201611070752004_AddDeletedForOrderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611190937439_AddressUpdate.resx">
+      <DependentUpon>201611190937439_AddressUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611191023327_AddOwnerIdForProduct.resx">
+      <DependentUpon>201611191023327_AddOwnerIdForProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611191039253_UpdateATypError.resx">
+      <DependentUpon>201611191039253_UpdateATypError.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611191322323_ShopCartAddIds.resx">
+      <DependentUpon>201611191322323_ShopCartAddIds.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

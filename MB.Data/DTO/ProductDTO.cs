@@ -11,7 +11,7 @@ namespace MB.Data.DTO
 {
     public class ProductDTO
     {
-
+        public string OwnerId { get; set; }
         public string Name { get; set; }
         public int CategoryId { get; set; }
         public string SKU { get; set; }

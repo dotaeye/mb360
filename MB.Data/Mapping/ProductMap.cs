@@ -13,6 +13,7 @@ namespace MB.Data.Mapping
             this.HasKey(p => p.Id);
             this.Ignore(p => p.Distance);
             this.Property(p => p.Name).IsRequired().HasMaxLength(200);
+            this.Property(p => p.OwnerId).HasMaxLength(128);
             this.Property(p => p.SKU).HasMaxLength(400);
             this.Property(p => p.ImageUrl).HasMaxLength(800);
             this.Property(p => p.DetailUrl).HasMaxLength(800);

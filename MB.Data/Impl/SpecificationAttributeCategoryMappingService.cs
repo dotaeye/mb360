@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace MB.Data.Impl
 {
-    public class SpecificationAttributeCategoryMappingService : ISpecificationAttributeCategoryMappingService
+	public class SpecificationAttributeCategoryMappingService : ISpecificationAttributeCategoryMappingService
     {
-        #region Fields
+		   #region Fields
 
         private readonly IRepository<SpecificationAttributeCategoryMapping> _SpecificationAttributeCategoryMappingRepository;
 
@@ -35,7 +35,8 @@ namespace MB.Data.Impl
             if (entity == null)
                 throw new ArgumentNullException("SpecificationAttributeCategoryMapping");
 
-            return await _SpecificationAttributeCategoryMappingRepository.DeleteAsync(entity);
+        
+           return await UpdateAsync(entity);
         }
 
         public async Task<SpecificationAttributeCategoryMapping> FindOneAsync(int Id)

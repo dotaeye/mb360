@@ -12,7 +12,7 @@ namespace MB.Data.Validator
     {
         public OrderItemValidator()
         {
-			//RuleFor(OrderItem => OrderItem.Name).NotEmpty().WithMessage("{PropertyName} is required");
+			//RuleFor(OrderItem => OrderItem.).NotEmpty().WithMessage("{PropertyName} is required");
         }
     }
 }

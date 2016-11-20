@@ -10,11 +10,10 @@ namespace MB.Data.DTO
 {
 	public class AddressDTO
     {
-         
+       public string UserId { get; set; }
        public string Name  { get; set; } 
        public string PhoneNumber  { get; set; } 
        public int CityId  { get; set; } 
-       public CityCate CityCate  { get; set; } 
        public string Detail  { get; set; } 
        public Boolean Default  { get; set; } 
        public int Id  { get; set; } 

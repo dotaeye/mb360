@@ -20,7 +20,7 @@ namespace MB.Data.Models
         private ICollection<ProductAttributeMapping> _productAttributeMappings;
     
 
-
+        public string OwnerId { get; set; }
 
         public string Name { get; set; }
 

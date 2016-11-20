@@ -92,8 +92,9 @@ namespace MB.Ioc
             builder.RegisterType<ProductAttributeCategoryMappingService>().As<IProductAttributeCategoryMappingService>().InstancePerRequest();
    
             builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerRequest();
-        
-           
+            builder.RegisterType<ShoppingCartItemService>().As<IShoppingCartItemService>().InstancePerRequest();
+
+
         }
 
         public int Order

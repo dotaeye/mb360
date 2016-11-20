@@ -14,12 +14,10 @@ namespace MB.Data.DTO
        public string OwnerId  { get; set; } 
        public int StorageId  { get; set; } 
        public int ShoppingCartTypeId  { get; set; } 
-       public string CustomerId  { get; set; } 
        public int ProductId  { get; set; } 
-       public string AttributesXml  { get; set; } 
-       public int Quantity  { get; set; } 
-       public int Status  { get; set; } 
-       public ShoppingCartType ShoppingCartType  { get; set; } 
+       public string AttributesXml  { get; set; }
+       public string AttributesIds { get; set; }
+        public int Quantity  { get; set; } 
        public int Id  { get; set; } 
     }
 }

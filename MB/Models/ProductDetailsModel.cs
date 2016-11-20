@@ -11,7 +11,10 @@ namespace MB.Models
         {
             ProductAttributes = new List<ProductAttributeModel>();
             ProductSpecifications = new List<ProductSpecificationModel>();
+            ProductStorages = new List<ProductStorageModel>();
         }
+
+        public string OwnerId { get; set; }
 
         public string Name { get; set; }
         public int CategoryId { get; set; }
@@ -35,7 +38,21 @@ namespace MB.Models
 
         public IList<ProductSpecificationModel> ProductSpecifications { get; set; }
 
+        public IList<ProductStorageModel> ProductStorages { get; set; }
+
     }
+
+    public partial class ProductStorageModel
+    {
+
+        public int ProductId { get; set; }
+        public int StorageId { get; set; }
+        public int Quantity { get; set; }
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
 
 
     public partial class ProductAttributeModel
@@ -56,22 +73,22 @@ namespace MB.Models
         public string Description { get; set; }
 
         public bool IsRequired { get; set; }
- 
+
         public IList<ProductAttributeValueModel> Values { get; set; }
 
     }
 
-    public partial class ProductAttributeValueModel 
+    public partial class ProductAttributeValueModel
     {
 
         public int Id { get; set; }
-     
+
         public string Name { get; set; }
 
         public decimal PriceAdjustment { get; set; }
 
         public bool IsPreSelected { get; set; }
-            
+
         public string ImageUrl { get; set; }
     }
 
