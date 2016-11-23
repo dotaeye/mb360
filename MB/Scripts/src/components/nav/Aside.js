@@ -113,6 +113,11 @@ var Aside = React.createClass({
             controller: 'specificationattribute',
             action: 'index',
             title: '产品规格'
+          },
+          {
+            controller: 'banner',
+            action: 'index',
+            title: '横幅管理'
           }
         ]
       },

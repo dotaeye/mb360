@@ -93,6 +93,7 @@ namespace MB.Ioc
    
             builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerRequest();
             builder.RegisterType<ShoppingCartItemService>().As<IShoppingCartItemService>().InstancePerRequest();
+            builder.RegisterType<BannerService>().As<IBannerService>().InstancePerRequest();
 
 
         }

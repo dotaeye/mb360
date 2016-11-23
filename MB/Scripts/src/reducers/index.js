@@ -20,6 +20,7 @@ import specificationAttributeOption from './specificationAttributeOption'
 import productSpecificationAttribute from './productSpecificationAttribute'
 import manufacturer from './manufacturer'
 import job from './job';
+import banner from './banner';
 
 export default combineReducers({
     form,
@@ -42,5 +43,6 @@ export default combineReducers({
     productSpecificationAttribute,
     specificationAttribute,
     specificationAttributeOption,
-    manufacturer
+    manufacturer,
+    banner
 });

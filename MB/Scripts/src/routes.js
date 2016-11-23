@@ -17,6 +17,7 @@ import {
   CarCate,
   CityCate,
   Job,
+  Banner,
   Storage,
   Member,
   MemberCreateOrUpdate,
@@ -82,6 +83,8 @@ export default (store) => {
       <Route path='department' component={Department} onEnter={requireLogin.bind(null,'department','index')} />
 
       <Route path='job' component={Job} onEnter={requireLogin.bind(null,'job','index')} />
+
+      <Route path='banner' component={Banner} onEnter={requireLogin.bind(null,'banner','index')} />
 
       <Route path='category' component={Category} onEnter={requireLogin.bind(null,'category','index')} />
 

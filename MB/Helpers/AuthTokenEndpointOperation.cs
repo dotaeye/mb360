@@ -9,7 +9,7 @@ namespace MB.Helpers
     {
         public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, IApiExplorer apiExplorer)
         {
-            swaggerDoc.paths.Add("/Account/Login", new PathItem
+            swaggerDoc.paths.Add("/api/Account/Login", new PathItem
             {
                 post = new Operation
                 {

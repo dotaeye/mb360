@@ -58,7 +58,7 @@ export function update(data) {
 export function remove(id) {
   return {
     types: [departmentTypes.DELETE_DEPARTMENT, departmentTypes.DELETE_DEPARTMENT_SUCCESS, departmentTypes.DELETE_DEPARTMENT_FAIL],
-    promise: (client) => client.delete('/department/' + id, {
+    promise: (client) => client.del('/department/' + id, {
       token: true
     })
   };

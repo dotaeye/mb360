@@ -47,7 +47,7 @@ export function update(id, data) {
 export function delete(id) {
   return {
     types: [userActivities.DELETE_USERACTIVITIES, userActivities.DELETE_USERACTIVITIES_SUCCESS, userActivities.DELETE_USERACTIVITIES_FAIL],
-    promise: (client) => client.delete('/userActivities/'+id, {
+    promise: (client) => client.del('/userActivities/'+id, {
 		token: true
     })
   };
