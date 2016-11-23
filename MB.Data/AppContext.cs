@@ -67,7 +67,7 @@ namespace MB.Data
             modelBuilder.Configurations.Add(new ShoppingCartItemMap());
             modelBuilder.Configurations.Add(new AddressMap());
 
-
+            modelBuilder.Configurations.Add(new SmsCodeMap());
             base.OnModelCreating(modelBuilder);
         }
 

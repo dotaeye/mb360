@@ -35,7 +35,7 @@ namespace MB.Models
     public class RegisterBindingModel
     {
         [Required]
-        [Display(Name = "电子邮件")]
+        [Display(Name = "手机号码")]
         public string Email { get; set; }
 
         [Required]
@@ -44,10 +44,11 @@ namespace MB.Models
         [Display(Name = "密码")]
         public string Password { get; set; }
 
-        [DataType(DataType.Password)]
-        [Display(Name = "确认密码")]
-        [Compare("Password", ErrorMessage = "密码和确认密码不匹配。")]
-        public string ConfirmPassword { get; set; }
+        [Required]
+        [StringLength(6, ErrorMessage = "请输入{2}位手机短信证码", MinimumLength = 6)]
+        [Display(Name = "验证码")]
+        public string SmsCode { get; set; }
+
     }
 
     public class RegisterExternalBindingModel

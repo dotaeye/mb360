@@ -169,6 +169,7 @@
     <Compile Include="Impl\SettingExtensions.cs" />
     <Compile Include="Impl\SettingService.cs" />
     <Compile Include="Impl\ShoppingCartItemService.cs" />
+    <Compile Include="Impl\SmsCodeService.cs" />
     <Compile Include="Impl\SpecificationAttributeCategoryMappingService.cs" />
     <Compile Include="Impl\SpecificationAttributeOptionService.cs" />
     <Compile Include="Impl\SpecificationAttributeService.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="Mapping\ProductSpecificationAttributeMap.cs" />
     <Compile Include="Mapping\ProductStorageQuantityMap.cs" />
     <Compile Include="Mapping\ShoppingCartItemMap.cs" />
+    <Compile Include="Mapping\SmsCodeMap.cs" />
     <Compile Include="Mapping\SpecificationAttributeMap.cs" />
     <Compile Include="Mapping\SpecificationAttributeOptionMap.cs" />
     <Compile Include="Mapping\StorageMap.cs" />
@@ -310,6 +312,14 @@
     <Compile Include="Migrations\201611191322323_ShopCartAddIds.Designer.cs">
       <DependentUpon>201611191322323_ShopCartAddIds.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611231328599_AddSmsCode.cs" />
+    <Compile Include="Migrations\201611231328599_AddSmsCode.Designer.cs">
+      <DependentUpon>201611231328599_AddSmsCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611231419367_IgnoreCodeType.cs" />
+    <Compile Include="Migrations\201611231419367_IgnoreCodeType.Designer.cs">
+      <DependentUpon>201611231419367_IgnoreCodeType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -371,6 +381,7 @@
     <Compile Include="Service\IProductStorageQuantityService.cs" />
     <Compile Include="Service\ISettingService.cs" />
     <Compile Include="Service\IShoppingCartItemService.cs" />
+    <Compile Include="Service\ISmsCodeService.cs" />
     <Compile Include="Service\ISpecificationAttributeCategoryMappingService.cs" />
     <Compile Include="Service\ISpecificationAttributeOptionService.cs" />
     <Compile Include="Service\ISpecificationAttributeService.cs" />
@@ -498,6 +509,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611191322323_ShopCartAddIds.resx">
       <DependentUpon>201611191322323_ShopCartAddIds.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611231328599_AddSmsCode.resx">
+      <DependentUpon>201611231328599_AddSmsCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611231419367_IgnoreCodeType.resx">
+      <DependentUpon>201611231419367_IgnoreCodeType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

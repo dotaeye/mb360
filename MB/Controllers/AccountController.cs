@@ -24,6 +24,7 @@ using MB.Data.Models;
 using SQ.Core.Data;
 using AutoMapper.QueryableExtensions;
 using MB.Helpers;
+using CCPRestSDK;
 
 namespace MB.Controllers
 {
@@ -35,12 +36,15 @@ namespace MB.Controllers
         private ApplicationUserManager _userManager;
         private IUserRoleService UserRoleService;
         private IUserPermissionService UserPermissionService;
+        private ISmsCodeService SmsCodeService;
         public AccountController(
              IUserRoleService _UserRoleService,
-            IUserPermissionService _UserPermissionService)
+            IUserPermissionService _UserPermissionService,
+            ISmsCodeService _SmsCodeService)
         {
             this.UserRoleService = _UserRoleService;
             this.UserPermissionService = _UserPermissionService;
+            this.SmsCodeService = _SmsCodeService;
         }
 
         public AccountController(ApplicationUserManager userManager,
@@ -84,6 +88,61 @@ namespace MB.Controllers
         }
 
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("SmsCode")]
+        public async Task<IHttpActionResult> GetSmsCode([FromBody]string PhoneNumber)
+        {
+
+            CCPRestSDK.CCPRestSDK api = new CCPRestSDK.CCPRestSDK();
+            //ip格式如下，不带https://
+            bool isInit = api.init("app.cloopen.com", "8883");
+            api.setAccount("8aaf0708588b1d2301588ff10eb00346", "3e902b274a844cb899b672bcaf4fde2f");
+            api.setAppId("8aaf0708588b1d2301588ff10f16034b");
+
+            var expireMin = 10;
+            var expireTime = DateTime.Now.AddMinutes(expireMin);
+
+            //1分钟内不允许再次发送
+            var limitTime = DateTime.Now.AddMinutes(-1);
+            var hasSendInLimit = SmsCodeService.GetAll().Count(x => x.PhoneNumber == PhoneNumber && x.CreateTime > limitTime) > 0;
+            if (hasSendInLimit)
+            {
+                return BadRequest("短信已发送给您，请耐心等待！");
+            }
+
+            var smsCode = new SmsCode()
+            {
+                Code = getRandCode(6),
+                CodeType = CodeType.Register,
+                CreateTime = DateTime.Now,
+                ExpireTime = expireTime,
+                PhoneNumber = PhoneNumber
+            };
+            try
+            {
+                if (isInit)
+                {
+                    Dictionary<string, object> retData = api.SendTemplateSMS(PhoneNumber, "1", new string[] { smsCode.Code, expireMin.ToString() });
+
+                    if (retData["statusCode"].ToString() == "000000")
+                    {
+                        await SmsCodeService.InsertAsync(smsCode);
+                    }
+                }
+                else
+                {
+                    return BadRequest("初始化失败！");
+                }
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc.Message);
+            }
+
+            return Ok();
+
+        }
 
         // POST api/Account/Logout
         [Route("Logout")]
@@ -308,15 +367,39 @@ namespace MB.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var smsCode = await SmsCodeService.GetAll().Where(x => x.PhoneNumber == model.Email
+              && x.Code == model.SmsCode
+              && x.ExpireTime > DateTime.Now
+            ).OrderByDescending(x => x.Id).FirstOrDefaultAsync();
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
+            if (smsCode == null)
             {
-                return GetErrorResult(result);
+                return BadRequest("短信验证码不正确，或已失效！");
             }
 
+            var user = new ApplicationUser()
+            {
+                UserName = model.Email,
+                PhoneNumber = model.Email,
+                Email = model.Email,
+                UserRoleId = 1,
+                JobId = 1,
+                PhoneNumberConfirmed = true
+            };
+            try
+            {
+
+                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok();
         }
 
@@ -479,6 +562,37 @@ namespace MB.Controllers
 
             public string Action { get; set; }
 
+        }
+
+        private string getDictionaryData(Dictionary<string, object> data)
+        {
+            string ret = null;
+            foreach (KeyValuePair<string, object> item in data)
+            {
+                if (item.Value != null && item.Value.GetType() == typeof(Dictionary<string, object>))
+                {
+                    ret += item.Key.ToString() + "={";
+                    ret += getDictionaryData((Dictionary<string, object>)item.Value);
+                    ret += "};";
+                }
+                else
+                {
+                    ret += item.Key.ToString() + "=" + (item.Value == null ? "null" : item.Value.ToString()) + ";";
+                }
+            }
+            return ret;
+        }
+
+        private string getRandCode(int length)
+        {
+            var text2 = "";
+            var random = new Random((int)DateTime.Now.Ticks);
+            const string textArray = "0123456789";
+            for (var i = 0; i < length; i++)
+            {
+                text2 = text2 + textArray.Substring(random.Next() % textArray.Length, 1);
+            }
+            return text2;
         }
     }
 }

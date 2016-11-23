@@ -2,10 +2,7 @@
 {
     public enum CodeType
     {
-        NoRegistered = 0,
-        Registered = 1,
-        Member = 2,
-        Employee = 80,
-        Admin = 99
+        Register = 0,
+        Login = 1
     }
 }

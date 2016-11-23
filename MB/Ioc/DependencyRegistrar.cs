@@ -95,7 +95,7 @@ namespace MB.Ioc
             builder.RegisterType<ShoppingCartItemService>().As<IShoppingCartItemService>().InstancePerRequest();
             builder.RegisterType<BannerService>().As<IBannerService>().InstancePerRequest();
 
-
+            builder.RegisterType<SmsCodeService>().As<ISmsCodeService>().InstancePerRequest();
         }
 
         public int Order
