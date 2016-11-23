@@ -317,6 +317,7 @@
     <Compile Include="Models\CarCate.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CityCate.cs" />
+    <Compile Include="Models\CodeType.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Job.cs" />
     <Compile Include="Models\Manufacturer.cs" />
@@ -339,6 +340,7 @@
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\ShoppingCartType.cs" />
+    <Compile Include="Models\SmsCode.cs" />
     <Compile Include="Models\SpecificationAttribute.cs" />
     <Compile Include="Models\SpecificationAttributeCategoryMapping.cs" />
     <Compile Include="Models\SpecificationAttributeOption.cs" />
