@@ -93,6 +93,7 @@ namespace MB.Controllers
         [Route("SmsCode")]
         public async Task<IHttpActionResult> GetSmsCode([FromBody]string PhoneNumber)
         {
+            var result = new ApiResult<string>();
 
             CCPRestSDK.CCPRestSDK api = new CCPRestSDK.CCPRestSDK();
             //ip格式如下，不带https://
@@ -108,7 +109,9 @@ namespace MB.Controllers
             var hasSendInLimit = SmsCodeService.GetAll().Count(x => x.PhoneNumber == PhoneNumber && x.CreateTime > limitTime) > 0;
             if (hasSendInLimit)
             {
-                return BadRequest("短信已发送给您，请耐心等待！");
+                result.Code = 3;
+                result.Info = "短信已发送给您，请耐心等待！";
+                return Ok(result);
             }
 
             var smsCode = new SmsCode()
@@ -132,15 +135,21 @@ namespace MB.Controllers
                 }
                 else
                 {
-                    return BadRequest("初始化失败！");
+                    result.Code = 2;
+                    result.Info = "短信验证码服务，初始化失败！";
+                    return Ok(result);
                 }
             }
             catch (Exception exc)
             {
-                return BadRequest(exc.Message);
+                result.Code = 1;
+                result.Info = exc.Message;
+                return Ok(result);
             }
 
-            return Ok();
+            result.Info = "短信发送成功";
+            result.Data = "success";
+            return Ok(result);
 
         }
 
@@ -362,9 +371,15 @@ namespace MB.Controllers
         [Route("Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
+
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return Ok(new ApiResult<ModelStateDictionary>()
+                {
+                    Code = 2,
+                    Data = ModelState,
+                    Info = "实体验证失败"
+                });
             }
 
             var smsCode = await SmsCodeService.GetAll().Where(x => x.PhoneNumber == model.Email
@@ -374,7 +389,11 @@ namespace MB.Controllers
 
             if (smsCode == null)
             {
-                return BadRequest("短信验证码不正确，或已失效！");
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 2,
+                    Info = "短信验证码不正确，或已失效！"
+                });
             }
 
             var user = new ApplicationUser()
@@ -388,19 +407,29 @@ namespace MB.Controllers
             };
             try
             {
-
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-                if (!result.Succeeded)
-                {
-                    return GetErrorResult(result);
+                if (!result.Succeeded) {
+                    return Ok(new ApiResult<string>()
+                    {
+                        Code = 2,
+                        Info = "服务器异常！"
+                    });
                 }
+              
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = ex.Message
+                });
             }
-            return Ok();
+            return Ok(new ApiResult<string>()
+            {
+                Info = "注册成功",
+                Data = "success"
+            });
         }
 
         // POST api/Account/RegisterExternal

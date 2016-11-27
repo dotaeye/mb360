@@ -163,5 +163,21 @@ namespace MB.Helpers
 
             return default(T);
         }
+
+        public static List<int> StringToIds(string str)
+        {
+            var result = new List<int>();
+
+            if (string.IsNullOrWhiteSpace(str))
+                return result;
+            foreach (var spec in str.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                int specId;
+                int.TryParse(spec.Trim(), out specId);
+                if (!result.Contains(specId))
+                    result.Add(specId);
+            }
+            return result;
+        }
     }
 }

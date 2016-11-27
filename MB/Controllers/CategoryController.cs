@@ -226,56 +226,73 @@ namespace MB.Controllers
         [Route("list/")]
         [HttpGet]
         [ResponseType(typeof(CategoryModel))]
-        public async Task<IHttpActionResult> List([FromUri] CatalogPagingFilteringModel command)
+        public async Task<IHttpActionResult> List(
+            int categoryId = 0,
+            int manufacturerId = 0,
+            string keywords = null,
+            string specs = null,
+            int pageIndex = 0,
+            int pageSize = 0,
+            string location = null,
+            int? orderBy = null,
+            decimal? minPrice = null,
+            decimal? maxPrice = null
+            )
         {
-            Category entity = await CategoryService.FindOneAsync(command.Id);
-
-            var location = DbGeography.FromText("POINT(121.606485 31.129087)");
-            if (entity == null)
-            {
-                return NotFound();
-            }
-            var model = new CategoryModel()
-            {
-                Id = entity.Id,
-                Description = entity.Description,
-                Name = entity.Name,
-                ImageUrl = entity.ImageUrl
-
-            };
-
-            if (command.PageSize == 0)
-            {
-                command.PageSize = 20;
-            }
-
-            model.SubCategories = CategoryService.GetAll()
-                .Where(x => !x.Deleted && x.ParentId.Value == entity.Id)
-                .ProjectTo<CategoryDTO>().OrderBy(x => x.DisplayOrder).ToList();
-
+            var result = new ApiResult<CategoryModel>();
+            var model = new CategoryModel();
             var categoryIds = new List<int>();
-            categoryIds.Add(entity.Id);
-            categoryIds.AddRange(model.SubCategories.Select(x => x.Id));
+            DbGeography Location = null;
 
+            if (!string.IsNullOrEmpty(location))
+            {
+                Location = DbGeography.FromText(string.Format("POINT({0})", location));
+            }
+            if (categoryId != 0)
+            {
+                Category entity = await CategoryService.FindOneAsync(categoryId);
+                model = new CategoryModel()
+                {
+                    Id = entity.Id,
+                    Description = entity.Description,
+                    Name = entity.Name,
+                    ImageUrl = entity.ImageUrl
+                };
+                model.SubCategories = CategoryService.GetAll()
+                   .Where(x => !x.Deleted && x.ParentId.Value == entity.Id)
+                   .ProjectTo<CategoryDTO>().OrderBy(x => x.DisplayOrder).ToList();
 
+                categoryIds.Add(entity.Id);
+                categoryIds.AddRange(model.SubCategories.Select(x => x.Id));
+            }
+
+            if (pageSize == 0)
+            {
+                pageSize = 20;
+            }
 
             int RoleId = 2;
-            IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.GetAlreadyFilteredSpecOptionIds();
+
+            IList<int> alreadyFilteredSpecOptionIds = MBHelper.StringToIds(specs);
             IList<int> filterableSpecificationAttributeOptionIds;
-            var products = ProductService.SearchProducts(out filterableSpecificationAttributeOptionIds,
-                loadFilterableSpecificationAttributeOptionIds: true,
+            var loadFilterableSpecificationAttributeOptionIds = pageIndex == 0;
+            var products = ProductService.SearchProducts(
+                out filterableSpecificationAttributeOptionIds,
+                categoryIds: categoryIds,
+                manufacturerId: manufacturerId,
+                loadFilterableSpecificationAttributeOptionIds: loadFilterableSpecificationAttributeOptionIds,
                 showHidden: true,
-                location: location,
+                location: Location,
                 featuredProducts: null,
                 //RoleId: MBHelper.GetUserRoleId(User),
                 RoleId: RoleId,
-                priceMin: command.MinPrice,
-                priceMax: command.MaxPrice,
+                priceMin: minPrice,
+                priceMax: maxPrice,
                 filteredSpecs: alreadyFilteredSpecOptionIds,
                 //orderBy: (ProductSortingEnum)command.OrderBy,
                 orderBy: ProductSortingEnum.Position,
-                pageIndex: command.PageNumber,
-                pageSize: command.PageSize);
+                pageIndex: pageIndex,
+                pageSize: pageSize);
             //model.Products = PrepareProductOverviewModels(products).ToList();
             model.Products = products.Select(x => new ProductOverviewModel()
             {
@@ -288,39 +305,74 @@ namespace MB.Controllers
                 Distance = x.Distance
 
             }).ToList();
-
-            model.PagingFilteringContext.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
-       filterableSpecificationAttributeOptionIds != null ? filterableSpecificationAttributeOptionIds.ToArray() : null,
-       SpecificationAttributeOptionService, CacheManager);
-
-
-            return Ok(model);
+            model.TotalCount = products.TotalCount;
+            if (loadFilterableSpecificationAttributeOptionIds)
+            {
+                model.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+                   filterableSpecificationAttributeOptionIds != null ? filterableSpecificationAttributeOptionIds.ToArray() : null,
+                   SpecificationAttributeOptionService, CacheManager);
+            }
+            result.Data = model;
+            return Ok(result);
         }
 
-
-
-
-        [Route("test")]
+        [Route("all")]
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<ProductOverviewModel>))]
-        public IEnumerable<ProductOverviewModel> Test()
+        [ResponseType(typeof(ApiResult<List<Cascader>>))]
+        public ApiResult<List<Cascader>> All()
         {
+            var result = new ApiResult<List<Cascader>>();
 
-            var result = ProductService.TestProductSearch(0, 20).Select(x => new ProductOverviewModel()
+            var cascader = new List<Cascader>();
+
+            try
             {
 
-                Description = x.Description,
-                Distance = x.Distance,
-                Id = x.Id,
-                Name = x.Name
-            });
+                var query = CategoryService.GetAll().Where(x => !x.Deleted && x.Level == 2).ToList();
 
+                var categories = query.ToList();
+
+                foreach (var cate in categories)
+                {
+                    var item = new Cascader()
+                    {
+                        Label = cate.Name,
+                        Value = cate.Id.ToString(),
+                        ParentId = cate.ParentId.HasValue ? cate.ParentId.Value.ToString() : null,
+                        ImageUrl = cate.ImageUrl
+                    };
+
+                    item.Children = new List<Cascader>();
+
+                    var childCategories = CategoryService.GetAll().Where(x => !x.Deleted && x.Level == 3 && x.ParentId == cate.Id).ToList();
+
+                    if (childCategories.Count > 0)
+                    {
+                        item.Children = childCategories.Select(x => new Cascader()
+                        {
+                            Label = x.Name,
+                            Value = x.Id.ToString(),
+                            ParentId = x.ParentId.HasValue ? x.ParentId.Value.ToString() : null,
+                            ImageUrl = x.ImageUrl
+
+                        }).ToList();
+
+                        cascader.Add(item);
+                    }
+                }
+                result.Data = cascader;
+            }
+            catch (Exception ex)
+            {
+                result.Info = ex.Message;
+                result.Code = 1;
+                return result;
+            }
+
+            result.Info = "获取类别成功！";
             return result;
+
         }
-
-
-
-
     }
 }
 

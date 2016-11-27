@@ -61,10 +61,5 @@ namespace MB.Data.Service
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             DbGeography location = null,
             bool showHidden = false);
-
-
-        IEnumerable<Product> TestProductSearch(int PageIndex, int PageSize);
-
-
     }
 }

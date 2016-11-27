@@ -23,15 +23,18 @@ using MB.Helpers;
 
 namespace MB.Controllers
 {
+    [RoutePrefix("api/app")]
     public class AppController : ApiController
     {
         private ICategoryService CategoryService;
+        private IBannerService BannerService;
         private IManufacturerService ManufacturerService;
         private IProductService ProductService;
         private ISpecificationAttributeOptionService SpecificationAttributeOptionService;
         private ICacheManager CacheManager;
         public AppController(
              ICategoryService _CategoryService,
+             IBannerService _BannerService,
              IManufacturerService _ManufacturerService,
              IProductService _ProductService,
              ISpecificationAttributeOptionService _SpecificationAttributeOptionService,
@@ -39,6 +42,7 @@ namespace MB.Controllers
           )
         {
             this.CategoryService = _CategoryService;
+            this.BannerService = _BannerService;
             this.ManufacturerService = _ManufacturerService;
             this.ProductService = _ProductService;
             this.SpecificationAttributeOptionService = _SpecificationAttributeOptionService;
@@ -49,21 +53,30 @@ namespace MB.Controllers
         [Route("home")]
         [HttpGet]
         [ResponseType(typeof(HomeModel))]
-        public HomeModel home(int number = 6)
+        public ApiResult<HomeModel> home(int number = 6)
         {
+            var result = new ApiResult<HomeModel>();
             var model = new HomeModel();
-            model.HotCategoires= CategoryService.GetAll()
+            model.HotCategories = CategoryService.GetAll()
                 .Where(x => !x.Deleted && x.IsHot)
                 .ProjectTo<CategoryDTO>()
                 .OrderBy(x => x.HotOrder)
                 .Take(number).ToList();
 
-            model.HotManufacturers=ManufacturerService.GetAll()
+            model.HotManufacturers = ManufacturerService.GetAll()
                 .Where(x => !x.Deleted && x.IsHot)
                 .ProjectTo<ManufacturerDTO>()
                 .OrderBy(x => x.HotOrder)
                 .Take(number).ToList();
-            return model;
+
+            model.Banners = BannerService.GetAll()
+              .Where(x => !x.Deleted)
+              .ProjectTo<BannerDTO>()
+              .OrderByDescending(x => x.Id)
+              .Take(number).ToList();
+            result.Data = model;
+            //
+            return result;
         }
     }
 }

@@ -350,59 +350,5 @@ namespace MB.Data.Impl
             #endregion
 
         }
-
-
-        public IEnumerable<Product> TestProductSearch(int PageIndex, int PageSize)
-        {
-            var location = DbGeography.FromText("POINT(121.606485 31.129087)");
-
-            //select t1.ProductID,t2.ProductName,t1.Quantity
-
-            // from
-            // (select[Order Details].ProductID, max([Order Details].Quantity) as Quantity
-
-            // from[Order Details] group by ProductID)t1
-            //left join
-            //Products t2
-            //on t1.ProductID = t2.ProductID
-
-            var query = from p in _ProductRepository.Table
-                        join d in (from t in
-                                       (from s in _StorageRepository.Table
-                                        join psq in _ProductStorageQuantityRepository.Table on s.Id equals psq.StorageId
-                                        select new { s, psq })
-                                   group t by t.psq.ProductId into g
-                                   select new
-                                   {
-                                       ProductId = g.Key,
-                                       distance = g.Min(z => z.s.Location.Distance(location))
-                                   }) on p.Id equals d.ProductId
-                        select new
-                        {
-                            p,
-                            d.distance
-                        };
-
-            //group s_p by s_p.prod
-
-            //join p in _ProductRepository.Table on psq.ProductId equals p.Id
-            //group psq by new { product = p, storage = s } into g
-            //select new
-            //{
-            //    p = g.Key.product,
-            //    distance = g.Min(z => g.Key.storage.Location.Distance(location))
-            //};
-            var source = query.OrderBy(x => x.distance).Skip(PageIndex * PageSize).Take(PageSize).ToList();
-            var products = source.Select(x => x.p).ToList(); ;
-            foreach (var sr in source)
-            {
-                var product = products.First(x => x.Id == sr.p.Id);
-                product.Distance = sr.distance;
-            }
-
-            return products;
-        }
-
-
     }
 }

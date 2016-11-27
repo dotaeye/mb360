@@ -292,7 +292,6 @@
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BasePageableModel.cs" />
-    <Compile Include="Models\CatalogPagingFilteringModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\HomeModel.cs" />
     <Compile Include="Models\ProductDetailsModel.cs" />

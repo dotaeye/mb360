@@ -66,7 +66,7 @@ namespace MB.Controllers
                 {
                     if (string.IsNullOrEmpty(option.SortField))
                     {
-                        query = query.OrderBy(x => x.Level).ThenBy(x=>x.Id);
+                        query = query.OrderBy(x => x.Level).ThenBy(x => x.Id);
                     }
                 }
             }
@@ -294,6 +294,82 @@ namespace MB.Controllers
             return Ok(entity.ToModel());
         }
 
+
+        [Route("select")]
+        [HttpGet]
+        [ResponseType(typeof(ApiResult<List<CarCateDTO>>))]
+        public IHttpActionResult Level([FromUri]int level, [FromUri]int parentId = 0)
+        {
+            var query = CarCateService.GetAll().Where(x => !x.Deleted && x.Level == level);
+            if (parentId != 0)
+            {
+                query = query.Where(x => x.ParentId == parentId);
+            }
+            var result = new ApiResult<List<CarCateDTO>>()
+            {
+                Data = query.ProjectTo<CarCateDTO>().ToList()
+            };
+            return Ok(result);
+        }
+
+
+        [Route("all/{id:int}")]
+        [HttpGet]
+        [ResponseType(typeof(ApiResult<List<Cascader>>))]
+        public ApiResult<List<Cascader>> All(int id)
+        {
+            var result = new ApiResult<List<Cascader>>();
+
+            var cascader = new List<Cascader>();
+
+            try
+            {
+
+                var query = CarCateService.GetAll().Where(x => !x.Deleted && x.Level == 2&&x.ParentId==id).ToList();
+
+                var categories = query.ToList();
+
+                foreach (var cate in categories)
+                {
+                    var item = new Cascader()
+                    {
+                        Label = cate.Name,
+                        Value = cate.Id.ToString(),
+                        ParentId = cate.ParentId.HasValue ? cate.ParentId.Value.ToString() : null,
+                        ImageUrl = cate.ImageUrl
+                    };
+
+                    item.Children = new List<Cascader>();
+
+                    var childCategories = CarCateService.GetAll().Where(x => !x.Deleted && x.Level == 3 && x.ParentId == cate.Id).ToList();
+
+                    if (childCategories.Count > 0)
+                    {
+                        item.Children = childCategories.Select(x => new Cascader()
+                        {
+                            Label = x.Name,
+                            Value = x.Id.ToString(),
+                            ParentId = x.ParentId.HasValue ? x.ParentId.Value.ToString() : null,
+                            ImageUrl = x.ImageUrl
+
+                        }).ToList();
+
+                        cascader.Add(item);
+                    }
+                }
+                result.Data = cascader;
+            }
+            catch (Exception ex)
+            {
+                result.Info = ex.Message;
+                result.Code = 1;
+                return result;
+            }
+
+            result.Info = "获取类别成功！";
+            return result;
+
+        }
     }
 }
 
