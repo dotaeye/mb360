@@ -11,7 +11,13 @@ namespace MB.Data.Mapping
         {
             this.HasKey(sci => sci.Id);
 
+            this.Property(orderItem => orderItem.Price).HasPrecision(18, 4);
+
+            this.Property(orderItem => orderItem.UnitPrice).HasPrecision(18, 4);
+
             this.Ignore(sci => sci.ShoppingCartType);
+
+            this.Ignore(sci => sci.ShoppingCartStatus);
 
             this.Property(p => p.OwnerId).HasMaxLength(128);
 
@@ -19,9 +25,17 @@ namespace MB.Data.Mapping
               .WithMany(c => c.ShoppingCartItems)
               .HasForeignKey(sci => sci.CustomerId);
 
+            this.HasOptional(sci => sci.Order)
+              .WithMany(c => c.ShoppingCartItems)
+              .HasForeignKey(sci => sci.OrderId);
+
+            this.HasOptional(sci => sci.Package)
+              .WithMany(c => c.ShoppingCartItems)
+              .HasForeignKey(sci => sci.PackageId);
+
             this.HasRequired(sci => sci.Product)
-                .WithMany()
-                .HasForeignKey(sci => sci.ProductId);
+              .WithMany()
+              .HasForeignKey(sci => sci.ProductId);
         }
     }
 }

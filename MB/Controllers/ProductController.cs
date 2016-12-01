@@ -238,6 +238,8 @@ namespace MB.Controllers
         [ResponseType(typeof(ProductDetailModel))]
         public async Task<IHttpActionResult> Detail(int id)
         {
+
+            var result = new ApiResult<ProductDetailModel>();
             var product = await ProductService.GetAll()
                   .Where(x => x.Id == id)
                   .FirstOrDefaultAsync();
@@ -289,7 +291,7 @@ namespace MB.Controllers
                 };
 
                 //values
-                var attributeValues = ProductAttributeValueService.GetAll().Where(x => x.ProductAttributeMappingId == attribute.Id);
+                var attributeValues = ProductAttributeValueService.GetAll().Where(x => x.ProductAttributeMappingId == attribute.Id && !x.Deleted);
                 foreach (var attributeValue in attributeValues)
                 {
                     var valueModel = new ProductAttributeValueModel
@@ -352,9 +354,9 @@ namespace MB.Controllers
             }).ToList();
 
             #endregion
+            result.Data = model;
 
-
-            return Ok(model);
+            return Ok(result);
         }
 
 

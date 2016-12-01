@@ -7,7 +7,7 @@ namespace MB.Data.Models
 {
     public partial class Order : BaseEntity
     {
-        private ICollection<OrderItem> _orderItems;
+        private ICollection<ShoppingCartItem> _shoppingCartItem;
 
 
         #region Properties
@@ -103,10 +103,10 @@ namespace MB.Data.Models
         /// <summary>
         /// Gets or sets order items
         /// </summary>
-        public virtual ICollection<OrderItem> OrderItems
+        public virtual ICollection<ShoppingCartItem> ShoppingCartItems
         {
-            get { return _orderItems ?? (_orderItems = new List<OrderItem>()); }
-            protected set { _orderItems = value; }
+            get { return _shoppingCartItem ?? (_shoppingCartItem = new List<ShoppingCartItem>()); }
+            protected set { _shoppingCartItem = value; }
         }
 
         #endregion

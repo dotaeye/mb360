@@ -52,16 +52,27 @@ namespace MB.Controllers
         [ResponseType(typeof(ShoppingCartItemDTO))]
         public async Task<IHttpActionResult> Create([FromBody]ShoppingCartItemDTO ShoppingCartItemDto)
         {
+            var result = new ApiResult<string>();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            var entity = ShoppingCartItemDto.ToEntity();
-            entity.CustomerId = User.Identity.GetUserId();
-            entity.CreateTime = DateTime.Now;
-            await ShoppingCartItemService.InsertAsync(entity);
-            return Ok(entity.ToModel());
+            try
+            {
+                var entity = ShoppingCartItemDto.ToEntity();
+                entity.CustomerId = User.Identity.GetUserId();
+                entity.CreateTime = DateTime.Now;
+                await ShoppingCartItemService.InsertAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                result.Info = "添加购物车异常！";
+                result.Code = 1;
+                result.Data = ex.Message;
+                return Ok(result);
+            }
+            result.Data = "添加购物车成功！";
+            return Ok(result);
         }
 
 
@@ -70,15 +81,27 @@ namespace MB.Controllers
         [ResponseType(typeof(ShoppingCartItemDTO))]
         public async Task<IHttpActionResult> Update([FromBody]ShoppingCartItemDTO ShoppingCartItemDto)
         {
+            var result = new ApiResult<string>();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var entity = await ShoppingCartItemService.FindOneAsync(ShoppingCartItemDto.Id);
+            var entity = await ShoppingCartItemService
+                .GetAll()
+                .Where(x => x.Id == ShoppingCartItemDto.Id
+                && x.CustomerId == User.Identity.GetUserId())
+                .SingleAsync();
+            if (entity == null)
+            {
+                result.Code = 2;
+                result.Info = "获取信息失败！";
+                return Ok(result);
+            }
             entity = ShoppingCartItemDto.ToEntity(entity);
             entity.LastTime = DateTime.Now;
             await ShoppingCartItemService.UpdateAsync(entity);
-            return Ok(entity.ToModel());
+            result.Data = "编辑购物车成功！";
+            return Ok(result);
         }
 
         [Route("{id:int}")]
@@ -86,14 +109,22 @@ namespace MB.Controllers
         [ResponseType(typeof(ShoppingCartItemDTO))]
         public async Task<IHttpActionResult> Delete(int id)
         {
-            ShoppingCartItem entity = await ShoppingCartItemService.FindOneAsync(id);
+            var result = new ApiResult<string>();
+            var entity = await ShoppingCartItemService
+                 .GetAll()
+                 .Where(x => x.Id == id
+                 && x.CustomerId == User.Identity.GetUserId())
+                 .SingleAsync();
             if (entity == null)
             {
-                return NotFound();
+                result.Code = 2;
+                result.Info = "删除购物车失败，服务器异常！";
+                result.Data = "没有权限或购物车不存在";
+                return Ok(result);
             }
+            result.Data = "删除成功！";
             await ShoppingCartItemService.DeleteAsync(entity);
-
-            return Ok(entity.ToModel());
+            return Ok(result);
         }
 
     }

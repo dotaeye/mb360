@@ -28,7 +28,7 @@ namespace MB.Data.AutoMapper
 
 					.ForMember(entity => entity.Customer, o => o.Ignore())
 					.ForMember(entity => entity.Address, o => o.Ignore())
-					.ForMember(entity => entity.OrderItems, o => o.Ignore())
+					.ForMember(entity => entity.ShoppingCartItems, o => o.Ignore())
 ;
         }
     }

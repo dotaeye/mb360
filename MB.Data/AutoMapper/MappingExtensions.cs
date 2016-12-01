@@ -397,20 +397,6 @@ namespace MB.Data.AutoMapper
             return Mapper.Map(dto, entity);
         }
 
-        public static OrderItemDTO ToModel(this OrderItem entity)
-        {
-            return Mapper.Map<OrderItem, OrderItemDTO>(entity);
-        }
-
-        public static OrderItem ToEntity(this OrderItemDTO dto)
-        {
-            return Mapper.Map<OrderItemDTO, OrderItem>(dto);
-        }
-
-        public static OrderItem ToEntity(this OrderItemDTO dto, OrderItem entity)
-        {
-            return Mapper.Map(dto, entity);
-        }
 
 
         public static AddressDTO ToModel(this Address entity)

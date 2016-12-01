@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace MB.Data.Impl
 {
-	public class ProductAttributeMappingService : IProductAttributeMappingService
+    public class ProductAttributeMappingService : IProductAttributeMappingService
     {
         #region Fields
         private const string PRODUCTATTRIBUTEMAPPINGS_ALL_KEY = "Nop.productattributemapping.all-{0}";
@@ -86,17 +86,17 @@ namespace MB.Data.Impl
         /// <returns>Product attribute mapping collection</returns>
         public virtual IList<ProductAttributeMapping> GetProductAttributeMappingsByProductId(int productId)
         {
-            string key = string.Format(PRODUCTATTRIBUTEMAPPINGS_ALL_KEY, productId);
+            //string key = string.Format(PRODUCTATTRIBUTEMAPPINGS_ALL_KEY, productId);
 
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from pam in _ProductAttributeMappingRepository.Table
-                            orderby pam.DisplayOrder
-                            where pam.ProductId == productId
-                            select pam;
-                var productAttributeMappings = query.ToList();
-                return productAttributeMappings;
-            });
+            //return _cacheManager.Get(key, () =>
+            //{
+            var query = from pam in _ProductAttributeMappingRepository.Table
+                        orderby pam.DisplayOrder
+                        where pam.ProductId == productId
+                        select pam;
+            var productAttributeMappings = query.ToList();
+            return productAttributeMappings;
+            //});
         }
 
     }

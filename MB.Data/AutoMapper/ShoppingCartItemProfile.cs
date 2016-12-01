@@ -27,6 +27,7 @@ namespace MB.Data.AutoMapper
                     .ForMember(entity => entity.CustomerId, o => o.Ignore())
                     .ForMember(entity => entity.Status, o => o.Ignore())
                     .ForMember(entity => entity.ShoppingCartType, o => o.Ignore())
+                    .ForMember(entity => entity.Status, o => o.Ignore())
                     .ForMember(entity => entity.CreateTime, o => o.Ignore())
                     .ForMember(entity => entity.LastTime, o => o.Ignore())
                     .ForMember(entity => entity.Deleted, o => o.Ignore())

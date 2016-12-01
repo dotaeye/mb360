@@ -263,7 +263,6 @@
     <Compile Include="Controllers\ManufacturerController.cs" />
     <Compile Include="Controllers\MemberController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
-    <Compile Include="Controllers\OrderItemController.cs" />
     <Compile Include="Controllers\ProductAttributeCategoryMappingController.cs" />
     <Compile Include="Controllers\ProductAttributeController.cs" />
     <Compile Include="Controllers\ProductAttributeMappingController.cs" />

@@ -63,7 +63,8 @@ namespace MB.Data
 
             modelBuilder.Configurations.Add(new BannerMap());
             modelBuilder.Configurations.Add(new OrderMap());
-            modelBuilder.Configurations.Add(new OrderItemMap());
+            modelBuilder.Configurations.Add(new PackageMap());
+
             modelBuilder.Configurations.Add(new ShoppingCartItemMap());
             modelBuilder.Configurations.Add(new AddressMap());
 

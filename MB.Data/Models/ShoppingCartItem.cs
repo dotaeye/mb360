@@ -15,6 +15,10 @@ namespace MB.Data.Models
         /// </summary>
         public string OwnerId { get; set; }
 
+        public int? OrderId { get; set; }
+
+        public int? PackageId { get; set; }
+
         /// <summary>
         /// 仓库ID
         /// </summary>
@@ -42,7 +46,10 @@ namespace MB.Data.Models
 
         public string AttributesIds { get; set; }
 
+        public decimal UnitPrice { get; set; }
 
+
+        public decimal Price { get; set; }
         /// <summary>
         /// Gets or sets the quantity
         /// </summary>
@@ -76,9 +83,30 @@ namespace MB.Data.Models
         }
 
         /// <summary>
+        /// Gets the log type
+        /// </summary>
+        public ShoppingCartStatus ShoppingCartStatus
+        {
+            get
+            {
+                return (ShoppingCartStatus)this.Status;
+            }
+            set
+            {
+                this.Status = (int)value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the product
         /// </summary>
         public virtual Product Product { get; set; }
+
+
+        public virtual Order Order { get; set; }
+
+
+        public virtual Package Package { get; set; }
 
         /// <summary>
         /// Gets or sets the customer

@@ -99,7 +99,6 @@
     <Compile Include="AutoMapper\ManufacturerProfile.cs" />
     <Compile Include="AutoMapper\MappingExtensions.cs" />
     <Compile Include="AutoMapper\MemberProfile.cs" />
-    <Compile Include="AutoMapper\OrderItemProfile.cs" />
     <Compile Include="AutoMapper\OrderProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeCategoryMappingProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeMappingProfile.cs" />
@@ -128,7 +127,6 @@
     <Compile Include="DTO\ManufacturerDTO.cs" />
     <Compile Include="DTO\MemberDTO.cs" />
     <Compile Include="DTO\OrderDTO.cs" />
-    <Compile Include="DTO\OrderItemDTO.cs" />
     <Compile Include="DTO\ProductAttributeCategoryMappingDTO.cs" />
     <Compile Include="DTO\ProductAttributeDTO.cs" />
     <Compile Include="DTO\ProductAttributeMappingDTO.cs" />
@@ -155,7 +153,6 @@
     <Compile Include="Impl\DepartmentService.cs" />
     <Compile Include="Impl\JobService.cs" />
     <Compile Include="Impl\ManufacturerService.cs" />
-    <Compile Include="Impl\OrderItemService.cs" />
     <Compile Include="Impl\OrderService.cs" />
     <Compile Include="Impl\ProductAttributeCategoryMappingService.cs" />
     <Compile Include="Impl\ProductAttributeMappingService.cs" />
@@ -186,8 +183,8 @@
     <Compile Include="Mapping\DepartmentMap.cs" />
     <Compile Include="Mapping\JobMap.cs" />
     <Compile Include="Mapping\ManufacturerMap.cs" />
-    <Compile Include="Mapping\OrderItemMap.cs" />
     <Compile Include="Mapping\OrderMap.cs" />
+    <Compile Include="Mapping\PackageMap.cs" />
     <Compile Include="Mapping\ProductAttributeMap.cs" />
     <Compile Include="Mapping\ProductAttributeMappingMap.cs" />
     <Compile Include="Mapping\ProductAttributeValueMap.cs" />
@@ -320,6 +317,10 @@
     <Compile Include="Migrations\201611231419367_IgnoreCodeType.Designer.cs">
       <DependentUpon>201611231419367_IgnoreCodeType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612011503146_RefactorOrder.cs" />
+    <Compile Include="Migrations\201612011503146_RefactorOrder.Designer.cs">
+      <DependentUpon>201612011503146_RefactorOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -332,8 +333,9 @@
     <Compile Include="Models\Job.cs" />
     <Compile Include="Models\Manufacturer.cs" />
     <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Models\OrderStatus.cs" />
+    <Compile Include="Models\Package.cs" />
+    <Compile Include="Models\PackageStatus.cs" />
     <Compile Include="Models\PriceRange.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductAttribute.cs" />
@@ -349,6 +351,7 @@
     <Compile Include="Models\RoleType.cs" />
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
+    <Compile Include="Models\ShoppingCartStatus.cs" />
     <Compile Include="Models\ShoppingCartType.cs" />
     <Compile Include="Models\SmsCode.cs" />
     <Compile Include="Models\SpecificationAttribute.cs" />
@@ -368,7 +371,6 @@
     <Compile Include="Service\IDepartmentService.cs" />
     <Compile Include="Service\IJobService.cs" />
     <Compile Include="Service\IManufacturerService.cs" />
-    <Compile Include="Service\IOrderItemService.cs" />
     <Compile Include="Service\IOrderService.cs" />
     <Compile Include="Service\IProductAttributeCategoryMappingService.cs" />
     <Compile Include="Service\IProductAttributeMappingService.cs" />
@@ -399,7 +401,6 @@
     <Compile Include="Validator\JobValidator.cs" />
     <Compile Include="Validator\ManufacturerValidator.cs" />
     <Compile Include="Validator\MemberValidator.cs" />
-    <Compile Include="Validator\OrderItemValidator.cs" />
     <Compile Include="Validator\OrderValidator.cs" />
     <Compile Include="Validator\ProductAttributeCategoryMappingValidator.cs" />
     <Compile Include="Validator\ProductAttributeMappingValidator.cs" />
@@ -515,6 +516,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611231419367_IgnoreCodeType.resx">
       <DependentUpon>201611231419367_IgnoreCodeType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612011503146_RefactorOrder.resx">
+      <DependentUpon>201612011503146_RefactorOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
