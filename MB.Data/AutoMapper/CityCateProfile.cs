@@ -19,19 +19,13 @@ namespace MB.Data.AutoMapper
         protected override void CreateMaps()
         {
 
-            CreateMap<CityCate, CityCateDTO>()
-;
+            CreateMap<CityCate, CityCateDTO>();
 
 
             CreateMap<CityCateDTO, CityCate>()
-                    .ForMember(entity => entity.CreateUserId, o => o.Ignore())
-                    .ForMember(entity => entity.CreateTime, o => o.Ignore())
-                    .ForMember(entity => entity.LastUserId, o => o.Ignore())
-                    .ForMember(entity => entity.LastTime, o => o.Ignore())
                     .ForMember(entity => entity.Deleted, o => o.Ignore())
                     .ForMember(entity => entity.ParentCityCate, o => o.Ignore())
-                    .ForMember(entity => entity.ChildCityCate, o => o.Ignore())
-;
+                    .ForMember(entity => entity.ChildCityCate, o => o.Ignore());
         }
     }
 }

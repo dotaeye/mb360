@@ -15,6 +15,10 @@ namespace MB.Data.Mapping
 
             this.Property(orderItem => orderItem.UnitPrice).HasPrecision(18, 4);
 
+            this.Property(x => x.ImageUrl).HasMaxLength(250);
+
+            this.Property(x => x.Name).HasMaxLength(250);
+
             this.Ignore(sci => sci.ShoppingCartType);
 
             this.Ignore(sci => sci.ShoppingCartStatus);

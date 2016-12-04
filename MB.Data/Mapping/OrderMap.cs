@@ -14,6 +14,9 @@ namespace MB.Data.Mapping
             this.Property(o => o.OrderTotalExclShipping).HasPrecision(18, 4);
             this.Property(o => o.OrderShipping).HasPrecision(18, 4);
 
+            this.Property(o => o.PrePayId).HasMaxLength(250);
+            this.Property(o => o.WeChatSign).HasMaxLength(350);
+
             this.Ignore(o => o.OrderStatus);
 
             this.HasRequired(o => o.Customer)

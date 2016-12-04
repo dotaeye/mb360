@@ -96,6 +96,9 @@ namespace MB.Ioc
             builder.RegisterType<BannerService>().As<IBannerService>().InstancePerRequest();
 
             builder.RegisterType<SmsCodeService>().As<ISmsCodeService>().InstancePerRequest();
+
+            builder.RegisterType<AddressService>().As<IAddressService>().InstancePerRequest();
+            builder.RegisterType<OrderService>().As<IOrderService>().InstancePerRequest();
         }
 
         public int Order

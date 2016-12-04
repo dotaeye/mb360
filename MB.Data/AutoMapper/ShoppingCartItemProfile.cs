@@ -27,12 +27,14 @@ namespace MB.Data.AutoMapper
                     .ForMember(entity => entity.CustomerId, o => o.Ignore())
                     .ForMember(entity => entity.Status, o => o.Ignore())
                     .ForMember(entity => entity.ShoppingCartType, o => o.Ignore())
-                    .ForMember(entity => entity.Status, o => o.Ignore())
+                    .ForMember(entity => entity.ShoppingCartStatus, o => o.Ignore())
                     .ForMember(entity => entity.CreateTime, o => o.Ignore())
                     .ForMember(entity => entity.LastTime, o => o.Ignore())
                     .ForMember(entity => entity.Deleted, o => o.Ignore())
                     .ForMember(entity => entity.Product, o => o.Ignore())
                     .ForMember(entity => entity.Customer, o => o.Ignore())
+                    .ForMember(entity => entity.Order, o => o.Ignore())
+                    .ForMember(entity => entity.Package, o => o.Ignore())
 ;
         }
     }

@@ -18,7 +18,8 @@ namespace MB.Data.Models
         public int? OrderId { get; set; }
 
         public int? PackageId { get; set; }
-
+        public string Name { get; set; }
+        public string ImageUrl { get; set; }
         /// <summary>
         /// 仓库ID
         /// </summary>

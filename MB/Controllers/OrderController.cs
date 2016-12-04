@@ -21,18 +21,125 @@ using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
+using System.Text;
+using MB.Models;
+using MB.Pay.WxPayAPI;
 
 namespace MB.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/Order")]
     public class OrderController : ApiController
     {
         private IOrderService OrderService;
+        private IShoppingCartItemService ShoppingCartItemService;
         public OrderController(
-            IOrderService _OrderService
+            IOrderService _OrderService,
+            IShoppingCartItemService _ShoppingCartItemService
           )
         {
             this.OrderService = _OrderService;
+            this.ShoppingCartItemService = _ShoppingCartItemService;
+        }
+
+        private bool QueryOrder(string transaction_id)
+        {
+            WxPayData req = new WxPayData();
+            req.SetValue("transaction_id", transaction_id);
+            WxPayData res = WxPayApi.OrderQuery(req);
+            if (res.GetValue("return_code").ToString() == "SUCCESS" &&
+                res.GetValue("result_code").ToString() == "SUCCESS")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private async Task<WxPayData> GetNotifyData()
+        {
+            //接收从微信后台POST过来的数据
+            System.IO.Stream s = await Request.Content.ReadAsStreamAsync();
+            int count = 0;
+            byte[] buffer = new byte[1024];
+            StringBuilder builder = new StringBuilder();
+            while ((count = s.Read(buffer, 0, 1024)) > 0)
+            {
+                builder.Append(Encoding.UTF8.GetString(buffer, 0, count));
+            }
+            s.Flush();
+            s.Close();
+            s.Dispose();
+
+            Log.Info(this.GetType().ToString(), "Receive data from WeChat : " + builder.ToString());
+
+            //转换数据格式并验证签名
+            WxPayData data = new WxPayData();
+            try
+            {
+                data.FromXml(builder.ToString());
+            }
+            catch (WxPayException ex)
+            {
+                //若签名错误，则立即返回结果给微信支付后台
+                WxPayData res = new WxPayData();
+                res.SetValue("return_code", "FAIL");
+                res.SetValue("return_msg", ex.Message);
+                Log.Error(this.GetType().ToString(), "Sign check error : " + res.ToXml());
+                return res;
+            }
+
+            Log.Info(this.GetType().ToString(), "Check sign success");
+            return data;
+        }
+
+        [HttpPost]
+        [Route("ResultNotifyPage")]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> ResultNotifyPage()
+        {
+
+            WxPayData notifyData = await GetNotifyData();
+            //微信支付回调失败
+            if (notifyData.GetValue("return_code").ToString() == "FAIL")
+            {
+                return BadRequest(notifyData.ToXml());
+            }
+
+            //检查支付结果中transaction_id是否存在
+            if (!notifyData.IsSet("transaction_id"))
+            {
+                //若transaction_id不存在，则立即返回结果给微信支付后台
+                WxPayData res = new WxPayData();
+                res.SetValue("return_code", "FAIL");
+                res.SetValue("return_msg", "支付结果中微信订单号不存在");
+                Log.Error(this.GetType().ToString(), "The Pay result is error : " + res.ToXml());
+                return BadRequest(res.ToXml());
+            }
+
+            string transaction_id = notifyData.GetValue("transaction_id").ToString();
+
+            //查询订单，判断订单真实性
+            if (!QueryOrder(transaction_id))
+            {
+                //若订单查询失败，则立即返回结果给微信支付后台
+                WxPayData res = new WxPayData();
+                res.SetValue("return_code", "FAIL");
+                res.SetValue("return_msg", "订单查询失败");
+                Log.Error(this.GetType().ToString(), "Order query failure : " + res.ToXml());
+                return BadRequest(res.ToXml());
+            }
+            //查询订单成功
+            else
+            {
+                WxPayData res = new WxPayData();
+                res.SetValue("return_code", "SUCCESS");
+                res.SetValue("return_msg", "OK");
+                Log.Info(this.GetType().ToString(), "order query success : " + res.ToXml());
+                return Ok(res.ToXml());
+            }
         }
 
         [Route("")]
@@ -74,40 +181,153 @@ namespace MB.Controllers
             return new ApiListResult<OrderDTO>(result, result.PageIndex, result.PageSize, count);
         }
 
+        [HttpGet]
+        [Route("list")]
+        public IHttpActionResult List(
+            int pageIndex = 0,
+            int pageSize = 0,
+            int status = 0)
+        {
+            var result = new ApiResult<OrderListModal>();
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                var query = OrderService.GetAll()
+                    .Where(x => !x.Deleted && x.CustomerId == userId)
+                    .ProjectTo<OrderDTO>();
+                if (status != 0)
+                {
+                    query.Where(x => x.OrderStatusId == status);
+                }
+                var count = query.Count();
+                result.Data = new OrderListModal()
+                {
+                    Orders = query.OrderByDescending(x => x.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList(),
+                    Status = status,
+                    TotalCount = count
+                };
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = "获取订单失败！",
+                    Data = ex.Message
+                });
+
+            }
+            result.Info = "获取订单成功！";
+            return Ok(result);
+        }
+
+
         [Route("{id:int}")]
-        [ResponseType(typeof(OrderDTO))]
         public async Task<IHttpActionResult> GetById(int id)
         {
-            OrderDTO Order = await OrderService.GetAll().Where(x => x.Id == id && !x.Deleted).ProjectTo<OrderDTO>().FirstOrDefaultAsync();
-            if (Order == null)
+            var result = new ApiResult<OrderDTO>();
+            try
             {
-                return NotFound();
+                var userId = User.Identity.GetUserId();
+                OrderDTO order = await OrderService.GetAll()
+                    .Where(x => x.Id == id && !x.Deleted && x.CustomerId == userId)
+                    .ProjectTo<OrderDTO>()
+                    .FirstOrDefaultAsync();
+
+                if (order == null)
+                {
+                    return Ok(new ApiResult<string>()
+                    {
+                        Code = 2,
+                        Info = "不存在当前订单！"
+                    });
+                }
+                result.Data = order;
             }
-            return Ok(Order);
+            catch (Exception ex)
+            {
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = ex.Message
+                });
+            }
+            return Ok(result);
         }
 
         [Route("")]
         [HttpPost]
-        [ResponseType(typeof(OrderDTO))]
         public async Task<IHttpActionResult> Create([FromBody]OrderDTO OrderDto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return Ok(new ApiResult<System.Web.Http.ModelBinding.ModelStateDictionary>()
+                    {
+                        Code = 3,
+                        Data = ModelState,
+                        Info = "请仔细填写表单！"
+                    });
+                }
+
+                var shopCartItems = ShoppingCartItemService.GetAll().Where(x => OrderDto.ShopCartIds.Contains(x.Id)).ToList();
+                decimal orderTotal = 0;
+                foreach (var item in shopCartItems)
+                {
+                    orderTotal += item.UnitPrice * item.Quantity;
+                }
+
+                var entity = OrderDto.ToEntity();
+                entity.OrderGuid = Guid.NewGuid();
+                entity.OrderStatus = OrderStatus.NotPay;
+                entity.OrderTotal = orderTotal;
+                entity.CustomerId = User.Identity.GetUserId();
+                entity.CustomerIp = Request.GetOwinContext().Request.RemoteIpAddress;
+                entity.CreateTime = DateTime.Now;
+                await OrderService.InsertAsync(entity);
+
+                WxPayData data = new WxPayData();
+                data.SetValue("body", "麦呗商城-微信收款");
+                data.SetValue("attach", "麦呗商城");
+                data.SetValue("out_trade_no", entity.OrderGuid.ToString());
+                data.SetValue("total_fee", entity.OrderTotal);
+                data.SetValue("time_start", DateTime.Now.ToString("yyyyMMddHHmmss"));
+                data.SetValue("time_expire", DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss"));
+                data.SetValue("trade_type", "APP");
+
+                WxPayData result = WxPayApi.UnifiedOrder(data);
+                entity.PrePayId = result.GetValue("prepay_id").ToString();
+                entity.WeChatSign = result.GetValue("sign").ToString();
+                await OrderService.UpdateAsync(entity);
+
+                //更新购物车ItemStatus
+                foreach (var shopCart in shopCartItems)
+                {
+                    shopCart.OrderId = entity.Id;
+                    shopCart.ShoppingCartStatus = ShoppingCartStatus.Order;
+                    await ShoppingCartItemService.UpdateAsync(shopCart);
+                }
+
+                return Ok(new ApiResult<OrderDTO>()
+                {
+                    Data = entity.ToModel(),
+                    Info = "添加订单成功"
+                });
             }
-
-            var entity = OrderDto.ToEntity();
-
-         
-            entity.CreateTime = DateTime.Now;
-            await OrderService.InsertAsync(entity);
-            return Ok(entity.ToModel());
+            catch (Exception ex)
+            {
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = ex.Message
+                });
+            }
         }
 
 
         [Route("")]
         [HttpPut]
-        [ResponseType(typeof(OrderDTO))]
         public async Task<IHttpActionResult> Update([FromBody]OrderDTO OrderDto)
         {
 
@@ -117,24 +337,32 @@ namespace MB.Controllers
             }
             var entity = await OrderService.FindOneAsync(OrderDto.Id);
             entity = OrderDto.ToEntity(entity);
-      
+
             await OrderService.UpdateAsync(entity);
             return Ok(entity.ToModel());
         }
 
         [Route("{id:int}")]
         [HttpDelete]
-        [ResponseType(typeof(OrderDTO))]
         public async Task<IHttpActionResult> Delete(int id)
         {
-            Order entity = await OrderService.FindOneAsync(id);
+            var result = new ApiResult<string>();
+            var userId = User.Identity.GetUserId();
+            var entity = await OrderService
+                 .GetAll()
+                 .Where(x => x.Id == id
+                 && x.CustomerId == userId)
+                 .SingleAsync();
             if (entity == null)
             {
-                return NotFound();
+                result.Code = 2;
+                result.Info = "删除订单，服务器异常！";
+                result.Data = "没有权限或该订单不存在";
+                return Ok(result);
             }
+            result.Data = "删除成功！";
             await OrderService.DeleteAsync(entity);
-
-            return Ok(entity.ToModel());
+            return Ok(result);
         }
 
     }

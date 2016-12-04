@@ -36,33 +36,113 @@ namespace MB.Controllers
             this.ShoppingCartItemService = _ShoppingCartItemService;
         }
 
+        [HttpGet]
         [Route("")]
-        public List<ShoppingCartItemDTO> Get()
+        public IHttpActionResult List(int status = 0)
         {
-            var userId = User.Identity.GetUserId();
-            var query = ShoppingCartItemService.GetAll()
-                .Where(x => !x.Deleted)
-                .Where(x => x.CustomerId == userId)
-                .ProjectTo<ShoppingCartItemDTO>();
-            return query.ToList();
+            var result = new ApiResult<List<ShoppingCartItemDTO>>();
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                var query = ShoppingCartItemService.GetAll()
+                    .Where(x => !x.Deleted && x.CustomerId == userId)
+                    .ProjectTo<ShoppingCartItemDTO>();
+                var shopCartStatus = (int)ShoppingCartStatus.ShoppingCart;
+                if (status != 0)
+                {
+                    query.Where(x => x.Status == status);
+                }
+                else
+                {
+                    query.Where(x => x.Status == shopCartStatus);
+                }
+                var count = query.Count();
+                result.Data = query.ToList();
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = "获取购物车失败！",
+                    Data = ex.Message
+                });
+
+            }
+            result.Info = "获取购物车成功！";
+            return Ok(result);
         }
 
         [Route("")]
         [HttpPost]
-        [ResponseType(typeof(ShoppingCartItemDTO))]
         public async Task<IHttpActionResult> Create([FromBody]ShoppingCartItemDTO ShoppingCartItemDto)
         {
             var result = new ApiResult<string>();
+            var userId = User.Identity.GetUserId();
+
+            if (ShoppingCartItemService
+                .GetAll()
+                .Count(x => x.CustomerId == userId
+                && x.Status == (int)ShoppingCartStatus.ShoppingCart
+                && !x.Deleted) > 20)
+            {
+                result.Info = "最多添加20条购物车信息！";
+                result.Code = 2;
+                return Ok(result);
+            }
+
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return Ok(new ApiResult<System.Web.Http.ModelBinding.ModelStateDictionary>()
+                {
+                    Code = 3,
+                    Data = ModelState,
+                    Info = "请仔细填写表单！"
+                });
             }
             try
             {
-                var entity = ShoppingCartItemDto.ToEntity();
-                entity.CustomerId = User.Identity.GetUserId();
-                entity.CreateTime = DateTime.Now;
-                await ShoppingCartItemService.InsertAsync(entity);
+                var hasExsit = ShoppingCartItemService
+                    .GetAll()
+                    .Any(x => x.CustomerId == userId
+                            && x.Status == (int)ShoppingCartStatus.ShoppingCart
+                            && !x.Deleted
+                            && x.ProductId == ShoppingCartItemDto.ProductId
+                            && x.AttributesIds == ShoppingCartItemDto.AttributesIds
+                            );
+
+                if (hasExsit)
+                {
+                    var entity = await ShoppingCartItemService
+                    .GetAll()
+                    .SingleOrDefaultAsync(x => x.CustomerId == userId
+                            && x.Status == (int)ShoppingCartStatus.ShoppingCart
+                            && !x.Deleted
+                            && x.ProductId == ShoppingCartItemDto.ProductId
+                            && x.AttributesIds == ShoppingCartItemDto.AttributesIds
+                            );
+                    entity.Quantity += ShoppingCartItemDto.Quantity;
+                    entity.Price += ShoppingCartItemDto.Price;
+                    entity.LastTime = DateTime.Now;
+                    await ShoppingCartItemService.UpdateAsync(entity);
+                    return Ok(new ApiResult<ShoppingCartItemDTO>()
+                    {
+                        Data = entity.ToModel()
+                    });
+                }
+                else
+                {
+
+                    var entity = ShoppingCartItemDto.ToEntity();
+                    entity.ShoppingCartStatus = ShoppingCartStatus.ShoppingCart;
+                    entity.CustomerId = userId;
+                    entity.CreateTime = DateTime.Now;
+                    await ShoppingCartItemService.InsertAsync(entity);
+                    return Ok(new ApiResult<ShoppingCartItemDTO>()
+                    {
+                        Data = entity.ToModel()
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -71,62 +151,85 @@ namespace MB.Controllers
                 result.Data = ex.Message;
                 return Ok(result);
             }
-            result.Data = "添加购物车成功！";
-            return Ok(result);
+
         }
 
+
+        [Route("update")]
+        [HttpPost]
+        public async Task<IHttpActionResult> Update([FromBody]ShoppingCartItemUpdateQuantityModal modal)
+        {
+            var result = new ApiResult<string>();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Ok(new ApiResult<System.Web.Http.ModelBinding.ModelStateDictionary>()
+                    {
+                        Code = 3,
+                        Data = ModelState,
+                        Info = "请仔细填写表单！"
+                    });
+                }
+                var userId = User.Identity.GetUserId();
+                var entity = await ShoppingCartItemService
+                    .GetAll()
+                    .Where(x => x.Id == modal.Id
+                    && x.CustomerId == userId)
+                    .SingleAsync();
+                if (entity == null)
+                {
+                    result.Code = 2;
+                    result.Info = "获取信息失败！";
+                    return Ok(result);
+                }
+                entity.Quantity = modal.Quantity;
+                entity.Price = modal.Quantity * entity.UnitPrice;
+                entity.LastTime = DateTime.Now;
+                await ShoppingCartItemService.UpdateAsync(entity);
+                return Ok(new ApiResult<ShoppingCartItemDTO>()
+                {
+                    Data = entity.ToModel()
+                });
+            }
+            catch (Exception ex)
+            {
+                result.Info = "添加购物车异常！";
+                result.Code = 1;
+                result.Data = ex.Message;
+                return Ok(result);
+            }
+        }
 
         [Route("")]
-        [HttpPut]
-        [ResponseType(typeof(ShoppingCartItemDTO))]
-        public async Task<IHttpActionResult> Update([FromBody]ShoppingCartItemDTO ShoppingCartItemDto)
-        {
-            var result = new ApiResult<string>();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var entity = await ShoppingCartItemService
-                .GetAll()
-                .Where(x => x.Id == ShoppingCartItemDto.Id
-                && x.CustomerId == User.Identity.GetUserId())
-                .SingleAsync();
-            if (entity == null)
-            {
-                result.Code = 2;
-                result.Info = "获取信息失败！";
-                return Ok(result);
-            }
-            entity = ShoppingCartItemDto.ToEntity(entity);
-            entity.LastTime = DateTime.Now;
-            await ShoppingCartItemService.UpdateAsync(entity);
-            result.Data = "编辑购物车成功！";
-            return Ok(result);
-        }
-
-        [Route("{id:int}")]
         [HttpDelete]
-        [ResponseType(typeof(ShoppingCartItemDTO))]
-        public async Task<IHttpActionResult> Delete(int id)
+        public async Task<IHttpActionResult> Delete([FromBody] ShoppingCartItemDeleteModal modal)
         {
             var result = new ApiResult<string>();
-            var entity = await ShoppingCartItemService
+            var userId = User.Identity.GetUserId();
+            var items = ShoppingCartItemService
                  .GetAll()
-                 .Where(x => x.Id == id
-                 && x.CustomerId == User.Identity.GetUserId())
-                 .SingleAsync();
-            if (entity == null)
+                 .Where(x => modal.Ids.Contains(x.Id)
+                 && x.CustomerId == userId).ToList();
+            foreach (var entity in items)
             {
-                result.Code = 2;
-                result.Info = "删除购物车失败，服务器异常！";
-                result.Data = "没有权限或购物车不存在";
-                return Ok(result);
+                await ShoppingCartItemService.DeleteAsync(entity);
             }
             result.Data = "删除成功！";
-            await ShoppingCartItemService.DeleteAsync(entity);
             return Ok(result);
         }
 
+    }
+
+    public class ShoppingCartItemUpdateQuantityModal
+    {
+        public int Id { get; set; }
+        public int Quantity { get; set; }
+    }
+
+    public class ShoppingCartItemDeleteModal
+    {
+        public List<int> Ids { get; set; }
     }
 }
 

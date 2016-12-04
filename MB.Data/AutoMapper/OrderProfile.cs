@@ -10,26 +10,25 @@ using MB.Data.DTO;
 
 namespace MB.Data.AutoMapper
 {
-	public class OrderProfile : BaseProfile
+    public class OrderProfile : BaseProfile
     {
         public OrderProfile() : base("OrderProfile")
         {
         }
 
-		protected override void CreateMaps()
+        protected override void CreateMaps()
         {
-			 
-			CreateMap<Order, OrderDTO>()
-;
 
-			 
-			CreateMap<OrderDTO, Order>()
+            CreateMap<Order, OrderDTO>()
+                    .ForMember(dto => dto.ShopCartIds, o => o.Ignore());
 
 
-					.ForMember(entity => entity.Customer, o => o.Ignore())
-					.ForMember(entity => entity.Address, o => o.Ignore())
-					.ForMember(entity => entity.ShoppingCartItems, o => o.Ignore())
-;
+            CreateMap<OrderDTO, Order>()
+
+
+                    .ForMember(entity => entity.Customer, o => o.Ignore())
+                    .ForMember(entity => entity.Address, o => o.Ignore())
+                    .ForMember(entity => entity.ShoppingCartItems, o => o.Ignore());
         }
     }
 }

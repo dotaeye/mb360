@@ -75,28 +75,39 @@ namespace MB.Controllers
             return new ApiListResult<CityCateDTO>(result, result.PageIndex, result.PageSize, count);
         }
 
-        [Route("cascader/{id:int=0}")]
-        public List<Cascader> GetCityCateCascader(int Id)
+        [Route("cascader/{code?}")]
+        public IHttpActionResult GetCityCateCascader(string code = null)
         {
-            var cascader = new List<Cascader>();
-            GenerateCascader(null, Id, cascader);
-            return cascader;
+            var result = new ApiResult<List<Cascader>>();
+            try
+            {
+                var cascader = new List<Cascader>();
+                GenerateCascader(null, code, cascader);
+                result.Data = cascader;
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = ex.Message
+                });
+            }
+            return Ok(result);
         }
 
 
-        private void GenerateCascader(int? Id, int currentId, List<Cascader> cascader)
+        private void GenerateCascader(string code, string currentCode, List<Cascader> cascader)
         {
-            var query = CityCateService.GetAll().Where(x => x.Id != currentId&&!x.Deleted);
-            if (Id.HasValue)
+            var query = CityCateService.GetAll().Where(x => x.Code != currentCode && !x.Deleted);
+            if (string.IsNullOrEmpty(code))
             {
-                query = query.Where(x => x.ParentId == Id.Value);
+                query = query.Where(x => x.ParentCode.Equals(null));
             }
             else
             {
-                query = query.Where(x => x.ParentId.Equals(null));
+                query = query.Where(x => x.ParentCode == code);
             }
-
-
 
             var dategorys = query.ToList();
 
@@ -105,16 +116,16 @@ namespace MB.Controllers
                 var item = new Cascader()
                 {
                     Label = depart.Name,
-                    Value = depart.Id.ToString(),
-                    ParentId = depart.ParentId.HasValue ? depart.ParentId.Value.ToString() : null
+                    Value = depart.Code,
+                    ParentId = depart.ParentCode
                 };
 
                 cascader.Add(item);
 
-                if (CityCateService.GetAll().Any(x => x.ParentId == depart.Id && x.Id != currentId && !x.Deleted))
+                if (CityCateService.GetAll().Any(x => x.ParentCode == depart.Code && x.Code != currentCode && !x.Deleted))
                 {
                     item.Children = new List<Cascader>();
-                    GenerateCascader(depart.Id, currentId, item.Children);
+                    GenerateCascader(depart.Code, currentCode, item.Children);
                 }
             }
         }
@@ -142,9 +153,6 @@ namespace MB.Controllers
             }
 
             var entity = CityCateDto.ToEntity();
-
-            entity.CreateUserId = User.Identity.GetUserId();
-            entity.CreateTime = DateTime.Now;
             await CityCateService.InsertAsync(entity);
             return Ok(entity.ToModel());
         }
@@ -162,8 +170,6 @@ namespace MB.Controllers
             }
             var entity = await CityCateService.FindOneAsync(CityCateDto.Id);
             entity = CityCateDto.ToEntity(entity);
-            entity.LastUserId = User.Identity.GetUserId();
-            entity.LastTime = DateTime.Now;
             await CityCateService.UpdateAsync(entity);
             return Ok(entity.ToModel());
         }

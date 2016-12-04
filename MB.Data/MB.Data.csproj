@@ -321,6 +321,34 @@
     <Compile Include="Migrations\201612011503146_RefactorOrder.Designer.cs">
       <DependentUpon>201612011503146_RefactorOrder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612021551376_RefactorCityCate.cs" />
+    <Compile Include="Migrations\201612021551376_RefactorCityCate.Designer.cs">
+      <DependentUpon>201612021551376_RefactorCityCate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612021619194_AddCityCodeListForAddress.cs" />
+    <Compile Include="Migrations\201612021619194_AddCityCodeListForAddress.Designer.cs">
+      <DependentUpon>201612021619194_AddCityCodeListForAddress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612030540271_AddPrePayIdForWeChatPay.cs" />
+    <Compile Include="Migrations\201612030540271_AddPrePayIdForWeChatPay.Designer.cs">
+      <DependentUpon>201612030540271_AddPrePayIdForWeChatPay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612031105100_UpdateAddressAddProvince.cs" />
+    <Compile Include="Migrations\201612031105100_UpdateAddressAddProvince.Designer.cs">
+      <DependentUpon>201612031105100_UpdateAddressAddProvince.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612040708308_AddImageUrlForShopCart.cs" />
+    <Compile Include="Migrations\201612040708308_AddImageUrlForShopCart.Designer.cs">
+      <DependentUpon>201612040708308_AddImageUrlForShopCart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612040738058_AddNameForShopCart.cs" />
+    <Compile Include="Migrations\201612040738058_AddNameForShopCart.Designer.cs">
+      <DependentUpon>201612040738058_AddNameForShopCart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612041454383_AddWeChatField.cs" />
+    <Compile Include="Migrations\201612041454383_AddWeChatField.Designer.cs">
+      <DependentUpon>201612041454383_AddWeChatField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -519,6 +547,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612011503146_RefactorOrder.resx">
       <DependentUpon>201612011503146_RefactorOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612021551376_RefactorCityCate.resx">
+      <DependentUpon>201612021551376_RefactorCityCate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612021619194_AddCityCodeListForAddress.resx">
+      <DependentUpon>201612021619194_AddCityCodeListForAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612030540271_AddPrePayIdForWeChatPay.resx">
+      <DependentUpon>201612030540271_AddPrePayIdForWeChatPay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612031105100_UpdateAddressAddProvince.resx">
+      <DependentUpon>201612031105100_UpdateAddressAddProvince.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612040708308_AddImageUrlForShopCart.resx">
+      <DependentUpon>201612040708308_AddImageUrlForShopCart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612040738058_AddNameForShopCart.resx">
+      <DependentUpon>201612040738058_AddNameForShopCart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612041454383_AddWeChatField.resx">
+      <DependentUpon>201612041454383_AddWeChatField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

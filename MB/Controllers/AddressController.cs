@@ -24,6 +24,7 @@ using SQ.Core.Data;
 
 namespace MB.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/Address")]
     public class AddressController : ApiController
     {
@@ -36,54 +37,62 @@ namespace MB.Controllers
         }
 
         [Route("")]
-        public ApiListResult<AddressDTO> Get([FromUri] AntPageOption option = null)
+        public IHttpActionResult Get()
         {
-            var query = AddressService.GetAll().Where(x => !x.Deleted).ProjectTo<AddressDTO>();
-            if (option != null)
+            var result = new ApiResult<List<AddressDTO>>();
+            try
             {
-                if (!string.IsNullOrEmpty(option.SortField))
-                {
-                    //for example
-                    if (option.SortField == "id")
-                    {
-                        if (option.SortOrder == PageSortTyoe.DESC)
-                        {
-                            query = query.OrderByDescending(x => x.Id);
-                        }
-                        else
-                        {
-                            query = query.OrderBy(x => x.Id);
-                        }
-                    }
-                }
-
-                if (option.Page > 0 && option.Results > 0)
-                {
-                    if (string.IsNullOrEmpty(option.SortField))
-                    {
-                        query = query.OrderBy(x => x.Id);
-                    }
-                }
+                var userId = User.Identity.GetUserId();
+                var query = AddressService.GetAll()
+                    .Where(x => !x.Deleted)
+                    .Where(x => x.UserId == userId)
+                    .ProjectTo<AddressDTO>();
+                result.Data = query.ToList();
             }
-            else
+            catch (Exception ex)
             {
-                query = query.OrderBy(x => x.Id);
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = ex.Message
+                });
             }
-            var count = query.Count();
-            var result = query.Paging<AddressDTO>(option.Page - 1, option.Results, count);
-            return new ApiListResult<AddressDTO>(result, result.PageIndex, result.PageSize, count);
+            return Ok(result);
         }
 
         [Route("{id:int}")]
         [ResponseType(typeof(AddressDTO))]
         public async Task<IHttpActionResult> GetById(int id)
         {
-            AddressDTO Address = await AddressService.GetAll().Where(x => x.Id == id && !x.Deleted).ProjectTo<AddressDTO>().FirstOrDefaultAsync();
-            if (Address == null)
+            var result = new ApiResult<AddressDTO>();
+            try
             {
-                return NotFound();
+                var userId = User.Identity.GetUserId();
+                AddressDTO Address = await AddressService.GetAll()
+                    .Where(x => x.Id == id && !x.Deleted && x.UserId == userId)
+                    .ProjectTo<AddressDTO>()
+                    .FirstOrDefaultAsync();
+
+                if (Address == null)
+                {
+                    return Ok(new ApiResult<string>()
+                    {
+                        Code = 2,
+                        Info = "不存在当前地址！"
+                    });
+                }
+                result.Data = Address;
             }
-            return Ok(Address);
+            catch (Exception ex)
+            {
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = ex.Message
+                });
+            }
+
+            return Ok(result);
         }
 
         [Route("")]
@@ -91,17 +100,37 @@ namespace MB.Controllers
         [ResponseType(typeof(AddressDTO))]
         public async Task<IHttpActionResult> Create([FromBody]AddressDTO AddressDto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return Ok(new ApiResult<System.Web.Http.ModelBinding.ModelStateDictionary>()
+                    {
+                        Code = 3,
+                        Data = ModelState,
+                        Info = "请仔细填写表单！"
+                    });
+                }
+                var entity = AddressDto.ToEntity();
+                entity.UserId = User.Identity.GetUserId();
+                entity.CreateUserId = User.Identity.GetUserId();
+                entity.CreateTime = DateTime.Now;
+                await AddressService.InsertAsync(entity);
 
-            var entity = AddressDto.ToEntity();
-            entity.UserId = User.Identity.GetUserId();
-            entity.CreateUserId = User.Identity.GetUserId();
-            entity.CreateTime = DateTime.Now;
-            await AddressService.InsertAsync(entity);
-            return Ok(entity.ToModel());
+                return Ok(new ApiResult<string>()
+                {
+                    Data = "success",
+                    Info = "添加地址成功"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = ex.Message
+                });
+            }
         }
 
 
@@ -110,17 +139,44 @@ namespace MB.Controllers
         [ResponseType(typeof(AddressDTO))]
         public async Task<IHttpActionResult> Update([FromBody]AddressDTO AddressDto)
         {
-
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return Ok(new ApiResult<System.Web.Http.ModelBinding.ModelStateDictionary>()
+                    {
+                        Code = 3,
+                        Data = ModelState,
+                        Info = "请仔细填写表单！"
+                    });
+                }
+                var entity = await AddressService.FindOneAsync(AddressDto.Id);
+                if (entity == null)
+                {
+                    return Ok(new ApiResult<string>()
+                    {
+                        Code = 4,
+                        Info = "改地址不存在！"
+                    });
+                }
+                entity = AddressDto.ToEntity(entity);
+                entity.LastUserId = User.Identity.GetUserId();
+                entity.LastTime = DateTime.Now;
+                await AddressService.UpdateAsync(entity);
+                return Ok(new ApiResult<string>()
+                {
+                    Data = "success",
+                    Info = "更新地址成功"
+                });
             }
-            var entity = await AddressService.FindOneAsync(AddressDto.Id);
-            entity = AddressDto.ToEntity(entity);
-            entity.LastUserId = User.Identity.GetUserId();
-            entity.LastTime = DateTime.Now;
-            await AddressService.UpdateAsync(entity);
-            return Ok(entity.ToModel());
+            catch (Exception ex)
+            {
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = ex.Message
+                });
+            }
         }
 
         [Route("{id:int}")]
@@ -128,14 +184,23 @@ namespace MB.Controllers
         [ResponseType(typeof(AddressDTO))]
         public async Task<IHttpActionResult> Delete(int id)
         {
-            Address entity = await AddressService.FindOneAsync(id);
+            var result = new ApiResult<string>();
+            var userId = User.Identity.GetUserId();
+            var entity = await AddressService
+                 .GetAll()
+                 .Where(x => x.Id == id
+                 && x.UserId == userId)
+                 .SingleAsync();
             if (entity == null)
             {
-                return NotFound();
+                result.Code = 2;
+                result.Info = "删除地址失败，服务器异常！";
+                result.Data = "没有权限或地址信息不存在";
+                return Ok(result);
             }
+            result.Data = "删除成功！";
             await AddressService.DeleteAsync(entity);
-
-            return Ok(entity.ToModel());
+            return Ok(result);
         }
 
     }

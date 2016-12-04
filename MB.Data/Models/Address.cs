@@ -14,7 +14,15 @@ namespace MB.Data.Models
 
         public string PhoneNumber { get; set; }
 
-        public int CityId { get; set; }
+        public string CityCode { get; set; }
+
+        public string CityCodeList { get; set; }
+
+        public string Province { get; set; }
+
+        public string Area { get; set; }
+
+        public string County { get; set; }
 
         public virtual CityCate CityCate { get; set; }
 

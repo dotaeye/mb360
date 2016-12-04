@@ -15,8 +15,8 @@ namespace MB.Data.Models
         }
 
         public string Name { get; set; }
-
-        public int? ParentId { get; set; }
+        public string Code { get; set; }
+        public string ParentCode { get; set; }
 
         public int DisplayOrder { get; set; }
 
@@ -26,21 +26,8 @@ namespace MB.Data.Models
 
         public string ImageUrl { get; set; }
 
-        public string Code { get; set; }
 
         public string PinYin { get; set; }
-
-        [DTO(false, true)]
-        public string CreateUserId { get; set; }
-
-        [DTO(false, true)]
-        public Nullable<System.DateTime> CreateTime { get; set; }
-
-        [DTO(false, true)]
-        public string LastUserId { get; set; }
-
-        [DTO(false, true)]
-        public Nullable<System.DateTime> LastTime { get; set; }
 
         [DTO(false, true)]
         public bool Deleted { get; set; }
