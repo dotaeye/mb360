@@ -290,8 +290,9 @@ namespace MB.Controllers
                 WxPayData data = new WxPayData();
                 data.SetValue("body", "麦呗商城-微信收款");
                 data.SetValue("attach", "麦呗商城");
-                data.SetValue("out_trade_no", entity.OrderGuid.ToString());
-                data.SetValue("total_fee", entity.OrderTotal);
+                data.SetValue("out_trade_no", WxPayApi.GenerateOutTradeNo());
+                data.SetValue("total_fee", 1);
+               // data.SetValue("total_fee", Convert.ToInt32(entity.OrderTotal*100));
                 data.SetValue("time_start", DateTime.Now.ToString("yyyyMMddHHmmss"));
                 data.SetValue("time_expire", DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss"));
                 data.SetValue("trade_type", "APP");
