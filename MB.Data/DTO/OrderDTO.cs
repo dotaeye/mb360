@@ -13,11 +13,13 @@ namespace MB.Data.DTO
     {
 
         public Guid OrderGuid { get; set; }
-
         public List<int> ShopCartIds { get; set; }
         public string CustomerId { get; set; }
         public string PrePayId { get; set; }
         public string WeChatSign { get; set; }
+        public string OutTradeNo { get; set; }
+        public string TimeSpan { get; set; }
+        public string NonceStr { get; set; }
         public int AddressId { get; set; }
         public bool PickUpInStore { get; set; }
         public int OrderStatusId { get; set; }

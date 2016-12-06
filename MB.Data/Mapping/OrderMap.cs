@@ -16,6 +16,9 @@ namespace MB.Data.Mapping
 
             this.Property(o => o.PrePayId).HasMaxLength(250);
             this.Property(o => o.WeChatSign).HasMaxLength(350);
+            this.Property(o => o.OutTradeNo).HasMaxLength(50);
+            this.Property(o => o.NonceStr).HasMaxLength(50);
+            this.Property(o => o.TimeSpan).HasMaxLength(30);
 
             this.Ignore(o => o.OrderStatus);
 

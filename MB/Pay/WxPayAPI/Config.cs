@@ -21,6 +21,8 @@ namespace MB.Pay.WxPayAPI
         public const string KEY = "Lmkj2015lmkj2015lmkj2015lmkj2015";
         public const string APPSECRET = "225e9e786e6a02e44404cda8ff2a332a";
 
+        public const string PACKAGE = "Sign=WXPay";
+
         //=======【证书路径设置】===================================== 
         /* 证书路径,注意应该填写绝对路径（仅退款、撤销订单时需要）
         */

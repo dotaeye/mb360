@@ -349,6 +349,10 @@
     <Compile Include="Migrations\201612041454383_AddWeChatField.Designer.cs">
       <DependentUpon>201612041454383_AddWeChatField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612061343235_AddNonceStrAndTimeSpanForOrder.cs" />
+    <Compile Include="Migrations\201612061343235_AddNonceStrAndTimeSpanForOrder.Designer.cs">
+      <DependentUpon>201612061343235_AddNonceStrAndTimeSpanForOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -568,6 +572,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612041454383_AddWeChatField.resx">
       <DependentUpon>201612041454383_AddWeChatField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612061343235_AddNonceStrAndTimeSpanForOrder.resx">
+      <DependentUpon>201612061343235_AddNonceStrAndTimeSpanForOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

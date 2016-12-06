@@ -278,29 +278,36 @@ namespace MB.Controllers
                     orderTotal += item.UnitPrice * item.Quantity;
                 }
 
+                WxPayData data = new WxPayData();
+                var orderNo = WxPayApi.GenerateOutTradeNo();
+                data.SetValue("body", "麦呗商城-微信收款");
+                data.SetValue("attach", "麦呗商城");
+                data.SetValue("out_trade_no", orderNo);
+                data.SetValue("total_fee", 1);
+                // data.SetValue("total_fee", Convert.ToInt32(entity.OrderTotal*100));
+                data.SetValue("time_start", DateTime.Now.ToString("yyyyMMddHHmmss"));
+                data.SetValue("time_expire", DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss"));
+                data.SetValue("trade_type", "APP");
+            
+                WxPayData result = WxPayApi.UnifiedOrder(data);
+
+                WxPayData appData= new WxPayData();
+                appData.SetValue("prepayid", result.GetValue("prepay_id").ToString());
+                WxPayData appResult = WxPayApi.AppOrder(appData);
+
                 var entity = OrderDto.ToEntity();
+                entity.PrePayId = result.GetValue("prepay_id").ToString();
+                entity.WeChatSign = appResult.GetValue("sign").ToString();
+                entity.NonceStr = appResult.GetValue("noncestr").ToString();
+                entity.TimeSpan = appResult.GetValue("timestamp").ToString();
                 entity.OrderGuid = Guid.NewGuid();
                 entity.OrderStatus = OrderStatus.NotPay;
                 entity.OrderTotal = orderTotal;
+                entity.OutTradeNo = orderNo;
                 entity.CustomerId = User.Identity.GetUserId();
                 entity.CustomerIp = Request.GetOwinContext().Request.RemoteIpAddress;
                 entity.CreateTime = DateTime.Now;
                 await OrderService.InsertAsync(entity);
-
-                WxPayData data = new WxPayData();
-                data.SetValue("body", "麦呗商城-微信收款");
-                data.SetValue("attach", "麦呗商城");
-                data.SetValue("out_trade_no", WxPayApi.GenerateOutTradeNo());
-                data.SetValue("total_fee", 1);
-               // data.SetValue("total_fee", Convert.ToInt32(entity.OrderTotal*100));
-                data.SetValue("time_start", DateTime.Now.ToString("yyyyMMddHHmmss"));
-                data.SetValue("time_expire", DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss"));
-                data.SetValue("trade_type", "APP");
-
-                WxPayData result = WxPayApi.UnifiedOrder(data);
-                entity.PrePayId = result.GetValue("prepay_id").ToString();
-                entity.WeChatSign = result.GetValue("sign").ToString();
-                await OrderService.UpdateAsync(entity);
 
                 //更新购物车ItemStatus
                 foreach (var shopCart in shopCartItems)

@@ -10,10 +10,13 @@ namespace MB.Data.Models
         private ICollection<ShoppingCartItem> _shoppingCartItem;
 
         public Guid OrderGuid { get; set; }
-
         public string CustomerId { get; set; }
-        public string PrePayId { get; set; }
+
         public string WeChatSign { get; set; }
+        public string PrePayId { get; set; }
+        public string OutTradeNo { get; set; }
+        public string TimeSpan { get; set; }
+        public string NonceStr { get; set; }
 
         public int AddressId { get; set; }
         public bool PickUpInStore { get; set; }

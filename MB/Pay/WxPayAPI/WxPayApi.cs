@@ -410,7 +410,34 @@ namespace MB.Pay.WxPayAPI
             return result;
         }
 
- 
+
+
+        /**
+        * 
+        * APP发起支付
+        * @param WxPaydata inputObj 提交APP下单的结果
+        * @throws WxPayException
+        * @return 成功时返回，其他抛异常
+        */
+        public static WxPayData AppOrder(WxPayData inputObj)
+        {
+            //检测必填参数
+            if (!inputObj.IsSet("prepayid"))
+            {
+                throw new WxPayException("缺少统一支付接口必填参数prepayid！");
+            }
+            inputObj.SetValue("appid", WxPayConfig.APPID);//公众账号ID
+            inputObj.SetValue("partnerid", WxPayConfig.MCHID);//商户号
+            inputObj.SetValue("package", WxPayConfig.PACKAGE);	  	    
+            inputObj.SetValue("noncestr", GenerateNonceStr());//随机字符串
+            inputObj.SetValue("timestamp", GenerateTimeStamp());//随机字符串
+            //签名
+            inputObj.SetValue("sign", inputObj.MakeSign());
+          
+            return inputObj;
+        }
+
+
         /**
 	    * 
 	    * 关闭订单
@@ -419,7 +446,7 @@ namespace MB.Pay.WxPayAPI
 	    * @throws WxPayException
 	    * @return 成功时返回，其他抛异常
 	    */
-	    public static WxPayData CloseOrder(WxPayData inputObj, int timeOut = 6)
+        public static WxPayData CloseOrder(WxPayData inputObj, int timeOut = 6)
 	    {
 		    string url = "https://api.mch.weixin.qq.com/pay/closeorder";
 		    //检测必填参数

@@ -222,6 +222,29 @@ namespace MB.Pay.WxPayAPI
         }
 
         /**
+      * @生成签名，详见签名生成算法
+      * @return 签名, sign字段不参加签名
+      */
+        public string MakeMD5Sign()
+        {
+            //转url格式
+            string str = ToUrl();
+            //在string后加入API KEY
+            str += "&key=" + WxPayConfig.KEY;
+            //MD5加密
+            var md5 = MD5.Create();
+            var bs = md5.ComputeHash(Encoding.UTF8.GetBytes(str));
+            var sb = new StringBuilder();
+            foreach (byte b in bs)
+            {
+                sb.Append(b.ToString("x2"));
+            }
+            //所有字符转为大写
+            return sb.ToString().ToUpper();
+        }
+
+
+        /**
         * 
         * 检测签名是否正确
         * 正确返回true，错误抛异常
