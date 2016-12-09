@@ -28,7 +28,7 @@ using MB.Pay.WxPayAPI;
 namespace MB.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/Order")]
+    [RoutePrefix("api/order")]
     public class OrderController : ApiController
     {
         private IOrderService OrderService;
@@ -41,6 +41,8 @@ namespace MB.Controllers
             this.OrderService = _OrderService;
             this.ShoppingCartItemService = _ShoppingCartItemService;
         }
+
+    
 
         private bool QueryOrder(string transaction_id)
         {
@@ -60,26 +62,32 @@ namespace MB.Controllers
 
         private async Task<WxPayData> GetNotifyData()
         {
-            //接收从微信后台POST过来的数据
-            System.IO.Stream s = await Request.Content.ReadAsStreamAsync();
-            int count = 0;
-            byte[] buffer = new byte[1024];
-            StringBuilder builder = new StringBuilder();
-            while ((count = s.Read(buffer, 0, 1024)) > 0)
-            {
-                builder.Append(Encoding.UTF8.GetString(buffer, 0, count));
-            }
-            s.Flush();
-            s.Close();
-            s.Dispose();
 
-            Log.Info(this.GetType().ToString(), "Receive data from WeChat : " + builder.ToString());
+            Log.Info("GetNotifyData", "触发了");
+            //接收从微信后台POST过来的数据
+            //System.IO.Stream s = await Request.Content.ReadAsStreamAsync();
+            var info = await Request.Content.ReadAsStringAsync();
+            Log.Info("ReadAsStreamAsync", info);
+
+            //int count = 0;
+            //byte[] buffer = new byte[1024];
+            //StringBuilder builder = new StringBuilder();
+            //while ((count = s.Read(buffer, 0, 1024)) > 0)
+            //{
+            //    builder.Append(Encoding.UTF8.GetString(buffer, 0, count));
+            //}
+            //s.Flush();
+            //s.Close();
+            //s.Dispose();
+
+
+            //Log.Info(this.GetType().ToString(), "Receive data from WeChat : " + builder.ToString());
 
             //转换数据格式并验证签名
             WxPayData data = new WxPayData();
             try
             {
-                data.FromXml(builder.ToString());
+                data.FromXml(info);
             }
             catch (WxPayException ex)
             {
@@ -96,10 +104,12 @@ namespace MB.Controllers
         }
 
         [HttpPost]
-        [Route("ResultNotifyPage")]
+        [Route("notify_url")]
         [AllowAnonymous]
         public async Task<IHttpActionResult> ResultNotifyPage()
         {
+
+            Log.Info("notify_url", "触发了");
 
             WxPayData notifyData = await GetNotifyData();
             //微信支付回调失败
@@ -122,7 +132,8 @@ namespace MB.Controllers
             string transaction_id = notifyData.GetValue("transaction_id").ToString();
 
             //查询订单，判断订单真实性
-            if (!QueryOrder(transaction_id))
+            // if (!QueryOrder(transaction_id))
+            if (false)
             {
                 //若订单查询失败，则立即返回结果给微信支付后台
                 WxPayData res = new WxPayData();
@@ -135,12 +146,37 @@ namespace MB.Controllers
             else
             {
                 WxPayData res = new WxPayData();
+                string out_trade_no = notifyData.GetValue("out_trade_no").ToString();
+                var orderPaied = (int)OrderStatus.Paied;
+                Log.Info(this.GetType().ToString(), "获取订单");
+                var query = OrderService.GetAll()
+                    .Where(x => x.OutTradeNo.Equals(out_trade_no));
+                if (query.Any(x => x.OrderStatusId == orderPaied))
+                {
+                    //订单业务逻辑已经处理了
+                    res.SetValue("return_code", "SUCCESS");
+                    res.SetValue("return_msg", "OK");
+                    Log.Error(this.GetType().ToString(), "订单已经处理过: " + res.ToXml());
+                    return Ok(res.ToXml());
+                }
+                var order = await query.SingleOrDefaultAsync();
+                Log.Info(this.GetType().ToString(), "获取订单成功");
+                Log.Info(this.GetType().ToString(), "获取订单成功"+order.Id);
+                order.OrderStatusId = (int)OrderStatus.Paied;
+                order.PaymentMethodSystemName = notifyData.GetValue("bank_type").ToString();
+                order.PaymentMethodDesction = notifyData.GetValue("openid").ToString() + "|" + transaction_id;
+                order.PaidDate = DateTime.Now;
+                Log.Info(this.GetType().ToString(), "订单更新");
+
+                await OrderService.UpdateAsync(order);
                 res.SetValue("return_code", "SUCCESS");
                 res.SetValue("return_msg", "OK");
                 Log.Info(this.GetType().ToString(), "order query success : " + res.ToXml());
                 return Ok(res.ToXml());
             }
         }
+
+ 
 
         [Route("")]
         public ApiListResult<OrderDTO> Get([FromUri] AntPageOption option = null)
@@ -185,7 +221,7 @@ namespace MB.Controllers
         [Route("list")]
         public IHttpActionResult List(
             int pageIndex = 0,
-            int pageSize = 0,
+            int pageSize = 20,
             int status = 0)
         {
             var result = new ApiResult<OrderListModal>();
@@ -193,16 +229,15 @@ namespace MB.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 var query = OrderService.GetAll()
-                    .Where(x => !x.Deleted && x.CustomerId == userId)
-                    .ProjectTo<OrderDTO>();
+                    .Where(x => !x.Deleted && x.CustomerId == userId);
                 if (status != 0)
                 {
-                    query.Where(x => x.OrderStatusId == status);
+                    query= query.Where(x => x.OrderStatusId == status);
                 }
                 var count = query.Count();
                 result.Data = new OrderListModal()
                 {
-                    Orders = query.OrderByDescending(x => x.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList(),
+                    Orders = query.ProjectTo<OrderDTO>().OrderByDescending(x => x.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList(),
                     Status = status,
                     TotalCount = count
                 };
@@ -288,10 +323,10 @@ namespace MB.Controllers
                 data.SetValue("time_start", DateTime.Now.ToString("yyyyMMddHHmmss"));
                 data.SetValue("time_expire", DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss"));
                 data.SetValue("trade_type", "APP");
-            
+
                 WxPayData result = WxPayApi.UnifiedOrder(data);
 
-                WxPayData appData= new WxPayData();
+                WxPayData appData = new WxPayData();
                 appData.SetValue("prepayid", result.GetValue("prepay_id").ToString());
                 WxPayData appResult = WxPayApi.AppOrder(appData);
 

@@ -225,7 +225,6 @@ namespace MB.Controllers
 
         [Route("list/")]
         [HttpGet]
-        [ResponseType(typeof(CategoryModel))]
         public async Task<IHttpActionResult> List(
             int categoryId = 0,
             int manufacturerId = 0,
@@ -290,7 +289,7 @@ namespace MB.Controllers
                 priceMax: maxPrice,
                 filteredSpecs: alreadyFilteredSpecOptionIds,
                 //orderBy: (ProductSortingEnum)command.OrderBy,
-                orderBy: ProductSortingEnum.Position,
+                orderBy: orderBy.HasValue? (ProductSortingEnum)orderBy:ProductSortingEnum.Position,
                 pageIndex: pageIndex,
                 pageSize: pageSize);
             //model.Products = PrepareProductOverviewModels(products).ToList();

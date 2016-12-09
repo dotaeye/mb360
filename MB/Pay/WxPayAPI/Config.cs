@@ -34,7 +34,7 @@ namespace MB.Pay.WxPayAPI
         //=======【支付结果通知url】===================================== 
         /* 支付结果通知回调url，用于商户接收支付结果
         */
-        public const string NOTIFY_URL = "http://www.lm123.cc/api/Order/ResultNotifyPage";
+        public const string NOTIFY_URL = "http://www.lm123.cc/api/order/notify_url";
 
         //=======【商户系统后台机器IP】===================================== 
         /* 此参数可手动配置也可在程序中自动获取
@@ -55,6 +55,6 @@ namespace MB.Pay.WxPayAPI
         //=======【日志级别】===================================
         /* 日志等级，0.不输出日志；1.只输出错误信息; 2.输出错误和正常信息; 3.输出错误信息、正常信息和调试信息
         */
-        public const int LOG_LEVENL = 0;
+        public const int LOG_LEVENL = 3;
     }
 }

@@ -16,11 +16,8 @@ namespace MB.Data.DTO
         public int CategoryId { get; set; }
         public string SKU { get; set; }
         public Boolean isAgreeActive { get; set; }
-
         public int ManufacturerId { get; set; }
-
         public bool IsFeaturedProduct { get; set; }
-
         public int Status { get; set; }
         public Decimal Price { get; set; }
         public Decimal VipPrice { get; set; }
@@ -29,5 +26,7 @@ namespace MB.Data.DTO
         public string Description { get; set; }
         public string DetailUrl { get; set; }
         public int Id { get; set; }
+        public int SoldCount { get; set; }
+        public int Hot { get; set; }
     }
 }

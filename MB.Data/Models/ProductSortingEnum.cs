@@ -35,6 +35,8 @@ namespace MB.Data.Models
         /// </summary>
         CreatedOn = 15,
 
-        Distance = 20
+        Distance = 20,
+
+        SoldCount = 25
     }
 }

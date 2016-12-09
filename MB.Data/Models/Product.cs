@@ -32,6 +32,10 @@ namespace MB.Data.Models
 
         public int Status { get; set; }
 
+        public int SoldCount { get; set; }
+
+        public int Hot { get; set; }
+
         public decimal Price { get; set; }
 
         public decimal VipPrice { get; set; }

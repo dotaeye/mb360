@@ -289,9 +289,6 @@
     <Compile Include="Controllers\UserPermissionController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
     <Compile Include="Helpers\AddAuthorizationHeaderParameterOperationFilter.cs" />
     <Compile Include="Helpers\AuthTokenEndpointOperation.cs" />
     <Compile Include="Helpers\MBHelper.cs" />
@@ -327,10 +324,10 @@
     <Content Include="Content\login-page-bg.jpg" />
     <Content Include="Content\logo.png" />
     <Content Include="favicon.ico" />
-    <Content Include="Global.asax" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\lm.pubxml" />
     <None Include="Properties\PublishProfiles\绿呗.pubxml" />
     <None Include="Properties\PublishProfiles\绿呗本地.pubxml" />
     <Content Include="Scripts\src\public\build\js\common.min.js" />

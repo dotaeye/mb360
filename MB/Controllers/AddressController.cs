@@ -117,9 +117,9 @@ namespace MB.Controllers
                 entity.CreateTime = DateTime.Now;
                 await AddressService.InsertAsync(entity);
 
-                return Ok(new ApiResult<string>()
+                return Ok(new ApiResult<AddressDTO>()
                 {
-                    Data = "success",
+                    Data = entity.ToModel(),
                     Info = "添加地址成功"
                 });
             }
@@ -163,9 +163,9 @@ namespace MB.Controllers
                 entity.LastUserId = User.Identity.GetUserId();
                 entity.LastTime = DateTime.Now;
                 await AddressService.UpdateAsync(entity);
-                return Ok(new ApiResult<string>()
+                return Ok(new ApiResult<AddressDTO>()
                 {
-                    Data = "success",
+                    Data = entity.ToModel(),
                     Info = "更新地址成功"
                 });
             }
@@ -200,6 +200,43 @@ namespace MB.Controllers
             }
             result.Data = "删除成功！";
             await AddressService.DeleteAsync(entity);
+            return Ok(result);
+        }
+
+        [Route("set_default/{id:int}")]
+        [HttpPut]
+        [ResponseType(typeof(AddressDTO))]
+        public async Task<IHttpActionResult> SetDefault(int id)
+        {
+            var result = new ApiResult<string>();
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                var addresses = AddressService
+                     .GetAll()
+                     .Where(x => x.UserId == userId && !x.Deleted).ToList();
+                if (addresses.Any(x => x.Id == id))
+                {
+                    foreach (var entity in addresses)
+                    {
+                        entity.Default = entity.Id == id;
+                        await AddressService.UpdateAsync(entity);
+                    }
+                }
+                else
+                {
+                    result.Code = 2;
+                    result.Info = "删除地址失败，服务器异常！";
+                    result.Data = "没有权限或地址信息不存在";
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex) {
+                result.Code = 1;
+                result.Info = ex.Message;
+                return Ok(result);
+            }
+            result.Data = "默认地址设置成功！";
             return Ok(result);
         }
 

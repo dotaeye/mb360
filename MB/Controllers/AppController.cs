@@ -15,11 +15,13 @@ using MB.Data.AutoMapper;
 using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using SQ.Core.Data;
 using SQ.Core.UI;
 using SQ.Core.Caching;
 using MB.Models;
 using MB.Helpers;
+using System.Text;
 
 namespace MB.Controllers
 {
@@ -77,6 +79,44 @@ namespace MB.Controllers
             result.Data = model;
             //
             return result;
+        }
+
+        [Route("key")]
+        [HttpGet]
+        public IHttpActionResult GetKey()
+        {
+           
+            string decryptionKey = CreateKey(24);
+            string validationKey = CreateKey(20);
+
+            return Ok(new
+            {
+                validationKey = validationKey,
+                decryptionKey = decryptionKey
+            });
+        }
+
+
+ 
+
+        private string CreateKey(int numBytes)
+        {
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            byte[] buff = new byte[numBytes];
+
+            rng.GetBytes(buff);
+            return BytesToHexString(buff);
+        }
+
+        private string BytesToHexString(byte[] bytes)
+        {
+            StringBuilder hexString = new StringBuilder(64);
+
+            for (int counter = 0; counter < bytes.Length; counter++)
+            {
+                hexString.Append(String.Format("{0:X2}", bytes[counter]));
+            }
+            return hexString.ToString();
         }
     }
 }

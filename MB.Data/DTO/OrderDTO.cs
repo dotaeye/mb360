@@ -33,7 +33,7 @@ namespace MB.Data.DTO
         public string ShippingMethod { get; set; }
         public bool Deleted { get; set; }
         public DateTime CreateTime { get; set; }
-        public OrderStatus OrderStatus { get; set; }
+
         public int Id { get; set; }
     }
 }

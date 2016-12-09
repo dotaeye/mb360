@@ -45,19 +45,19 @@ namespace MB.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 var query = ShoppingCartItemService.GetAll()
-                    .Where(x => !x.Deleted && x.CustomerId == userId)
-                    .ProjectTo<ShoppingCartItemDTO>();
+                    .Where(x => !x.Deleted && x.CustomerId == userId);
+
                 var shopCartStatus = (int)ShoppingCartStatus.ShoppingCart;
                 if (status != 0)
                 {
-                    query.Where(x => x.Status == status);
+                    query = query.Where(x => x.Status == status);
                 }
                 else
                 {
-                    query.Where(x => x.Status == shopCartStatus);
+                    query = query.Where(x => x.Status == shopCartStatus);
                 }
                 var count = query.Count();
-                result.Data = query.ToList();
+                result.Data = query.ProjectTo<ShoppingCartItemDTO>().ToList();
             }
             catch (Exception ex)
             {

@@ -24,8 +24,7 @@ namespace MB.Data.AutoMapper
 
 
             CreateMap<OrderDTO, Order>()
-
-
+                    .ForMember(entity => entity.OrderStatus, o => o.Ignore())
                     .ForMember(entity => entity.Customer, o => o.Ignore())
                     .ForMember(entity => entity.Address, o => o.Ignore())
                     .ForMember(entity => entity.ShoppingCartItems, o => o.Ignore());
