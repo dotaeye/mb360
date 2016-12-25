@@ -124,8 +124,6 @@ namespace MB.Controllers
         {
             try
             {
-
-
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
@@ -133,7 +131,8 @@ namespace MB.Controllers
 
                 var entity = MemberDto.ToEntity();
                 entity.Id = Guid.NewGuid().ToString();
-                entity.Email = entity.UserName;
+                entity.UserName = entity.PhoneNumber;
+                entity.Email = entity.PhoneNumber;
                 entity.CreateTime = DateTime.Now;
                 entity.CreateUserId = User.Identity.GetUserId();
                 IdentityResult result = await UserManager.CreateAsync(entity, MemberDto.Password);
@@ -141,8 +140,7 @@ namespace MB.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
-
+                return BadRequest(ex.Message);
             }
         }
 

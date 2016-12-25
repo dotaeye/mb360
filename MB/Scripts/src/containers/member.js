@@ -156,7 +156,7 @@ function mapDispatchToProps(dispatch) {
 
 const statics = {
   path: 'member',
-  menuGroup: 'member',
+  menuGroup: 'core',
   breadcrumb: [{
     title: '用户中心'
   }, {

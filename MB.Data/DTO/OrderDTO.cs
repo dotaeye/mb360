@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using MB.Data.Models;
+using MB.Data.DTO;
 
 namespace MB.Data.DTO
 {
@@ -16,6 +17,7 @@ namespace MB.Data.DTO
         public List<int> ShopCartIds { get; set; }
         
 
+
         public List<ShoppingCartItemDTO> ShopCartItems { get; set; }
 
         public string CustomerId { get; set; }
@@ -25,6 +27,9 @@ namespace MB.Data.DTO
         public string TimeSpan { get; set; }
         public string NonceStr { get; set; }
         public int AddressId { get; set; }
+
+        public AddressDTO AddressDTO { get; set; }
+
         public bool PickUpInStore { get; set; }
         public int OrderStatusId { get; set; }
         public string PaymentMethodSystemName { get; set; }

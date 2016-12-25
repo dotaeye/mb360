@@ -20,8 +20,9 @@ namespace MB.Data.Models
             return userIdentity;
         }
 
-
         public string Avatar { get; set; }
+
+        public string RefPhone { get; set; }
 
         public bool Sex { get; set; }
 

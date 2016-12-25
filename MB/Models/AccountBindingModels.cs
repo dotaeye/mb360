@@ -49,6 +49,10 @@ namespace MB.Models
         [Display(Name = "验证码")]
         public string SmsCode { get; set; }
 
+        [Required]
+        [Display(Name = "推荐人手机号")]
+        public string RefPhone { get; set; }
+
     }
 
     public class RegisterExternalBindingModel
@@ -72,14 +76,19 @@ namespace MB.Models
     public class SetPasswordBindingModel
     {
         [Required]
+        [Display(Name = "手机号码")]
+        public string UserName { get; set; }
+
+        [Required]
+        [StringLength(6, ErrorMessage = "请输入{2}位手机短信证码", MinimumLength = 6)]
+        [Display(Name = "验证码")]
+        public string SmsCode { get; set; }
+
+        [Required]
         [StringLength(100, ErrorMessage = "{0} 必须至少包含 {2} 个字符。", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "新密码")]
         public string NewPassword { get; set; }
 
-        [DataType(DataType.Password)]
-        [Display(Name = "确认新密码")]
-        [Compare("NewPassword", ErrorMessage = "新密码和确认密码不匹配。")]
-        public string ConfirmPassword { get; set; }
     }
 }

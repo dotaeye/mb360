@@ -16,6 +16,8 @@ namespace MB.Data.DTO
 
         public string PhoneNumber { get; set; }
 
+        public string RefPhone { get; set; }
+
         public string Password { get; set; }
 
         public bool PhoneNumberConfirmed { get; set; }

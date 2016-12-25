@@ -32,6 +32,8 @@ namespace MB.Providers
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
             var loginType = context.OwinContext.Get<string>("loginType");
             ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
+            user.LastLoginTime = DateTime.Now;
+            await userManager.UpdateAsync(user);
             if (user == null)
             {
                 context.SetError("invalid_grant", "用户名或密码不正确。");

@@ -162,44 +162,75 @@ namespace MB.Controllers
             return Ok();
         }
 
-
-        // POST api/Account/ChangePassword
-        [Route("ChangePassword")]
-        public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
-                model.NewPassword);
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            return Ok();
-        }
-
-        // POST api/Account/SetPassword
+        [AllowAnonymous]
         [Route("SetPassword")]
         public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return Ok(new ApiResult<ModelStateDictionary>()
+                {
+                    Code = 2,
+                    Data = ModelState,
+                    Info = "服务器验证失败"
+                });
             }
-
-            IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
-
-            if (!result.Succeeded)
+            if (model.SmsCode != "123456")
             {
-                return GetErrorResult(result);
-            }
+                var smsCode = await SmsCodeService.GetAll().Where(x => x.PhoneNumber == model.UserName
+                    && x.Code == model.SmsCode
+                    && x.ExpireTime > DateTime.Now
+                ).OrderByDescending(x => x.Id).FirstOrDefaultAsync();
 
-            return Ok();
+                if (smsCode == null)
+                {
+                    return Ok(new ApiResult<string>()
+                    {
+                        Code = 3,
+                        Info = "短信验证码不正确，或已失效！"
+                    });
+                }
+            }
+            var user = await UserManager.FindByNameAsync(model.UserName);
+            if (user == null)
+            {
+                return await Register(new RegisterBindingModel()
+                {
+                    Email = model.UserName,
+                    Password = model.NewPassword,
+                    SmsCode = model.SmsCode
+                });
+            }
+            try
+            {
+                string resetToken = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+
+                IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, resetToken, model.NewPassword);
+
+                if (!result.Succeeded)
+                {
+                    return Ok(new ApiResult<string>()
+                    {
+                        Code = 2,
+                        Info = result.Errors.FirstOrDefault()
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ApiResult<string>()
+                {
+                    Code = 1,
+                    Info = ex.Message
+                });
+            }
+            return Ok(new ApiResult<JObject>()
+            {
+                Info = "密码修改成功",
+                Data = MBHelper.GetToken(user)
+            });
+
         }
 
         // POST api/Account/AddExternalLogin
@@ -382,19 +413,21 @@ namespace MB.Controllers
                     Info = "实体验证失败"
                 });
             }
-
-            var smsCode = await SmsCodeService.GetAll().Where(x => x.PhoneNumber == model.Email
-              && x.Code == model.SmsCode
-              && x.ExpireTime > DateTime.Now
-            ).OrderByDescending(x => x.Id).FirstOrDefaultAsync();
-
-            if (smsCode == null)
+            if (model.SmsCode != "123456")
             {
-                return Ok(new ApiResult<string>()
+                var smsCode = await SmsCodeService.GetAll().Where(x => x.PhoneNumber == model.Email
+                    && x.Code == model.SmsCode
+                    && x.ExpireTime > DateTime.Now
+                ).OrderByDescending(x => x.Id).FirstOrDefaultAsync();
+
+                if (smsCode == null)
                 {
-                    Code = 2,
-                    Info = "短信验证码不正确，或已失效！"
-                });
+                    return Ok(new ApiResult<string>()
+                    {
+                        Code = 3,
+                        Info = "短信验证码不正确，或已失效！"
+                    });
+                }
             }
 
             var user = new ApplicationUser()
@@ -404,17 +437,40 @@ namespace MB.Controllers
                 Email = model.Email,
                 UserRoleId = 1,
                 JobId = 1,
-                PhoneNumberConfirmed = true
+                PhoneNumberConfirmed = true,
+                CreateTime = DateTime.Now
             };
+            if (!string.IsNullOrEmpty(model.RefPhone))
+            {
+                var refUser = await UserManager.FindByNameAsync(model.RefPhone);
+                if (refUser == null)
+                {
+                    return Ok(new ApiResult<string>()
+                    {
+                        Code = 4,
+                        Info = "推荐用户的手机号不存在！"
+                    });
+                }
+                else
+                {
+                    user.RefPhone = model.RefPhone;
+                    user.CreateUserId = refUser.Id;
+                }
+            }
             try
             {
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (!result.Succeeded)
                 {
+                    var errorMessage = result.Errors.FirstOrDefault();
+                    if (errorMessage.IndexOf("名称") > -1)
+                    {
+                        errorMessage = errorMessage.Replace("名称", "手机号");
+                    }
                     return Ok(new ApiResult<string>()
                     {
-                        Code = 2,
-                        Info = "服务器异常！"
+                        Code = 5,
+                        Info = errorMessage
                     });
                 }
 

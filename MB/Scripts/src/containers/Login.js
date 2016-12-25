@@ -20,18 +20,15 @@ var Login = React.createClass({
         return;
       }
       formdata.grant_type = 'password';
-      this.props.actions.login(formdata);
+      formdata.type = 'password';
+      this.props.actions.login(formdata,()=>{
+        browserHistory.push('/admin');
+      },()=>{
+        const {auth}=this.props;
+        message.error(auth.loginError.error_description);
+        this.props.actions.clearLoginError();
+      });
     });
-  },
-
-  componentWillReceiveProps(nextProps){
-    if (!this.props.auth.token && nextProps.auth.token) {
-      browserHistory.push('/admin');
-    }
-    if (nextProps.auth.loginError) {
-      message.error(nextProps.auth.loginError.error_description);
-      this.props.actions.clearLoginError();
-    }
   },
 
   render() {

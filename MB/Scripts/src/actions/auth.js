@@ -58,7 +58,7 @@ export function clearLoginError(token) {
   }
 }
 
-export function login(data) {
+export function login(data, success, fail) {
   return {
     types: [authTypes.LOGIN, authTypes.LOGIN_SUCCESS, authTypes.LOGIN_FAIL],
     promise: (client) => client.post('/account/login', {
@@ -68,7 +68,9 @@ export function login(data) {
         key: configs.authToken,
         expired: 60 * 24 * 14
       }
-    })
+    }),
+    success,
+    fail
   };
 }
 

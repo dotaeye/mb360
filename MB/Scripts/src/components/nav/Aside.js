@@ -122,14 +122,19 @@ var Aside = React.createClass({
         ]
       },
       {
-        group: 'member',
-        title: '用户管理',
-        icon: 'hdd',
+        group: 'core',
+        title: '核心业务',
+        icon: 'star',
         items: [
           {
             controller: 'member',
             action: 'index',
-            title: '用户列表'
+            title: '会员管理'
+          },
+          {
+            controller: 'order',
+            action: 'index',
+            title: '订单管理'
           }
         ]
       }

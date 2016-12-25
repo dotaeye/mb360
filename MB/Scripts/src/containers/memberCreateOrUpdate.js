@@ -143,18 +143,11 @@ var MemberCreateOrUpdate = React.createClass({
           <Form horizontal>
             <FormItem
               {...formItemLayout}
-              label="邮箱地址"
+              label="手机"
               >
-              {getFieldDecorator('userName', {
-                  initialValue: record.userName,
-                  rules: [{
-                    required: true,
-                    message: '请输入邮箱地址'
-                  }, {
-                    type: 'email',
-                    message: '请输入正确的邮箱地址'
-                  },
-                  ]
+              {getFieldDecorator('phoneNumber', {
+                  initialValue: record.phoneNumber,
+                  rules: [{required: true, message: '请输入手机号码'}]
                 }
               )(
                 <Input type="text"/>
@@ -174,18 +167,6 @@ var MemberCreateOrUpdate = React.createClass({
                 )}
               </FormItem>
             )}
-            <FormItem
-              {...formItemLayout}
-              label="手机"
-              >
-              {getFieldDecorator('phoneNumber', {
-                  initialValue: record.phoneNumber,
-                  rules: [{required: true, message: '请输入手机号码'}]
-                }
-              )(
-                <Input type="text"/>
-              )}
-            </FormItem>
 
             <FormItem
               {...formItemLayout}

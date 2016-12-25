@@ -20,7 +20,9 @@ namespace MB.Data.AutoMapper
         {
             CreateMap<Order, OrderDTO>()
                     .ForMember(entity => entity.ShopCartItems, o => o.Ignore())
+                    .ForMember(dto => dto.AddressDTO, o => o.Ignore())
                     .ForMember(dto => dto.ShopCartIds, o => o.Ignore());
+
 
 
             CreateMap<OrderDTO, Order>()

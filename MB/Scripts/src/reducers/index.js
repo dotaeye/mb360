@@ -11,7 +11,7 @@ import storage from './storage';
 import member from './member'
 import product from './product'
 import productStorageQuantity from './productStorageQuantity'
-import productCarCate from './productCarCate' 
+import productCarCate from './productCarCate'
 import productAttribute from './productAttribute'
 import productAttributeValue from './productAttributeValue'
 import productAttributeMapping from './productAttributeMapping'
@@ -21,28 +21,30 @@ import productSpecificationAttribute from './productSpecificationAttribute'
 import manufacturer from './manufacturer'
 import job from './job';
 import banner from './banner';
+import order from './order';
 
 export default combineReducers({
-    form,
-    auth,
-    userPermission,
-    userRole,
-    department,
-    category,
-    job,
-    carCate,
-    cityCate,
-    storage,
-    member,
-    product,
-    productStorageQuantity,
-    productCarCate,
-    productAttribute,
-    productAttributeValue,
-    productAttributeMapping,
-    productSpecificationAttribute,
-    specificationAttribute,
-    specificationAttributeOption,
-    manufacturer,
-    banner
+  form,
+  auth,
+  userPermission,
+  userRole,
+  department,
+  category,
+  job,
+  carCate,
+  cityCate,
+  storage,
+  member,
+  product,
+  productStorageQuantity,
+  productCarCate,
+  productAttribute,
+  productAttributeValue,
+  productAttributeMapping,
+  productSpecificationAttribute,
+  specificationAttribute,
+  specificationAttributeOption,
+  manufacturer,
+  banner,
+  order
 });

@@ -24,6 +24,7 @@ using SQ.Core.Data;
 using System.Text;
 using MB.Models;
 using MB.Pay.WxPayAPI;
+using System.Transactions;
 
 namespace MB.Controllers
 {
@@ -41,6 +42,8 @@ namespace MB.Controllers
             this.OrderService = _OrderService;
             this.ShoppingCartItemService = _ShoppingCartItemService;
         }
+
+
 
 
 
@@ -159,62 +162,98 @@ namespace MB.Controllers
                     Log.Error(this.GetType().ToString(), "订单已经处理过: " + res.ToXml());
                     return Ok(res.ToXml());
                 }
-                var order = await query.SingleOrDefaultAsync();
-                Log.Info(this.GetType().ToString(), "获取订单成功");
-                Log.Info(this.GetType().ToString(), "获取订单成功" + order.Id);
-                order.OrderStatusId = (int)OrderStatus.Paied;
-                order.PaymentMethodSystemName = notifyData.GetValue("bank_type").ToString();
-                order.PaymentMethodDesction = notifyData.GetValue("openid").ToString() + "|" + transaction_id;
-                order.PaidDate = DateTime.Now;
-                Log.Info(this.GetType().ToString(), "订单更新");
 
-                await OrderService.UpdateAsync(order);
-                res.SetValue("return_code", "SUCCESS");
-                res.SetValue("return_msg", "OK");
-                Log.Info(this.GetType().ToString(), "order query success : " + res.ToXml());
-                return Ok(res.ToXml());
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    try
+                    {
+                        var order = await query.SingleOrDefaultAsync();
+                        order.OrderStatusId = (int)OrderStatus.Paied;
+                        order.PaymentMethodSystemName = notifyData.GetValue("bank_type").ToString();
+                        order.PaymentMethodDesction = notifyData.GetValue("openid").ToString() + "|" + transaction_id;
+                        order.PaidDate = DateTime.Now;
+
+                        await OrderService.UpdateAsync(order);
+                        res.SetValue("return_code", "SUCCESS");
+                        res.SetValue("return_msg", "OK");
+                        Log.Info(this.GetType().ToString(), "order query success : " + res.ToXml());
+                        scope.Complete();
+
+                        return Ok(res.ToXml());
+                    }
+                    catch (Exception ex)
+                    {
+                        res = new WxPayData();
+                        res.SetValue("return_code", "FAIL");
+                        res.SetValue("return_msg", "订单事物处理失败");
+                        Log.Error(this.GetType().ToString(), "订单事物处理失败: " + ex.Message);
+                        return BadRequest(res.ToXml());
+                    }
+                }
             }
         }
 
 
-
         [Route("")]
-        public ApiListResult<OrderDTO> Get([FromUri] AntPageOption option = null)
+        public ApiListResult<OrderDTO> Get([FromUri] OrderPageOption option = null)
         {
-            var query = OrderService.GetAll().Where(x => !x.Deleted).ProjectTo<OrderDTO>();
-            if (option != null)
-            {
-                if (!string.IsNullOrEmpty(option.SortField))
-                {
-                    //for example
-                    if (option.SortField == "id")
-                    {
-                        if (option.SortOrder == PageSortTyoe.DESC)
-                        {
-                            query = query.OrderByDescending(x => x.Id);
-                        }
-                        else
-                        {
-                            query = query.OrderBy(x => x.Id);
-                        }
-                    }
-                }
+            var query = OrderService.GetAll()
+                    .Include(x => x.ShoppingCartItems)
+                    .Include(x => x.Address)
+                    .Where(x => !x.Deleted);
 
-                if (option.Page > 0 && option.Results > 0)
-                {
-                    if (string.IsNullOrEmpty(option.SortField))
-                    {
-                        query = query.OrderBy(x => x.Id);
-                    }
-                }
-            }
-            else
+            if (!string.IsNullOrEmpty(option.OrderNo))
             {
-                query = query.OrderBy(x => x.Id);
+                query = query.Where(x => x.OutTradeNo.Equals(option.OrderNo));
             }
+
+            if (option.OrderStatusId != 0)
+            {
+                query = query.Where(x => x.OrderStatusId.Equals(option.OrderStatusId));
+            }
+
             var count = query.Count();
-            var result = query.Paging<OrderDTO>(option.Page - 1, option.Results, count);
-            return new ApiListResult<OrderDTO>(result, result.PageIndex, result.PageSize, count);
+
+            var orderList = query.OrderByDescending(x => x.CreateTime).Skip((option.Page - 1) * option.Results).Take(option.Results).ToList();
+
+            var results = orderList.Select(x => new OrderDTO()
+            {
+                AddressId = x.AddressId,
+                AddressDTO = new AddressDTO()
+                {
+                    CityCodeList = x.Address.CityCodeList,
+                    Detail = x.Address.Detail,
+                    PhoneNumber = x.Address.PhoneNumber,
+                    County = x.Address.County,
+                    Province = x.Address.Province,
+                    Area = x.Address.Area,
+                    Name = x.Address.Name
+                },
+                CreateTime = x.CreateTime,
+                OutTradeNo = x.OutTradeNo,
+                OrderTotal = x.OrderTotal,
+                Id = x.Id,
+                PaidDate = x.PaidDate,
+                OrderStatusId = x.OrderStatusId,
+                WeChatSign = x.WeChatSign,
+                TimeSpan = x.TimeSpan,
+                NonceStr = x.NonceStr,
+                PrePayId = x.PrePayId,
+                ShopCartItems = x.ShoppingCartItems.Select(s => new ShoppingCartItemDTO()
+                {
+                    AttributesXml = s.AttributesXml,
+                    ImageUrl = s.ImageUrl,
+                    Name = s.Name,
+                    UnitPrice = s.UnitPrice,
+                    Quantity = s.Quantity,
+                    Id = s.Id,
+                    Price = s.Price
+
+                }).ToList()
+
+            }).ToList();
+
+            return new ApiListResult<OrderDTO>(results, option.Page - 1, option.Results, count);
         }
 
         [HttpGet]
@@ -365,33 +404,38 @@ namespace MB.Controllers
                 appData.SetValue("prepayid", result.GetValue("prepay_id").ToString());
                 WxPayData appResult = WxPayApi.AppOrder(appData);
 
-                var entity = OrderDto.ToEntity();
-                entity.PrePayId = result.GetValue("prepay_id").ToString();
-                entity.WeChatSign = appResult.GetValue("sign").ToString();
-                entity.NonceStr = appResult.GetValue("noncestr").ToString();
-                entity.TimeSpan = appResult.GetValue("timestamp").ToString();
-                entity.OrderGuid = Guid.NewGuid();
-                entity.OrderStatus = OrderStatus.NotPay;
-                entity.OrderTotal = orderTotal;
-                entity.OutTradeNo = orderNo;
-                entity.CustomerId = User.Identity.GetUserId();
-                entity.CustomerIp = Request.GetOwinContext().Request.RemoteIpAddress;
-                entity.CreateTime = DateTime.Now;
-                await OrderService.InsertAsync(entity);
-
-                //更新购物车ItemStatus
-                foreach (var shopCart in shopCartItems)
+                using (TransactionScope scope = new TransactionScope())
                 {
-                    shopCart.OrderId = entity.Id;
-                    shopCart.ShoppingCartStatus = ShoppingCartStatus.Order;
-                    await ShoppingCartItemService.UpdateAsync(shopCart);
+
+                    var entity = OrderDto.ToEntity();
+                    entity.PrePayId = result.GetValue("prepay_id").ToString();
+                    entity.WeChatSign = appResult.GetValue("sign").ToString();
+                    entity.NonceStr = appResult.GetValue("noncestr").ToString();
+                    entity.TimeSpan = appResult.GetValue("timestamp").ToString();
+                    entity.OrderGuid = Guid.NewGuid();
+                    entity.OrderStatus = OrderStatus.NotPay;
+                    entity.OrderTotal = orderTotal;
+                    entity.OutTradeNo = orderNo;
+                    entity.CustomerId = User.Identity.GetUserId();
+                    entity.CustomerIp = Request.GetOwinContext().Request.RemoteIpAddress;
+                    entity.CreateTime = DateTime.Now;
+                    await OrderService.InsertAsync(entity);
+
+                    //更新购物车ItemStatus
+                    foreach (var shopCart in shopCartItems)
+                    {
+                        shopCart.OrderId = entity.Id;
+                        shopCart.ShoppingCartStatus = ShoppingCartStatus.Order;
+                        await ShoppingCartItemService.UpdateAsync(shopCart);
+                    }
+
+                    scope.Complete();
+                    return Ok(new ApiResult<OrderDTO>()
+                    {
+                        Data = entity.ToModel(),
+                        Info = "添加订单成功"
+                    });
                 }
-
-                return Ok(new ApiResult<OrderDTO>()
-                {
-                    Data = entity.ToModel(),
-                    Info = "添加订单成功"
-                });
             }
             catch (Exception ex)
             {

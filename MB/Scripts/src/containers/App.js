@@ -18,7 +18,7 @@ var App = React.createClass({
   },
 
   render(){
-    const { auth: {permission}}=this.props;
+    const { auth: {permission,token}}=this.props;
     const child = React.cloneElement(this.props.children, {key: new Date().getTime()});
     const { path, noLayout, breadcrumb, menuGroup } = child.type;
     return (
@@ -26,8 +26,7 @@ var App = React.createClass({
         {!noLayout ? (
           <div className='ant-layout'>
             <Aside current={path} open={menuGroup} permission={permission}/>
-            <Header onRefresh={this.onRefresh.bind(null,path)} breadcrumb={breadcrumb}/>
-
+            <Header onRefresh={this.onRefresh.bind(null,path)} breadcrumb={breadcrumb} token={token}/>
             <div className="ant-layout-container">
               <div className="ant-layout-content">{this.props.children}</div>
             </div>

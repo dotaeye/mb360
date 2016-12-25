@@ -365,6 +365,10 @@
     <Compile Include="Migrations\201612100246400_AddCarMapping.Designer.cs">
       <DependentUpon>201612100246400_AddCarMapping.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612250315301_AddRefUser.cs" />
+    <Compile Include="Migrations\201612250315301_AddRefUser.Designer.cs">
+      <DependentUpon>201612250315301_AddRefUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -595,6 +599,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612100246400_AddCarMapping.resx">
       <DependentUpon>201612100246400_AddCarMapping.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612250315301_AddRefUser.resx">
+      <DependentUpon>201612250315301_AddRefUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

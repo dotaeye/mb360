@@ -1,24 +1,22 @@
 import React ,{PropTypes}from 'react';
-import { Breadcrumb, Icon , Button, Dropdown} from 'antd';
+import { Breadcrumb, Icon , Button, Dropdown, Menu} from 'antd';
 import { IndexLink, Link } from 'react-router';
 var Header = React.createClass({
 
-  propTypes: {
-    //onRefresh: PropTypes.fuc
-  },
   getDefaultProps(){
     return {
-      breadcrumb: []
+      breadcrumb: [],
+      token:{}
     }
   },
 
   render(){
-    const { breadcrumb }=this.props;
+    const { breadcrumb,token }=this.props;
     return (
       <div className="ant-layout-header">
         <div className="flex flex-nowrap" data-flex="dir:left box:justify">
           <div className="ant-layout-logo flex-align-center">
-            <IndexLink to="/" ><h1>Logo</h1></IndexLink>
+            <IndexLink to="/" ><img src="/content/logo.png"/></IndexLink>
           </div>
           <div className="ant-layout-breadcrumb flex-align-center">
             <Breadcrumb>
@@ -36,10 +34,9 @@ var Header = React.createClass({
           </div>
           <div className="ant-layout-tools flex-align-center">
             <Button icon="reload" onClick={this.props.onRefresh}/>
-            <Dropdown placement="bottomRight" overlay={<UserPannel/>} trigger={['click']}>
+            <Dropdown placement="bottomRight" overlay={<UserPanel/>} trigger={['click']}>
               <Button>
-                <span className='avatar'></span>
-                <span className='username'>用户名</span>
+                <span className='username'>{token.userName}</span>
                 <Icon className='arrow' type="down"/>
               </Button>
             </Dropdown>
@@ -50,11 +47,18 @@ var Header = React.createClass({
   }
 });
 
-var UserPannel = React.createClass({
+var UserPanel = React.createClass({
 
   render(){
     return (
-      <div>UserPannel</div>
+      <Menu>
+        <Menu.Item>
+          <a><Icon type="user" />个人信息</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a><Icon type="logout" />退出登录</a>
+        </Menu.Item>
+      </Menu>
     )
   }
 });
