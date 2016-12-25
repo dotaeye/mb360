@@ -42,7 +42,7 @@ namespace MB.Controllers
             this.ShoppingCartItemService = _ShoppingCartItemService;
         }
 
-    
+
 
         private bool QueryOrder(string transaction_id)
         {
@@ -161,7 +161,7 @@ namespace MB.Controllers
                 }
                 var order = await query.SingleOrDefaultAsync();
                 Log.Info(this.GetType().ToString(), "获取订单成功");
-                Log.Info(this.GetType().ToString(), "获取订单成功"+order.Id);
+                Log.Info(this.GetType().ToString(), "获取订单成功" + order.Id);
                 order.OrderStatusId = (int)OrderStatus.Paied;
                 order.PaymentMethodSystemName = notifyData.GetValue("bank_type").ToString();
                 order.PaymentMethodDesction = notifyData.GetValue("openid").ToString() + "|" + transaction_id;
@@ -176,7 +176,7 @@ namespace MB.Controllers
             }
         }
 
- 
+
 
         [Route("")]
         public ApiListResult<OrderDTO> Get([FromUri] AntPageOption option = null)
@@ -229,18 +229,44 @@ namespace MB.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 var query = OrderService.GetAll()
+                    .Include(x => x.ShoppingCartItems)
                     .Where(x => !x.Deleted && x.CustomerId == userId);
                 if (status != 0)
                 {
-                    query= query.Where(x => x.OrderStatusId == status);
+                    query = query.Where(x => x.OrderStatusId == status);
                 }
                 var count = query.Count();
-                result.Data = new OrderListModal()
+                var orderList = query.OrderByDescending(x => x.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+                var modal = new OrderListModal();
+                modal.Status = status;
+                modal.Orders = orderList.Select(x => new OrderDTO()
                 {
-                    Orders = query.ProjectTo<OrderDTO>().OrderByDescending(x => x.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList(),
-                    Status = status,
-                    TotalCount = count
-                };
+                    AddressId = x.AddressId,
+                    CreateTime = x.CreateTime,
+                    OutTradeNo = x.OutTradeNo,
+                    OrderTotal = x.OrderTotal,
+                    Id = x.Id,
+                    PaidDate = x.PaidDate,
+                    OrderStatusId = x.OrderStatusId,
+                    WeChatSign = x.WeChatSign,
+                    TimeSpan = x.TimeSpan,
+                    NonceStr = x.NonceStr,
+                    PrePayId = x.PrePayId,
+                    ShopCartItems = x.ShoppingCartItems.Select(s => new ShoppingCartItemDTO()
+                    {
+                        AttributesXml = s.AttributesXml,
+                        ImageUrl = s.ImageUrl,
+                        Name = s.Name,
+                        UnitPrice = s.UnitPrice,
+                        Quantity = s.Quantity,
+                        Id = s.Id,
+                        Price = s.Price
+
+                    }).ToList()
+                }).ToList();
+                modal.TotalCount = count;
+                result.Data = modal;
             }
             catch (Exception ex)
             {
@@ -303,6 +329,15 @@ namespace MB.Controllers
                         Code = 3,
                         Data = ModelState,
                         Info = "请仔细填写表单！"
+                    });
+                }
+
+                if (!OrderDto.ShopCartIds.Any())
+                {
+                    return Ok(new ApiResult<string>()
+                    {
+                        Code = 4,
+                        Info = "请选择商品然后支付！"
                     });
                 }
 
@@ -407,6 +442,31 @@ namespace MB.Controllers
             await OrderService.DeleteAsync(entity);
             return Ok(result);
         }
+
+        [Route("cancel/{id:int}")]
+        [HttpDelete]
+        public async Task<IHttpActionResult> Cancel(int id)
+        {
+            var result = new ApiResult<string>();
+            var userId = User.Identity.GetUserId();
+            var entity = await OrderService
+                 .GetAll()
+                 .Where(x => x.Id == id
+                 && x.CustomerId == userId)
+                 .SingleAsync();
+            if (entity == null)
+            {
+                result.Code = 2;
+                result.Info = "取消订单，服务器异常！";
+                result.Data = "没有权限或该订单不存在";
+                return Ok(result);
+            }
+            result.Data = "取消成功！";
+            entity.OrderStatus = OrderStatus.Cancelled;
+            await OrderService.UpdateAsync(entity);
+            return Ok(result);
+        }
+
 
     }
 }

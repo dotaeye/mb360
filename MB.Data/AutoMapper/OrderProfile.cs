@@ -18,8 +18,8 @@ namespace MB.Data.AutoMapper
 
         protected override void CreateMaps()
         {
-
             CreateMap<Order, OrderDTO>()
+                    .ForMember(entity => entity.ShopCartItems, o => o.Ignore())
                     .ForMember(dto => dto.ShopCartIds, o => o.Ignore());
 
 

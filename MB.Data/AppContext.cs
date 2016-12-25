@@ -69,6 +69,7 @@ namespace MB.Data
             modelBuilder.Configurations.Add(new AddressMap());
 
             modelBuilder.Configurations.Add(new SmsCodeMap());
+            modelBuilder.Configurations.Add(new CarMappingMap());
             base.OnModelCreating(modelBuilder);
         }
 

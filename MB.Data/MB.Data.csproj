@@ -92,6 +92,7 @@
     <Compile Include="AutoMapper\AutoMapperStartupTask.cs" />
     <Compile Include="AutoMapper\BannerProfile.cs" />
     <Compile Include="AutoMapper\CarCateProfile.cs" />
+    <Compile Include="AutoMapper\CarMappingProfile.cs" />
     <Compile Include="AutoMapper\CategoryProfile.cs" />
     <Compile Include="AutoMapper\CityCateProfile.cs" />
     <Compile Include="AutoMapper\DepartmentProfile.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="DTO\AddressDTO.cs" />
     <Compile Include="DTO\BannerDTO.cs" />
     <Compile Include="DTO\CarCateDTO.cs" />
+    <Compile Include="DTO\CarMappingDTO.cs" />
     <Compile Include="DTO\CategoryDTO.cs" />
     <Compile Include="DTO\CityCateDTO.cs" />
     <Compile Include="DTO\DepartmentDTO.cs" />
@@ -148,6 +150,7 @@
     <Compile Include="Impl\AddressService.cs" />
     <Compile Include="Impl\BannerService.cs" />
     <Compile Include="Impl\CarCateService.cs" />
+    <Compile Include="Impl\CarMappingService.cs" />
     <Compile Include="Impl\CategoryService.cs" />
     <Compile Include="Impl\CityCateService.cs" />
     <Compile Include="Impl\DepartmentService.cs" />
@@ -178,6 +181,7 @@
     <Compile Include="Mapping\ApplicationUserMap.cs" />
     <Compile Include="Mapping\BannerMap.cs" />
     <Compile Include="Mapping\CarCateMap.cs" />
+    <Compile Include="Mapping\CarMappingMap.cs" />
     <Compile Include="Mapping\CategoryMap.cs" />
     <Compile Include="Mapping\CityCate.cs" />
     <Compile Include="Mapping\DepartmentMap.cs" />
@@ -357,11 +361,16 @@
     <Compile Include="Migrations\201612081308505_AddHotAndSoldCountForProduct.Designer.cs">
       <DependentUpon>201612081308505_AddHotAndSoldCountForProduct.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612100246400_AddCarMapping.cs" />
+    <Compile Include="Migrations\201612100246400_AddCarMapping.Designer.cs">
+      <DependentUpon>201612100246400_AddCarMapping.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Banner.cs" />
     <Compile Include="Models\CarCate.cs" />
+    <Compile Include="Models\CarMapping.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CityCate.cs" />
     <Compile Include="Models\CodeType.cs" />
@@ -402,6 +411,7 @@
     <Compile Include="Service\IAddressService.cs" />
     <Compile Include="Service\IBannerService.cs" />
     <Compile Include="Service\ICarCateService.cs" />
+    <Compile Include="Service\ICarMappingService.cs" />
     <Compile Include="Service\ICategoryService.cs" />
     <Compile Include="Service\ICityCateService.cs" />
     <Compile Include="Service\IDepartmentService.cs" />
@@ -582,6 +592,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612081308505_AddHotAndSoldCountForProduct.resx">
       <DependentUpon>201612081308505_AddHotAndSoldCountForProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612100246400_AddCarMapping.resx">
+      <DependentUpon>201612100246400_AddCarMapping.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

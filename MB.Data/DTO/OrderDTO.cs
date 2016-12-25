@@ -14,6 +14,10 @@ namespace MB.Data.DTO
 
         public Guid OrderGuid { get; set; }
         public List<int> ShopCartIds { get; set; }
+        
+
+        public List<ShoppingCartItemDTO> ShopCartItems { get; set; }
+
         public string CustomerId { get; set; }
         public string PrePayId { get; set; }
         public string WeChatSign { get; set; }

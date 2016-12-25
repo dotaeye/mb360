@@ -51,6 +51,7 @@ namespace MB.Data.Service
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
             int manufacturerId = 0,
+            int carId=0,
             int RoleId = 0,
             bool isAgreeActive = false,
             bool? featuredProducts = null,

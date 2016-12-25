@@ -114,6 +114,7 @@ namespace MB.Data.Impl
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
             int manufacturerId = 0,
+            int carId = 0,
             int RoleId = 0,
             bool isAgreeActive = false,
             bool? featuredProducts = null,
@@ -205,6 +206,13 @@ namespace MB.Data.Impl
                 query = from p in query
                         from pm in p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId)
                         where (!featuredProducts.HasValue || featuredProducts.Value == pm.IsFeaturedProduct)
+                        select p;
+            }
+
+            if (carId > 0)
+            {
+                query = from p in query
+                        from pm in p.ProductCarCate.Where(pc => pc.CarCateId == carId)
                         select p;
             }
 

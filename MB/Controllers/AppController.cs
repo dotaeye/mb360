@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Web;
 using System.Net;
 using System.Net.Http;
 using System.Data.Entity;
 using System.Web.Http;
 using System.Web.Http.Description;
+
 using System.Data.Entity.Spatial;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using MB.Data.Service;
 using MB.Data.DTO;
 using MB.Data.AutoMapper;
 using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using SQ.Core.Data;
 using SQ.Core.UI;
@@ -22,6 +26,8 @@ using SQ.Core.Caching;
 using MB.Models;
 using MB.Helpers;
 using System.Text;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.OAuth;
 
 namespace MB.Controllers
 {
@@ -85,7 +91,7 @@ namespace MB.Controllers
         [HttpGet]
         public IHttpActionResult GetKey()
         {
-           
+
             string decryptionKey = CreateKey(24);
             string validationKey = CreateKey(20);
 
@@ -97,7 +103,29 @@ namespace MB.Controllers
         }
 
 
- 
+        [Route("token")]
+        [HttpGet]
+        public IHttpActionResult GetTestToken()
+        {
+            ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
+
+            identity.AddClaim(new Claim(ClaimTypes.Name, "123"));
+
+            var props = new AuthenticationProperties()
+            {
+                IssuedUtc = DateTime.UtcNow,
+                ExpiresUtc = DateTime.UtcNow.AddDays(14),
+            };
+
+            var ticket = new AuthenticationTicket(identity, props);
+
+            var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
+
+            return Ok(accessToken);
+        }
+
+
+
 
         private string CreateKey(int numBytes)
         {

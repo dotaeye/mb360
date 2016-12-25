@@ -30,6 +30,7 @@ namespace MB.Providers
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
+            var loginType = context.OwinContext.Get<string>("loginType");
             ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
             if (user == null)
             {
@@ -40,7 +41,7 @@ namespace MB.Providers
                OAuthDefaults.AuthenticationType);
             oAuthIdentity.AddClaim(new Claim("userName", user.UserName));
             oAuthIdentity.AddClaim(new Claim("userRoleId", user.UserRoleId.ToString()));
-            
+
             AuthenticationProperties properties = CreateProperties(user);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
@@ -63,6 +64,9 @@ namespace MB.Providers
             {
                 context.Validated();
             }
+            string loginType = context.Parameters.Where(f => f.Key == "type").Select(f => f.Value).SingleOrDefault()[0];
+
+            context.OwinContext.Set("loginType", loginType);
 
             return Task.FromResult<object>(null);
         }

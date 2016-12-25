@@ -228,6 +228,7 @@ namespace MB.Controllers
         public async Task<IHttpActionResult> List(
             int categoryId = 0,
             int manufacturerId = 0,
+            int carId = 0,
             string keywords = null,
             string specs = null,
             int pageIndex = 0,
@@ -279,6 +280,7 @@ namespace MB.Controllers
                 out filterableSpecificationAttributeOptionIds,
                 categoryIds: categoryIds,
                 manufacturerId: manufacturerId,
+                carId: carId,
                 loadFilterableSpecificationAttributeOptionIds: loadFilterableSpecificationAttributeOptionIds,
                 showHidden: true,
                 location: Location,
@@ -289,7 +291,7 @@ namespace MB.Controllers
                 priceMax: maxPrice,
                 filteredSpecs: alreadyFilteredSpecOptionIds,
                 //orderBy: (ProductSortingEnum)command.OrderBy,
-                orderBy: orderBy.HasValue? (ProductSortingEnum)orderBy:ProductSortingEnum.Position,
+                orderBy: orderBy.HasValue ? (ProductSortingEnum)orderBy : ProductSortingEnum.Position,
                 pageIndex: pageIndex,
                 pageSize: pageSize);
             //model.Products = PrepareProductOverviewModels(products).ToList();

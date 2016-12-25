@@ -39,6 +39,13 @@ namespace MB.Helpers
                         name = "password",
                         required = false,
                         @in = "formData"
+                    },
+                    new Parameter
+                    {
+                        type = "string",
+                        name = "type",
+                        required = false,
+                        @in = "formData"
                     }
                 }
                 }

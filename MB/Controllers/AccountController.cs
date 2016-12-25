@@ -25,6 +25,7 @@ using SQ.Core.Data;
 using AutoMapper.QueryableExtensions;
 using MB.Helpers;
 using CCPRestSDK;
+using Newtonsoft.Json.Linq;
 
 namespace MB.Controllers
 {
@@ -408,14 +409,15 @@ namespace MB.Controllers
             try
             {
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-                if (!result.Succeeded) {
+                if (!result.Succeeded)
+                {
                     return Ok(new ApiResult<string>()
                     {
                         Code = 2,
                         Info = "服务器异常！"
                     });
                 }
-              
+
             }
             catch (Exception ex)
             {
@@ -425,10 +427,10 @@ namespace MB.Controllers
                     Info = ex.Message
                 });
             }
-            return Ok(new ApiResult<string>()
+            return Ok(new ApiResult<JObject>()
             {
                 Info = "注册成功",
-                Data = "success"
+                Data = MBHelper.GetToken(user)
             });
         }
 

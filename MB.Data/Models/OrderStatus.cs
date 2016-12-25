@@ -12,12 +12,12 @@ namespace MB.Data.Models
         /// <summary>
         /// 删除的订单
         /// </summary>
-        Deleted = -1,
+        Deleted = -10,
 
         /// <summary>
         /// 买家主动取消
         /// </summary>
-        Cancelled = 1,
+        Cancelled = -1,
 
         /// <summary>
         /// 未支付

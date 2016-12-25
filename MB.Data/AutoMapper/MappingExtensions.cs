@@ -429,5 +429,20 @@ namespace MB.Data.AutoMapper
             return Mapper.Map(dto, entity);
         }
 
+        public static CarMappingDTO ToModel(this CarMapping entity)
+        {
+            return Mapper.Map<CarMapping, CarMappingDTO>(entity);
+        }
+
+        public static CarMapping ToEntity(this CarMappingDTO dto)
+        {
+            return Mapper.Map<CarMappingDTO, CarMapping>(dto);
+        }
+
+        public static CarMapping ToEntity(this CarMappingDTO dto, CarMapping entity)
+        {
+            return Mapper.Map(dto, entity);
+        }
+
     }
 }

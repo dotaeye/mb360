@@ -7,6 +7,9 @@ using System.Text;
 using MB.Data.Models;
 using System.Web;
 using SQ.Core;
+using Newtonsoft.Json.Linq;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.OAuth;
 
 namespace MB.Helpers
 {
@@ -26,6 +29,9 @@ namespace MB.Helpers
         public const string SPECS_FILTER_PATTERN_KEY = "Mb.pres.filter.specs";
 
 
+
+
+
         protected virtual Boolean IsRequestAvailable(HttpContext httpContext)
         {
             if (httpContext == null)
@@ -42,6 +48,36 @@ namespace MB.Helpers
             }
 
             return true;
+        }
+
+        public static JObject GetToken(ApplicationUser user)
+        {
+            var tokenExpiration = TimeSpan.FromDays(14);
+
+            ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
+
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+
+            var props = new AuthenticationProperties()
+            {
+                IssuedUtc = DateTime.UtcNow,
+                ExpiresUtc = DateTime.UtcNow.Add(tokenExpiration),
+            };
+
+            var ticket = new AuthenticationTicket(identity, props);
+
+            var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
+
+            JObject tokenResponse = new JObject(
+                                        new JProperty("userName", user.UserName),
+                                        new JProperty("access_token", accessToken),
+                                        new JProperty("token_type", "bearer"),
+                                        new JProperty("expires_in", tokenExpiration.TotalSeconds.ToString()),
+                                        new JProperty(".issued", ticket.Properties.IssuedUtc.ToString()),
+                                        new JProperty(".expires", ticket.Properties.ExpiresUtc.ToString())
+            );
+
+            return tokenResponse;
         }
 
         public static int GetUserRoleId(IPrincipal User)

@@ -21,7 +21,11 @@ export function getCascader(params) {
     types: [carCateTypes.GET_CARCATE_CASCADER, carCateTypes.GET_CARCATE_CASCADER_SUCCESS, carCateTypes.GET_CARCATE_CASCADER_FAIL],
     promise: (client) => client.get('/carCate/cascader', {
       token: true,
-      params
+      params,
+      save: {
+        key: 'carCateCascader',
+        expired: 60 * 24 * 14
+      }
     })
   };
 }
