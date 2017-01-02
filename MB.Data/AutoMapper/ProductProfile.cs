@@ -19,10 +19,7 @@ namespace MB.Data.AutoMapper
         protected override void CreateMaps()
         {
 
-            CreateMap<Product, ProductDTO>()
-                   .ForMember(dto => dto.ManufacturerId, e => e.Ignore())
-                   .ForMember(dto => dto.IsFeaturedProduct, e => e.Ignore())
-;
+            CreateMap<Product, ProductDTO>();
 
 
             CreateMap<ProductDTO, Product>()
@@ -33,7 +30,7 @@ namespace MB.Data.AutoMapper
                     .ForMember(entity => entity.LastTime, o => o.Ignore())
                     .ForMember(entity => entity.Deleted, o => o.Ignore())
                     .ForMember(entity => entity.Category, o => o.Ignore())
-                    .ForMember(entity => entity.ProductManufacturers, o => o.Ignore())
+                    .ForMember(entity => entity.Manufacturer, o => o.Ignore())
                     .ForMember(entity => entity.ProductCarCate, o => o.Ignore())
                     .ForMember(entity => entity.ProductStorageQuantity, o => o.Ignore())
                     .ForMember(entity => entity.ProductSpecificationAttributes, o => o.Ignore())

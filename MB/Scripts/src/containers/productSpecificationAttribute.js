@@ -253,7 +253,7 @@ var ProductSpecificationAttribute = React.createClass({
           <ul className="nav nav-tabs">
             <li><Link to={`product/update/${product.id}`}>基本信息</Link></li>
             <li><Link to={`productstoragequantity/${product.id}`}>管理库存</Link></li>
-            <li><Link to={`productcarcate/${entity.id}`}>车型匹配</Link></li>
+            <li><Link to={`productcarcate/${product.id}`}>车型匹配</Link></li>
             <li><Link to={`productattributemapping/${product.id}`}>产品属性</Link></li>
             <li className="active"><a>产品规格</a></li>
           </ul>

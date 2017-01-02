@@ -43,10 +43,6 @@ namespace MB.Controllers
             this.ShoppingCartItemService = _ShoppingCartItemService;
         }
 
-
-
-
-
         private bool QueryOrder(string transaction_id)
         {
             WxPayData req = new WxPayData();
@@ -328,12 +324,47 @@ namespace MB.Controllers
             var result = new ApiResult<OrderDTO>();
             try
             {
-                var userId = User.Identity.GetUserId();
-                OrderDTO order = await OrderService.GetAll()
-                    .Where(x => x.Id == id && !x.Deleted && x.CustomerId == userId)
-                    .ProjectTo<OrderDTO>()
+                Order order = await OrderService.GetAll()
+                    .Include(x => x.ShoppingCartItems)
+                    .Include(x => x.Address)
+                    .Where(x => x.Id == id && !x.Deleted)
                     .FirstOrDefaultAsync();
 
+                var model = new OrderDTO()
+                {
+                    AddressId = order.AddressId,
+                    AddressDTO = new AddressDTO()
+                    {
+                        CityCodeList = order.Address.CityCodeList,
+                        Detail = order.Address.Detail,
+                        PhoneNumber = order.Address.PhoneNumber,
+                        County = order.Address.County,
+                        Province = order.Address.Province,
+                        Area = order.Address.Area,
+                        Name = order.Address.Name
+                    },
+                    CreateTime = order.CreateTime,
+                    OutTradeNo = order.OutTradeNo,
+                    OrderTotal = order.OrderTotal,
+                    Id = order.Id,
+                    PaidDate = order.PaidDate,
+                    OrderStatusId = order.OrderStatusId,
+                    WeChatSign = order.WeChatSign,
+                    TimeSpan = order.TimeSpan,
+                    NonceStr = order.NonceStr,
+                    PrePayId = order.PrePayId,
+                    ShopCartItems = order.ShoppingCartItems.Select(s => new ShoppingCartItemDTO()
+                    {
+                        AttributesXml = s.AttributesXml,
+                        ImageUrl = s.ImageUrl,
+                        Name = s.Name,
+                        UnitPrice = s.UnitPrice,
+                        Quantity = s.Quantity,
+                        Id = s.Id,
+                        Price = s.Price
+
+                    }).ToList()
+                };
                 if (order == null)
                 {
                     return Ok(new ApiResult<string>()
@@ -342,7 +373,7 @@ namespace MB.Controllers
                         Info = "不存在当前订单！"
                     });
                 }
-                result.Data = order;
+                result.Data = model;
             }
             catch (Exception ex)
             {
@@ -450,16 +481,14 @@ namespace MB.Controllers
 
         [Route("")]
         [HttpPut]
-        public async Task<IHttpActionResult> Update([FromBody]OrderDTO OrderDto)
+        public async Task<IHttpActionResult> Update([FromBody]OrderStatusModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var entity = await OrderService.FindOneAsync(OrderDto.Id);
-            entity = OrderDto.ToEntity(entity);
-
+            var entity = await OrderService.FindOneAsync(model.Id);
+            entity.OrderStatusId = model.OrderStatusId;
             await OrderService.UpdateAsync(entity);
             return Ok(entity.ToModel());
         }

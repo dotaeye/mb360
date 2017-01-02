@@ -35,7 +35,6 @@ namespace MB.Controllers
 
 
         private IProductService ProductService;
-        private IProductManufacturerService ProductManufacturerService;
         private ICacheManager CacheManager;
         private IProductAttributeService ProductAttributeService;
         private IProductAttributeMappingService ProductAttributeMappingService;
@@ -47,7 +46,6 @@ namespace MB.Controllers
         private IStorageService StorageService;
         public ProductController(
             IProductService _ProductService,
-            IProductManufacturerService _ProductManufacturerService,
             ICacheManager _CacheManager,
             IProductAttributeService _ProductAttributeService,
             IProductAttributeMappingService _ProductAttributeMappingService,
@@ -60,7 +58,6 @@ namespace MB.Controllers
           )
         {
             this.ProductService = _ProductService;
-            this.ProductManufacturerService = _ProductManufacturerService;
             this.CacheManager = _CacheManager;
             this.ProductAttributeService = _ProductAttributeService;
             this.ProductAttributeMappingService = _ProductAttributeMappingService;
@@ -86,13 +83,26 @@ namespace MB.Controllers
             {
                 query = query.Where(x => option.CategoryId == x.CategoryId);
             }
-            if (option.ManufacturerId > 0)
+            if (option.IsAgreeActive)
             {
-                query = from p in query
-                        from pm in p.ProductManufacturers.Where(pm => pm.ManufacturerId == option.ManufacturerId)
-                        select p;
+                query = query.Where(x => option.IsAgreeActive == x.isAgreeActive);
             }
-
+            if (option.IsFeaturedProduct)
+            {
+                query = query.Where(x => option.IsFeaturedProduct == x.IsFeaturedProduct);
+            }
+            if (option.IsMatchAllCar)
+            {
+                query = query.Where(x => option.IsMatchAllCar == x.IsMatchAllCar);
+            }
+            if (option.Published)
+            {
+                query = query.Where(x => option.Published == x.Published);
+            }
+            if (option.IsVipAlbum)
+            {
+                query = query.Where(x => option.IsVipAlbum == x.IsVipAlbum);
+            }
             var queryDto = query.ProjectTo<ProductDTO>();
 
             if (!string.IsNullOrEmpty(option.SortField))
@@ -136,15 +146,6 @@ namespace MB.Controllers
             {
                 return NotFound();
             }
-            ProductManufacturerDTO pm = await ProductManufacturerService.GetAll()
-                .Where(x => x.ProductId == Product.Id)
-                .ProjectTo<ProductManufacturerDTO>()
-                .FirstOrDefaultAsync();
-            if (pm != null)
-            {
-                Product.ManufacturerId = pm.ManufacturerId;
-                Product.IsFeaturedProduct = pm.IsFeaturedProduct;
-            }
 
             return Ok(Product);
         }
@@ -166,14 +167,6 @@ namespace MB.Controllers
             entity.CreateTime = DateTime.Now;
             await ProductService.InsertAsync(entity);
 
-            var pm = new ProductManufacturerDTO()
-            {
-                IsFeaturedProduct = ProductDto.IsFeaturedProduct,
-                ManufacturerId = ProductDto.ManufacturerId,
-                ProductId = entity.Id
-            };
-            await ProductManufacturerService.InsertAsync(pm.ToEntity());
-
             return Ok(entity.ToModel());
         }
 
@@ -194,26 +187,6 @@ namespace MB.Controllers
             entity.LastTime = DateTime.Now;
             await ProductService.UpdateAsync(entity);
 
-            var pmEntity = await ProductManufacturerService.GetAll()
-                .Where(x => x.ProductId == ProductDto.Id)
-                .FirstOrDefaultAsync();
-            var isEmpty = false;
-            if (pmEntity == null)
-            {
-                isEmpty = true;
-                pmEntity = new ProductManufacturer();
-            }
-            pmEntity.ManufacturerId = ProductDto.ManufacturerId;
-            pmEntity.IsFeaturedProduct = ProductDto.IsFeaturedProduct;
-            pmEntity.ProductId = entity.Id;
-            if (isEmpty)
-            {
-                await ProductManufacturerService.InsertAsync(pmEntity);
-            }
-            else
-            {
-                await ProductManufacturerService.UpdateAsync(pmEntity);
-            }
             return Ok(entity.ToModel());
         }
 
@@ -360,6 +333,69 @@ namespace MB.Controllers
         }
 
 
+        [Route("updateStatus")]
+        [HttpPut]
+        public async Task<IHttpActionResult> UpdateStatus([FromBody]ProductStatusModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var list = ProductService.GetAll().Where(x => model.Ids.Contains(x.Id)).ToList();
+
+            foreach (var product in list)
+            {
+
+                switch (model.ProductStatusType)
+                {
+
+                    case ProductStatusType.IsAgreeActive:
+                        product.isAgreeActive = true;
+                        break;
+
+                    case ProductStatusType.DeAgreeActive:
+                        product.isAgreeActive = false;
+                        break;
+
+                    case ProductStatusType.IsVipAlbum:
+                        product.IsVipAlbum = true;
+                        break;
+
+                    case ProductStatusType.DeVipAlbum:
+                        product.IsVipAlbum = false;
+                        break;
+
+                    case ProductStatusType.IsFeaturedProduct:
+                        product.IsFeaturedProduct = true;
+                        break;
+
+                    case ProductStatusType.DeFeaturedProduct:
+                        product.IsFeaturedProduct = false;
+                        break;
+
+                    case ProductStatusType.IsMatchAllCar:
+                        product.IsMatchAllCar = true;
+                        break;
+
+                    case ProductStatusType.DeMatchAllCar:
+                        product.IsMatchAllCar = false;
+                        break;
+
+                    case ProductStatusType.IsPublished:
+                        product.Published = true;
+                        break;
+                    case ProductStatusType.DePublished:
+                        product.Published = false;
+                        break;
+                    default:
+                        break;
+                }
+
+                await ProductService.UpdateAsync(list);
+            }
+
+            return Ok();
+        }
 
     }
 }

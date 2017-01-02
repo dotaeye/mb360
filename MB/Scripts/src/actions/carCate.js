@@ -9,7 +9,7 @@ import * as carCateTypes from '../contants/carCate';
 export function getAll(params) {
   return {
     types: [carCateTypes.GET_ALL_CARCATE, carCateTypes.GET_ALL_CARCATE_SUCCESS, carCateTypes.GET_ALL_CARCATE_FAIL],
-    promise: (client) => client.get('/carCate',{
+    promise: (client) => client.get('/carCate', {
       token: true,
       params
     })
@@ -33,7 +33,7 @@ export function getCascader(params) {
 export function getById(id) {
   return {
     types: [carCateTypes.GET_ONE_CARCATE, carCateTypes.GET_ONE_CARCATE_SUCCESS, carCateTypes.GET_ONE_CARCATE_FAIL],
-    promise: (client) => client.get('/carCate/'+id,{
+    promise: (client) => client.get('/carCate/' + id, {
       token: true
     })
   };
@@ -62,10 +62,20 @@ export function update(data) {
 export function remove(id) {
   return {
     types: [carCateTypes.DELETE_CARCATE, carCateTypes.DELETE_CARCATE_SUCCESS, carCateTypes.DELETE_CARCATE_FAIL],
-    promise: (client) => client.del('/carCate/'+id, {
+    promise: (client) => client.del('/carCate/' + id, {
       token: true
     })
   };
 }
 
 
+export function getTwo(params) {
+  return {
+    types: [carCateTypes.GET_TWO_CARCATE, carCateTypes.GET_TWO_CARCATE_SUCCESS, carCateTypes.GET_TWO_CARCATE_FAIL],
+    promise: (client) => client.get('/carCate/two', {
+      token: true,
+      params
+    }),
+    payload: params
+  };
+}

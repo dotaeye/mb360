@@ -86,8 +86,7 @@ namespace MB.Ioc
             builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerRequest();
             builder.RegisterType<ProductAttributeMappingService>().As<IProductAttributeMappingService>().InstancePerRequest();
             builder.RegisterType<ProductAttributeValueService>().As<IProductAttributeValueService>().InstancePerRequest();
-            builder.RegisterType<ProductManufacturerService>().As<IProductManufacturerService>().InstancePerRequest();
-
+         
 
             builder.RegisterType<ProductAttributeCategoryMappingService>().As<IProductAttributeCategoryMappingService>().InstancePerRequest();
    

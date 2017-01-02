@@ -198,17 +198,6 @@ var ProductCreateOrUpdate = React.createClass({
 
             <FormItem
               {...formItemLayout}
-              label="热销产品"
-              >{getFieldDecorator('isFeaturedProduct', {
-              initialValue: record.isFeaturedProduct,
-              valuePropName: 'checked'
-            })(
-              <Checkbox />
-            )}
-            </FormItem>
-
-            <FormItem
-              {...formItemLayout}
               label="SKU"
               >
               {getFieldDecorator('sku', {
@@ -255,7 +244,7 @@ var ProductCreateOrUpdate = React.createClass({
                   rules: [{required: true, type: 'number', message: '请输入紧急调配价格'}]
                 }
               )(
-                <InputNumber step={0.01}   type="text"/>
+                <InputNumber step={0.01} type="text"/>
               )}
             </FormItem>
 
@@ -268,7 +257,7 @@ var ProductCreateOrUpdate = React.createClass({
                   rules: [{required: true, message: '请输入产品描述'}]
                 }
               )(
-                <Input  type="textarea"/>
+                <Input type="textarea"/>
               )}
             </FormItem>
             {!loading && (
@@ -281,7 +270,7 @@ var ProductCreateOrUpdate = React.createClass({
                     rules: [{required: true, message: '请上传产品图片'}]
                   }
                 )(
-                  <UploadFile   multiple={true}/>
+                  <UploadFile multiple={true}/>
                 )}
               </FormItem>
             )}
@@ -296,14 +285,25 @@ var ProductCreateOrUpdate = React.createClass({
                     rules: [{required: true, message: '请上传详情图片'}]
                   }
                 )(
-                  <UploadFile   multiple={true}/>
+                  <UploadFile multiple={true}/>
                 )}
               </FormItem>
             )}
+
             <FormItem
               {...formItemLayout}
-              label="参与团购活动"
-              help="如果同意将产品加入到团购活动中"
+              label="热销产品"
+              >{getFieldDecorator('isFeaturedProduct', {
+              initialValue: record.isFeaturedProduct,
+              valuePropName: 'checked'
+            })(
+              <Checkbox />
+            )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="盟友尊享"
               >
               {getFieldDecorator('isAgreeActive', {
                 initialValue: record.isAgreeActive,
@@ -312,6 +312,31 @@ var ProductCreateOrUpdate = React.createClass({
                 <Checkbox/>
               )}
             </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="尊享专辑"
+              >
+              {getFieldDecorator('isVipAlbum', {
+                initialValue: record.isVipAlbum,
+                valuePropName: 'checked'
+              })(
+                <Checkbox/>
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="匹配全部车型"
+              >
+              {getFieldDecorator('isMatchAllCar', {
+                initialValue: record.isMatchAllCar,
+                valuePropName: 'checked'
+              })(
+                <Checkbox/>
+              )}
+            </FormItem>
+
           </Form>
         </Spin>
       </div>

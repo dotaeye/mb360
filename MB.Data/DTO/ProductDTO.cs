@@ -18,6 +18,10 @@ namespace MB.Data.DTO
         public Boolean isAgreeActive { get; set; }
         public int ManufacturerId { get; set; }
         public bool IsFeaturedProduct { get; set; }
+        public bool IsVipAlbum { get; set; }
+        public bool Published { get; set; }
+        public bool IsMatchAllCar { get; set; }
+
         public int Status { get; set; }
         public Decimal Price { get; set; }
         public Decimal VipPrice { get; set; }

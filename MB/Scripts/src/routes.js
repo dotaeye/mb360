@@ -19,6 +19,8 @@ import {
   Job,
   Banner,
   Order,
+  OrderDetail,
+  OrderPrint,
   Storage,
   Member,
   MemberCreateOrUpdate,
@@ -41,9 +43,6 @@ export default (store) => {
       const { auth: { token, permission }} = store.getState();
       let hasPermission = permission.find(x=>x.controller == controller && x.action == action);
       if (!token || !hasPermission) {
-        store.dispatch(cleanAuthToken());
-        baseStorage.getStorage(configs.storage).remove(configs.authToken);
-        // oops, not logged in, so can't be here!
         replace('/login');
       }
       cb();
@@ -195,6 +194,16 @@ export default (store) => {
       <Route
         path='order'
         component={Order}
+        onEnter={requireLogin.bind(null,'order','index')}/>
+
+      <Route
+        path='order/:id'
+        component={OrderDetail}
+        onEnter={requireLogin.bind(null,'order','index')}/>
+
+      <Route
+        path='print/:id'
+        component={OrderPrint}
         onEnter={requireLogin.bind(null,'order','index')}/>
 
       <Route path='login' component={Login}/>

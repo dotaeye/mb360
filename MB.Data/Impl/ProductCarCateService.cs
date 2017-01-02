@@ -10,6 +10,7 @@ using SQ.Core.Data;
 using MB.Data.Service;
 using MB.Data.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MB.Data.Impl
 {
@@ -29,6 +30,7 @@ namespace MB.Data.Impl
             this._ProductCarCateRepository = ProductCarCateRepository;
 
         }
+
         #endregion
 
         public async Task<int> DeleteAsync(ProductCarCate entity)
@@ -38,6 +40,7 @@ namespace MB.Data.Impl
 
             return await _ProductCarCateRepository.DeleteAsync(entity);
         }
+
 
         public async Task<ProductCarCate> FindOneAsync(int Id)
         {
@@ -68,6 +71,22 @@ namespace MB.Data.Impl
             return await _ProductCarCateRepository.InsertAsync(entity);
         }
 
+        public async Task<int> InsertAsync(IEnumerable<ProductCarCate> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException("ProductCarCate");
+
+            return await _ProductCarCateRepository.InsertAsync(entities);
+        }
+
+        public async Task<int> UpdateAsync(IEnumerable<ProductCarCate> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException("ProductCarCate");
+
+            return await _ProductCarCateRepository.UpdateAsync(entities);
+        }
+
         public async Task<int> UpdateAsync(ProductCarCate entity)
         {
             if (entity == null)
@@ -75,5 +94,14 @@ namespace MB.Data.Impl
 
             return await _ProductCarCateRepository.UpdateAsync(entity);
         }
+
+        public async Task<int> DeleteAsync(IEnumerable<ProductCarCate> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException("ProductCarCate");
+
+            return await _ProductCarCateRepository.DeleteAsync(entities);
+        }
+
     }
 }

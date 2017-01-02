@@ -168,21 +168,6 @@ namespace MB.Data.AutoMapper
             return Mapper.Map(dto, entity);
         }
 
-        public static ProductManufacturerDTO ToModel(this ProductManufacturer entity)
-        {
-            return Mapper.Map<ProductManufacturer, ProductManufacturerDTO>(entity);
-        }
-
-        public static ProductManufacturer ToEntity(this ProductManufacturerDTO dto)
-        {
-            return Mapper.Map<ProductManufacturerDTO, ProductManufacturer>(dto);
-        }
-
-        public static ProductManufacturer ToEntity(this ProductManufacturerDTO dto, ProductManufacturer entity)
-        {
-            return Mapper.Map(dto, entity);
-        }
-
 
         public static ProductCarCateDTO ToModel(this ProductCarCate entity)
         {

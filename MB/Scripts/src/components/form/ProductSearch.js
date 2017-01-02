@@ -13,7 +13,7 @@ var ProductSearch = React.createClass({
   displayName: 'ProductSearch',
 
   onSubmit(e){
-  	e.preventDefault();
+    e.preventDefault();
     this.props.form.validateFields((err, formdata) => {
       if (err) {
         return;
@@ -33,11 +33,11 @@ var ProductSearch = React.createClass({
     return (
       <Form horizontal onSubmit={this.onSubmit} style={{maxWidth:'none'}}>
         <Row gutter={10}>
-          <Col span={8}>
+          <Col span={8} style={{textAlign:'left'}}>
             <FormItem
               {...formItemLayout}
-              label="产品名称"
-            >
+              label="名称"
+              >
               {getFieldDecorator('name', {
                   initialValue: ''
                 }
@@ -46,24 +46,24 @@ var ProductSearch = React.createClass({
               )}
             </FormItem>
           </Col>
-          <Col span={8}>
+          <Col span={8} style={{textAlign:'left'}}>
             <FormItem
               {...formItemLayout}
-              label="产品类别"
-            >
+              label="类别"
+              >
               {getFieldDecorator('categoryId', {
                   initialValue: []
                 }
               )(
-                <Cascader placeholder='产品类别' options={categoryCascader} />
+                <Cascader placeholder='产品类别' options={categoryCascader}/>
               )}
             </FormItem>
           </Col>
-          <Col span={8}>
+          <Col span={8} style={{textAlign:'left'}}>
             <FormItem
               {...formItemLayout}
-              label="所属品牌"
-            >
+              label="品牌"
+              >
               {getFieldDecorator('manufacturerId', {
                 initialValue: '',
               })(
@@ -78,17 +78,38 @@ var ProductSearch = React.createClass({
               )}
             </FormItem>
           </Col>
-        </Row>
-        <Row>
-          <Col span={24} style={{ textAlign: 'right' }}>
-            <Button type="primary" icon="search" htmlType="submit" style={{marginRight:'10px'}}>搜索</Button>
 
-            <Link to='product/create'>
-              <Button type="primary" icon="plus" >添加产品</Button>
-            </Link>
-
-          </Col>
         </Row>
+        <div style={{marginBottom:'24px'}}>
+
+          {getFieldDecorator('isFeaturedProduct', {
+            initialValue: '',
+          })(
+            <Checkbox>热销产品</Checkbox>
+          )}
+          {getFieldDecorator('isAgreeActive', {
+            initialValue: '',
+          })(
+            <Checkbox>盟友专享</Checkbox>
+          )}
+          {getFieldDecorator('isVipAlbum', {
+            initialValue: '',
+          })(
+            <Checkbox>尊享专辑</Checkbox>
+          )}
+          {getFieldDecorator('isMatchAllCar', {
+            initialValue: '',
+          })(
+            <Checkbox>全匹配</Checkbox>
+          )}
+          {getFieldDecorator('published', {
+            initialValue: '',
+          })(
+            <Checkbox>已上架</Checkbox>
+          )}
+
+          <Button type="primary" size="large" icon="search" htmlType="submit" style={{float:'right'}}>搜索</Button>
+        </div>
       </Form>
     )
   }

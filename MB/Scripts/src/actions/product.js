@@ -9,7 +9,7 @@ import * as productTypes from '../contants/product';
 export function getAll(params) {
   return {
     types: [productTypes.GET_ALL_PRODUCT, productTypes.GET_ALL_PRODUCT_SUCCESS, productTypes.GET_ALL_PRODUCT_FAIL],
-    promise: (client) => client.get('/product',{
+    promise: (client) => client.get('/product', {
       token: true,
       params
     })
@@ -19,7 +19,7 @@ export function getAll(params) {
 export function getById(id) {
   return {
     types: [productTypes.GET_ONE_PRODUCT, productTypes.GET_ONE_PRODUCT_SUCCESS, productTypes.GET_ONE_PRODUCT_FAIL],
-    promise: (client) => client.get('/product/'+id,{
+    promise: (client) => client.get('/product/' + id, {
       token: true
     })
   };
@@ -30,7 +30,7 @@ export function create(data) {
     types: [productTypes.CREATE_PRODUCT, productTypes.CREATE_PRODUCT_SUCCESS, productTypes.CREATE_PRODUCT_FAIL],
     promise: (client) => client.post('/product', {
       data: data,
-	    token: true
+      token: true
     })
   };
 }
@@ -40,16 +40,27 @@ export function update(data) {
     types: [productTypes.UPDATE_PRODUCT, productTypes.UPDATE_PRODUCT_SUCCESS, productTypes.UPDATE_PRODUCT_FAIL],
     promise: (client) => client.put('/product', {
       data: data,
-	    token: true
+      token: true
     })
+  };
+}
+
+export function updateStatus(data) {
+  return {
+    types: [productTypes.UPDATE_PRODUCT_STATUS, productTypes.UPDATE_PRODUCT_STATUS_SUCCESS, productTypes.UPDATE_PRODUCT_STATUS_FAIL],
+    promise: (client) => client.put('/product/updateStatus', {
+      data: data,
+      token: true
+    }),
+    payload: data
   };
 }
 
 export function remove(id) {
   return {
     types: [productTypes.DELETE_PRODUCT, productTypes.DELETE_PRODUCT_SUCCESS, productTypes.DELETE_PRODUCT_FAIL],
-    promise: (client) => client.del('/product/'+id, {
-		token: true
+    promise: (client) => client.del('/product/' + id, {
+      token: true
     })
   };
 }

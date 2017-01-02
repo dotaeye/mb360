@@ -65,7 +65,7 @@ var OrderSearch = React.createClass({
             </FormItem>
           </Col>
           <Col span={8}>
-            <Button type="primary" icon="search" htmlType="submit" style={{marginRight:'10px'}}>搜索</Button>
+            <Button type="primary" icon="search" size="large" htmlType="submit" style={{marginRight:'10px'}}>搜索</Button>
           </Col>
         </Row>
       </Form>

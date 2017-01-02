@@ -22,6 +22,8 @@ namespace MB.Data.Service
 
         Task<int> UpdateAsync(Product entity);
 
+        Task<int> UpdateAsync(IEnumerable<Product> entities);
+
         IQueryable<Product> GetAll();
 
         Task<Product> FindOneAsync(int Id);
@@ -50,7 +52,7 @@ namespace MB.Data.Service
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
-            int manufacturerId = 0,
+            IList<int> manufacturerIds = null,
             int carId=0,
             int RoleId = 0,
             bool isAgreeActive = false,

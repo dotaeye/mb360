@@ -9,7 +9,6 @@ namespace MB.Data.Models
     public class Product : BaseEntity
     {
 
-        private ICollection<ProductManufacturer> _productManufacturers;
 
         private ICollection<ProductCarCate> _productCarCate;
 
@@ -26,9 +25,15 @@ namespace MB.Data.Models
 
         public int CategoryId { get; set; }
 
+        public int ManufacturerId { get; set; }
+
         public string SKU { get; set; }
 
         public bool isAgreeActive { get; set; }
+
+        public bool IsFeaturedProduct { get; set; }
+
+        public bool IsVipAlbum { get; set; }
 
         public int Status { get; set; }
 
@@ -50,6 +55,10 @@ namespace MB.Data.Models
 
         public double? Distance { get; set; }
 
+        public bool Published { get; set; }
+
+        public bool IsMatchAllCar { get; set; }
+
         [DTO(false, true)]
         public string CreateUserId { get; set; }
 
@@ -67,16 +76,8 @@ namespace MB.Data.Models
 
         public virtual Category Category { get; set; }
 
-
-        /// <summary>
-        /// Gets or sets the collection of ProductManufacturer
-        /// </summary>
-        public virtual ICollection<ProductManufacturer> ProductManufacturers
-        {
-            get { return _productManufacturers ?? (_productManufacturers = new List<ProductManufacturer>()); }
-            protected set { _productManufacturers = value; }
-        }
-
+        public virtual Manufacturer Manufacturer { get; set; }
+  
         public virtual ICollection<ProductCarCate> ProductCarCate
         {
             get { return _productCarCate ?? (_productCarCate = new List<ProductCarCate>()); }

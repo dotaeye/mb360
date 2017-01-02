@@ -9,18 +9,14 @@ export default function order(state = initialState, action = {}) {
   switch (action.type) {
     case orderTypes.GET_ALL_ORDER:
     case orderTypes.GET_ONE_ORDER:
-    case orderTypes.CREATE_ORDER:
-    case orderTypes.UPDATE_ORDER:
-    case orderTypes.DELETE_ORDER:
+    case orderTypes.UPDATE_ORDER_STATUS:
       return {
         ...state,
         loading: true
       };
     case orderTypes.GET_ALL_ORDER_FAIL:
     case orderTypes.GET_ONE_ORDER_FAIL:
-    case orderTypes.CREATE_ORDER_FAIL:
-    case orderTypes.UPDATE_ORDER_FAIL:
-    case orderTypes.DELETE_ORDER_FAIL:
+    case orderTypes.UPDATE_ORDER_STATUS_FAIL:
       return {
         ...state,
         loading: false,
@@ -39,26 +35,20 @@ export default function order(state = initialState, action = {}) {
         loading: false,
         entity: action.result
       };
-    case orderTypes.CREATE_ORDER_SUCCESS:
+    case orderTypes.UPDATE_ORDER_STATUS_SUCCESS:
       return {
         ...state,
         loading: false,
-        entity: action.result
-      };
-    case orderTypes.UPDATE_ORDER_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        entity: action.result
-      };
-    case orderTypes.DELETE_ORDER_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        entity: action.result
+        list: updateListStatus(state, action)
       };
     default:
       return state;
   }
 }
 
+
+function updateListStatus(state, action) {
+  const {id, orderStatusId }= action.payload;
+  state.list.data.find(x=>x.id == id).orderStatusId = orderStatusId;
+  return state.list;
+}

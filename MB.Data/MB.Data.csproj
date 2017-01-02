@@ -106,7 +106,6 @@
     <Compile Include="AutoMapper\ProductAttributeProfile.cs" />
     <Compile Include="AutoMapper\ProductAttributeValueProfile.cs" />
     <Compile Include="AutoMapper\ProductCarCateProfile.cs" />
-    <Compile Include="AutoMapper\ProductManufacturerProfile.cs" />
     <Compile Include="AutoMapper\ProductProfile.cs" />
     <Compile Include="AutoMapper\ProductSpecificationAttributeProfile.cs" />
     <Compile Include="AutoMapper\ProductStorageQuantityProfile.cs" />
@@ -135,7 +134,6 @@
     <Compile Include="DTO\ProductAttributeValueDTO.cs" />
     <Compile Include="DTO\ProductCarCateDTO.cs" />
     <Compile Include="DTO\ProductDTO.cs" />
-    <Compile Include="DTO\ProductManufacturerDTO.cs" />
     <Compile Include="DTO\ProductSpecificationAttributeDTO.cs" />
     <Compile Include="DTO\ProductStorageQuantityDTO.cs" />
     <Compile Include="DTO\ShoppingCartItemDTO.cs" />
@@ -162,7 +160,6 @@
     <Compile Include="Impl\ProductAttributeService.cs" />
     <Compile Include="Impl\ProductAttributeValueService.cs" />
     <Compile Include="Impl\ProductCarCateService.cs" />
-    <Compile Include="Impl\ProductManufacturerService.cs" />
     <Compile Include="Impl\ProductService.cs" />
     <Compile Include="Impl\ProductSpecificationAttributeService.cs" />
     <Compile Include="Impl\ProductStorageQuantityService.cs" />
@@ -193,7 +190,6 @@
     <Compile Include="Mapping\ProductAttributeMappingMap.cs" />
     <Compile Include="Mapping\ProductAttributeValueMap.cs" />
     <Compile Include="Mapping\ProductCarCateMap.cs" />
-    <Compile Include="Mapping\ProductManufacturerMap.cs" />
     <Compile Include="Mapping\ProductMap.cs" />
     <Compile Include="Mapping\ProductSpecificationAttributeMap.cs" />
     <Compile Include="Mapping\ProductStorageQuantityMap.cs" />
@@ -369,6 +365,26 @@
     <Compile Include="Migrations\201612250315301_AddRefUser.Designer.cs">
       <DependentUpon>201612250315301_AddRefUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701020501383_RefactorManufactureOneToOne.cs" />
+    <Compile Include="Migrations\201701020501383_RefactorManufactureOneToOne.Designer.cs">
+      <DependentUpon>201701020501383_RefactorManufactureOneToOne.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701020502246_RefactorManufactureOneToOne2.cs" />
+    <Compile Include="Migrations\201701020502246_RefactorManufactureOneToOne2.Designer.cs">
+      <DependentUpon>201701020502246_RefactorManufactureOneToOne2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701020508003_AddProductIsFeature.cs" />
+    <Compile Include="Migrations\201701020508003_AddProductIsFeature.Designer.cs">
+      <DependentUpon>201701020508003_AddProductIsFeature.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701020516354_AddProductIsVipAlbum.cs" />
+    <Compile Include="Migrations\201701020516354_AddProductIsVipAlbum.Designer.cs">
+      <DependentUpon>201701020516354_AddProductIsVipAlbum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701020528159_AddProductPublished.cs" />
+    <Compile Include="Migrations\201701020528159_AddProductPublished.Designer.cs">
+      <DependentUpon>201701020528159_AddProductPublished.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -392,7 +408,6 @@
     <Compile Include="Models\ProductAttributeMapping.cs" />
     <Compile Include="Models\ProductAttributeValue.cs" />
     <Compile Include="Models\ProductCarCate.cs" />
-    <Compile Include="Models\ProductManufacturer.cs" />
     <Compile Include="Models\ProductSortingEnum.cs" />
     <Compile Include="Models\ProductSpecificationAttribute.cs" />
     <Compile Include="Models\ProductStatus.cs" />
@@ -427,7 +442,6 @@
     <Compile Include="Service\IProductAttributeService.cs" />
     <Compile Include="Service\IProductAttributeValueService.cs" />
     <Compile Include="Service\IProductCarCateService.cs" />
-    <Compile Include="Service\IProductManufacturerService.cs" />
     <Compile Include="Service\IProductService.cs" />
     <Compile Include="Service\IProductSpecificationAttributeService.cs" />
     <Compile Include="Service\IProductStorageQuantityService.cs" />
@@ -456,7 +470,6 @@
     <Compile Include="Validator\ProductAttributeMappingValidator.cs" />
     <Compile Include="Validator\ProductAttributeValidator.cs" />
     <Compile Include="Validator\ProductAttributeValueValidator.cs" />
-    <Compile Include="Validator\ProductManufacturerValidator.cs" />
     <Compile Include="Validator\ProductSpecificationAttributeValidator.cs" />
     <Compile Include="Validator\ProductStorageQuantityValidator.cs" />
     <Compile Include="Validator\ProductValidator.cs" />
@@ -602,6 +615,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612250315301_AddRefUser.resx">
       <DependentUpon>201612250315301_AddRefUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701020501383_RefactorManufactureOneToOne.resx">
+      <DependentUpon>201701020501383_RefactorManufactureOneToOne.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701020502246_RefactorManufactureOneToOne2.resx">
+      <DependentUpon>201701020502246_RefactorManufactureOneToOne2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701020508003_AddProductIsFeature.resx">
+      <DependentUpon>201701020508003_AddProductIsFeature.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701020516354_AddProductIsVipAlbum.resx">
+      <DependentUpon>201701020516354_AddProductIsVipAlbum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701020528159_AddProductPublished.resx">
+      <DependentUpon>201701020528159_AddProductPublished.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -113,7 +113,7 @@ namespace MB.Data.Impl
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
-            int manufacturerId = 0,
+            IList<int> manufacturerIds = null,
             int carId = 0,
             int RoleId = 0,
             bool isAgreeActive = false,
@@ -200,15 +200,12 @@ namespace MB.Data.Impl
             {
                 query = query.Where(p => p.isAgreeActive);
             }
-            //manufacturer filtering
-            if (manufacturerId > 0)
-            {
-                query = from p in query
-                        from pm in p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId)
-                        where (!featuredProducts.HasValue || featuredProducts.Value == pm.IsFeaturedProduct)
-                        select p;
-            }
 
+            if (manufacturerIds != null && manufacturerIds.Any())
+            {
+                query = query.Where(p => manufacturerIds.Contains(p.ManufacturerId));
+            }
+       
             if (carId > 0)
             {
                 query = from p in query
@@ -303,11 +300,11 @@ namespace MB.Data.Impl
                     var firstCategoryId = categoryIds[0];
                     query = query.OrderBy(p => p.Category.DisplayOrder);
                 }
-                else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
+                else if (orderBy == ProductSortingEnum.Position && manufacturerIds != null && manufacturerIds.Any())
                 {
                     //manufacturer position
-                    query =
-                        query.OrderBy(p => p.ProductManufacturers.FirstOrDefault(pm => pm.ManufacturerId == manufacturerId).DisplayOrder);
+                    var firstCategoryId = manufacturerIds[0];
+                    query = query.OrderBy(p => p.Manufacturer.DisplayOrder);
                 }
                 else if (orderBy == ProductSortingEnum.Position)
                 {
@@ -357,6 +354,15 @@ namespace MB.Data.Impl
 
             #endregion
 
+        }
+
+
+        public async Task<int> UpdateAsync(IEnumerable<Product> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException("Product");
+
+            return await _ProductRepository.UpdateAsync(entities);
         }
     }
 }

@@ -242,6 +242,9 @@ namespace MB.Controllers
             var result = new ApiResult<CategoryModel>();
             var model = new CategoryModel();
             var categoryIds = new List<int>();
+            var manufacturerIds = new List<int>();
+
+            manufacturerIds.Add(manufacturerId);
             DbGeography Location = null;
 
             if (!string.IsNullOrEmpty(location))
@@ -279,7 +282,7 @@ namespace MB.Controllers
             var products = ProductService.SearchProducts(
                 out filterableSpecificationAttributeOptionIds,
                 categoryIds: categoryIds,
-                manufacturerId: manufacturerId,
+                manufacturerIds: manufacturerIds,
                 carId: carId,
                 loadFilterableSpecificationAttributeOptionIds: loadFilterableSpecificationAttributeOptionIds,
                 showHidden: true,

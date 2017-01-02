@@ -21,6 +21,7 @@ using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
+using MB.Models;
 
 namespace MB.Controllers
 {
@@ -28,112 +29,71 @@ namespace MB.Controllers
     public class ProductCarCateController : ApiController
     {
         private IProductCarCateService ProductCarCateService;
+        private ICarCateService CarCateService;
         public ProductCarCateController(
-            IProductCarCateService _ProductCarCateService
+            IProductCarCateService _ProductCarCateService,
+            ICarCateService _CarCateService
           )
         {
             this.ProductCarCateService = _ProductCarCateService;
+            this.CarCateService = _CarCateService;
         }
 
         [Route("")]
-        public ApiListResult<ProductCarCateDTO> Get([FromUri] AntPageOption option = null)
+        public List<ProductCarCateItem> Get([FromUri] ProductCarCatePageOption option = null)
         {
-            var query = ProductCarCateService.GetAll().Where(x => x.ProductId == option.Id).ProjectTo<ProductCarCateDTO>();
-            if (option != null)
+            var result = new List<ProductCarCateItem>();
+            var parentCategories = CarCateService.GetAll().Where(x => !x.Deleted && x.ParentId == option.CarCateId).ToList();
+            foreach (var category in parentCategories)
             {
-                if (!string.IsNullOrEmpty(option.SortField))
+                var categories = CarCateService.GetAll().Where(x => !x.Deleted && x.ParentId == category.Id).ToList();
+                var ids = categories.Select(x => x.Id).ToList();
+                var productCarCateIds = ProductCarCateService.GetAll().Where(x => x.ProductId == option.ProductId && ids.Contains(x.CarCateId)).Select(x => x.CarCateId).ToList();
+                result.AddRange(categories.Select(x => new ProductCarCateItem()
                 {
-                    //for example
-                    if (option.SortField == "id")
-                    {
-                        if (option.SortOrder == PageSortTyoe.DESC)
-                        {
-                            query = query.OrderByDescending(x => x.Id);
-                        }
-                        else
-                        {
-                            query = query.OrderBy(x => x.Id);
-                        }
-                    }
-                }
+                    CarCateId = x.Id,
+                    ProductId = option.ProductId,
+                    Id = productCarCateIds.Contains(x.Id) ? x.Id : 0,
+                    Selected = productCarCateIds.Contains(x.Id),
+                    CarName = category.Name + " | " + x.Name
 
-                if (option.Page > 0 && option.Results > 0)
-                {
-                    if (string.IsNullOrEmpty(option.SortField))
-                    {
-                        query = query.OrderBy(x => x.Id);
-                    }
-                }
+                }).ToList());
             }
-            else
-            {
-                query = query.OrderBy(x => x.Id);
-            }
-            var count = query.Count();
-            var result = query.Paging<ProductCarCateDTO>(option.Page - 1, option.Results, count);
-            return new ApiListResult<ProductCarCateDTO>(result, result.PageIndex, result.PageSize, count);
-        }
-
-        [Route("{id:int}")]
-        [ResponseType(typeof(ProductCarCateDTO))]
-        public async Task<IHttpActionResult> GetById(int id)
-        {
-            ProductCarCateDTO ProductCarCate = await ProductCarCateService.GetAll().Where(x => x.Id == id).ProjectTo<ProductCarCateDTO>().FirstOrDefaultAsync();
-            if (ProductCarCate == null)
-            {
-                return NotFound();
-            }
-            return Ok(ProductCarCate);
+            return result;
         }
 
         [Route("")]
         [HttpPost]
-        [ResponseType(typeof(ProductCarCateDTO))]
-        public async Task<IHttpActionResult> Create([FromBody]ProductCarCateDTO ProductCarCateDto)
+        public async Task<IHttpActionResult> Create([FromBody]ProductCarCateModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var entities = model.Ids.Select(x => new ProductCarCate()
+            {
+                ProductId = model.ProductId,
+                CarCateId = x
+            }).ToList();
 
-            var entity = ProductCarCateDto.ToEntity();
+            await ProductCarCateService.InsertAsync(entities);
 
-
-            await ProductCarCateService.InsertAsync(entity);
-            return Ok(entity.ToModel());
+            return Ok();
         }
-
 
         [Route("")]
-        [HttpPut]
-        [ResponseType(typeof(ProductCarCateDTO))]
-        public async Task<IHttpActionResult> Update([FromBody]ProductCarCateDTO ProductCarCateDto)
+        [HttpDelete]
+        public async Task<IHttpActionResult> Delete([FromBody]ProductCarCateModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var entity = await ProductCarCateService.FindOneAsync(ProductCarCateDto.Id);
-            entity = ProductCarCateDto.ToEntity(entity);
-           
-            await ProductCarCateService.UpdateAsync(entity);
-            return Ok(entity.ToModel());
-        }
+            var entities = ProductCarCateService.GetAll().Where(x => model.Ids.Contains(x.Id)).ToList();
 
-        [Route("{id:int}")]
-        [HttpDelete]
-        [ResponseType(typeof(ProductCarCateDTO))]
-        public async Task<IHttpActionResult> Delete(int id)
-        {
-            ProductCarCate entity = await ProductCarCateService.FindOneAsync(id);
-            if (entity == null)
-            {
-                return NotFound();
-            }
-            await ProductCarCateService.DeleteAsync(entity);
+            await ProductCarCateService.DeleteAsync(entities);
 
-            return Ok(entity.ToModel());
+            return Ok();
         }
 
     }

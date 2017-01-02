@@ -26,31 +26,32 @@ var Product = React.createClass({
         pageSize: 10,
         current: 1
       },
-      hasLoad:false,
-      loading:true
+      hasLoad: false,
+      loading: true,
+      selectProductIds:[]
     };
   },
 
   fetchData(option){
-    const page= (option&&option.page)||this.state.pagination.current;
+    const page = (option && option.page) || this.state.pagination.current;
     const promise = [];
-    if(!this.state.hasLoad){
+    if (!this.state.hasLoad) {
       promise.push(this.props.categoryActions.getCascader());
       promise.push(this.props.manufacturerActions.getSelectList());
     }
     Promise.all(promise).then(err=> {
-      const params=Object.assign({
+      const params = Object.assign({
         results: this.state.pagination.pageSize,
         page: page
-      },option);
-      this.props.productActions.getAll(params).then(err=>{
+      }, option);
+      this.props.productActions.getAll(params).then(err=> {
         this.setState({
-          loading:false,
-          hasLoad:true
+          loading: false,
+          hasLoad: true
         })
       });
     });
-    
+
   },
 
   componentDidMount(){
@@ -92,7 +93,7 @@ var Product = React.createClass({
               page = page - 1;
             }
             self.fetchData({
-              page:_.max([page - 1, 1])
+              page: _.max([page - 1, 1])
             });
           }
         });
@@ -105,10 +106,27 @@ var Product = React.createClass({
 
   onSearchSubmit(formdata){
     this.setState({
-      search:formdata
-    },()=>{
-      this.fetchData(Object.assign({},{page:1},formdata))
+      search: formdata
+    }, ()=> {
+      this.fetchData(Object.assign({}, {page: 1}, formdata))
     })
+  },
+
+  onSetProductStatus(statusType){
+    const {selectProductIds}=this.state;
+    if(selectProductIds.length==0){
+      message.error('请至少选择一条记录');
+      return;
+    }
+    this.props.productActions
+      .updateStatus({ids:selectProductIds, statusType})
+      .then(err=> {
+        if (err) {
+          message.error(err.message);
+        } else {
+          message.success('设置状态成功！');
+        }
+      })
   },
 
   render() {
@@ -116,73 +134,134 @@ var Product = React.createClass({
       title: 'Id',
       dataIndex: 'id',
       sorter: true,
-      width: '20%'
+      width: '50px'
     }, {
       title: '名称',
-      dataIndex: 'name'
+      dataIndex: 'name',
+      width: '250px'
+    }, {
+      title: '盟友专享',
+      dataIndex: 'isAgreeActive',
+      render: (isAgreeActive)=> {
+        return isAgreeActive ? <Icon type="check-circle" style={{'color':'red'}}/> : <Icon type="check-circle-o"/>
+      }
     },{
-      title: 'SKU',
-      dataIndex: 'sku'
+      title: '尊享专辑',
+      dataIndex: 'isVipAlbum',
+      render: (isVipAlbum)=> {
+        return isVipAlbum ? <Icon type="check-circle" style={{'color':'red'}}/> : <Icon type="check-circle-o"/>
+      }
     },{
-      title: '图片',
-      dataIndex: 'imageUrl',
-      render: (url) => url.split(',').map((item,index)=> <img key={index} src={item} style={{ width:'30px' ,height:'30px',marginRight:'10px'}}/>) 
+      title: '通匹配',
+      dataIndex: 'isMatchAllCar',
+      render: (isMatchAllCar)=> {
+        return isMatchAllCar ? <Icon type="check-circle" style={{'color':'red'}}/> : <Icon type="check-circle-o"/>
+      }
     },{
-      title: '价格',
-      dataIndex: 'price'
+      title: '热门',
+      dataIndex: 'isFeaturedProduct',
+      render: (isFeaturedProduct)=> {
+        return isFeaturedProduct ? <Icon type="check-circle" style={{'color':'red'}}/> : <Icon type="check-circle-o"/>
+      }
     },{
-      title: 'Vip价格',
-      dataIndex: 'vipPrice'
-    },{
-      title: '紧急调配价格',
-      dataIndex: 'urgencyPrice'
+      title: '上架',
+      dataIndex: 'published',
+      render: (published)=> {
+        return published ? <Icon type="check-circle" style={{'color':'red'}}/> : <Icon type="check-circle-o"/>
+      }
     },
-     {
-      title: '操作',
-      key: 'operation',
-      render: (text, record) => (
-        <span>
+      //  {
+      //  title: '图片',
+      //  dataIndex: 'imageUrl',
+      //  render: (url) => url.split(',').map((item, index)=> <img key={index} src={item}
+      //                                                           style={{ width:'30px' ,height:'30px',marginRight:'10px'}}/>)
+      //},
+      //
+      {
+        title: '价格',
+        dataIndex: 'price'
+      }, {
+        title: 'Vip价格',
+        dataIndex: 'vipPrice'
+      }, {
+        title: '紧急价格',
+        dataIndex: 'urgencyPrice'
+      },
+      {
+        title: '操作',
+        key: 'operation',
+        render: (text, record) => (
+          <span>
           <Link to={`product/update/${record.id}`}>
-            <Button type="ghost" shape="circle" icon="edit" size="small" title='编辑' />
+            <Button type="ghost" shape="circle" icon="edit" size="small" title='编辑'/>
           </Link>
             <span className="ant-divider"></span>
           <Link to={`productstoragequantity/${record.id}`}>
-            <Button type="ghost" shape="circle" icon="appstore" size="small" title='库存管理' />
+            <Button type="ghost" shape="circle" icon="appstore" size="small" title='库存管理'/>
           </Link>
            <span className="ant-divider"></span>
            <Link to={`productcarcate/${record.id}`}>
-            <Button type="ghost" shape="circle" icon="pushpin-o" size="small" title='车型匹配' />
-          </Link>
+             <Button type="ghost" shape="circle" icon="pushpin-o" size="small" title='车型匹配'/>
+           </Link>
           <span className="ant-divider"></span>
           <Button type="ghost" shape="circle" icon="delete" size="small" title='删除'
                   onClick={this.onRemove.bind(null,record)}/>
         </span>
-      )
-    }];
+        )
+      }];
     const { cascader }=this.props.category;
     const { selectlist }= this.props.manufacturer;
-    const { product:{list, entity }} = this.props;
-    const { title, visible, edit, loading,hasLoad }=this.state;
+    const { product:{list }} = this.props;
+    const { loading,hasLoad }=this.state;
     const data = list ? list.data : [];
-    const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0})
-    const { getFieldDecorator } = this.props.form;
-    const record = edit ? entity : {};
-    const formItemLayout = {
-      labelCol: {span: 4},
-      wrapperCol: {span: 20}
+    const pagination = Object.assign({}, this.state.pagination, {total: list ? list.recordCount : 0});
+
+    const rowSelection = {
+      onChange: (selectProductIds) => {
+        this.setState({
+          selectProductIds: selectProductIds
+        });
+      }
     };
     return (
       <div className='container'>
-         {hasLoad&&(
+        {hasLoad && (
           <div className='ant-list-header'>
-            <ProductSearchFrom  
+            <ProductSearchFrom
               ref='search'
               categoryCascader={cascader}
               manufacturerList={selectlist}
               onSearchSubmit={this.onSearchSubmit}
+              onSetVipOnly={this.onSetVipOnly}
               />
+
+            <div>
+              <Button type="primary" htmlType="button" onClick={this.onSetProductStatus.bind(this,0)}
+                      style={{marginRight:'10px',marginBottom:'10px'}}>设置盟友专享</Button>
+              <Button type="primary" htmlType="button" onClick={this.onSetProductStatus.bind(this,1)}
+                      style={{marginRight:'10px',marginBottom:'10px'}}>取消盟友专享</Button>
+              <Button type="primary" htmlType="button" onClick={this.onSetProductStatus.bind(this,2)}
+                      style={{marginRight:'10px',marginBottom:'10px'}}>设置尊享专辑</Button>
+              <Button type="primary" htmlType="button" onClick={this.onSetProductStatus.bind(this,3)}
+                      style={{marginRight:'10px',marginBottom:'10px'}}>取消尊享专辑</Button>
+              <Button type="primary" htmlType="button" onClick={this.onSetProductStatus.bind(this,4)}
+                      style={{marginRight:'10px',marginBottom:'10px'}}>设置热门</Button>
+              <Button type="primary" htmlType="button" onClick={this.onSetProductStatus.bind(this,5)}
+                      style={{marginRight:'10px',marginBottom:'10px'}}>取消热门</Button>
+              <Button type="primary" htmlType="button" onClick={this.onSetProductStatus.bind(this,6)}
+                      style={{marginRight:'10px',marginBottom:'10px'}}>设置通匹配</Button>
+              <Button type="primary" htmlType="button" onClick={this.onSetProductStatus.bind(this,7)}
+                      style={{marginRight:'10px',marginBottom:'10px'}}>取消通匹配</Button>
+              <Button type="primary" htmlType="button" onClick={this.onSetProductStatus.bind(this,8)}
+                      style={{marginRight:'10px',marginBottom:'10px'}}>批量上架</Button>
+              <Button type="primary" htmlType="button" onClick={this.onSetProductStatus.bind(this,9)}
+                      style={{marginRight:'10px',marginBottom:'10px'}}>批量下架</Button>
+              <Link to='product/create'>
+                <Button type="primary" icon="plus" style={{marginRight:'10px',marginBottom:'10px'}}>添加产品</Button>
+              </Link>
+            </div>
           </div>
-          )}
+        )}
         <Table
           ref='table'
           columns={columns}
@@ -190,6 +269,7 @@ var Product = React.createClass({
           dataSource={data}
           pagination={pagination}
           loading={loading}
+          rowSelection={rowSelection}
           onChange={this.handleTableChange}
           />
       </div>

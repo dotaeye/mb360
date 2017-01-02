@@ -301,9 +301,13 @@
     <Compile Include="Models\HomeModel.cs" />
     <Compile Include="Models\OrderListModal.cs" />
     <Compile Include="Models\OrderPageOption.cs" />
+    <Compile Include="Models\OrderStatusModel.cs" />
+    <Compile Include="Models\ProductCarCatePageOption.cs" />
+    <Compile Include="Models\ProductCartCateItem.cs" />
     <Compile Include="Models\ProductDetailsModel.cs" />
     <Compile Include="Models\ProductOverviewModel.cs" />
     <Compile Include="Models\ProductPageOption.cs" />
+    <Compile Include="Models\ProductStatusModel.cs" />
     <Compile Include="Pay\WxPayAPI\Config.cs" />
     <Compile Include="Pay\WxPayAPI\Data.cs" />
     <Compile Include="Pay\WxPayAPI\Exception.cs" />

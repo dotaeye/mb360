@@ -9,6 +9,7 @@ using System.Linq;
 using SQ.Core.Data;
 using MB.Data.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MB.Data.Service
 {
@@ -16,11 +17,17 @@ namespace MB.Data.Service
     {
         Task<int> DeleteAsync(ProductCarCate entity);
 
+        Task<int> DeleteAsync(IEnumerable<ProductCarCate> entities);
+
         IPagedList<ProductCarCate> GetPageList(int pageIndex, int pageSize);
 
         Task<int> InsertAsync(ProductCarCate entity);
 
+        Task<int> InsertAsync(IEnumerable<ProductCarCate> entities);
+
         Task<int> UpdateAsync(ProductCarCate entity);
+
+        Task<int> UpdateAsync(IEnumerable<ProductCarCate> entities);
 
         IQueryable<ProductCarCate> GetAll();
 

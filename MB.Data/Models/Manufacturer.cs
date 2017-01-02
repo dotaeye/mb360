@@ -24,6 +24,8 @@ namespace MB.Data.Models
 
         public int HotOrder { get; set; }
 
+        public int DisplayOrder { get; set; }
+
         [DTO(false, true)]
         public string CreateUserId { get; set; }
 

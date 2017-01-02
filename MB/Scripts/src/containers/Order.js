@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { Spin, Table , Icon, Button, Modal, Tag, Form, Input, Checkbox, message,Select,Popconfirm } from 'antd';
 import connectStatic from '../utils/connectStatic'
@@ -63,8 +64,16 @@ var Order = React.createClass({
     })
   },
 
-  onConfirm(){
-
+  onConfirm(id){
+    this.props.orderActions
+    .updateStatus({id, orderStatusId: 30})
+    .then(err=> {
+      if (err) {
+        message.error(err.message);
+      } else {
+        message.success('发货成功！');
+      }
+    })
   },
 
   render() {
@@ -75,7 +84,7 @@ var Order = React.createClass({
       title: '状态',
       dataIndex: 'orderStatusId',
       render: (orderStatusId)=> {
-        const item=orderStatus.find(x=>x.value == orderStatusId);
+        const item = orderStatus.find(x=>x.value == orderStatusId);
         return <Tag color={item.color}>{item.name}</Tag>
       }
     }, {
@@ -92,6 +101,7 @@ var Order = React.createClass({
           return (
             <div key={sIndex} data-flex="main:left cross:center" style={{marginBottom:'10px'}}>
               <img style={{width:'40px'}} src={'http://www.lm123.cc/'+shopCart.imageUrl}/>
+
               <div>{shopCart.name} {shopCart.attributesXml} X{shopCart.quantity}</div>
             </div>
           )
@@ -112,11 +122,25 @@ var Order = React.createClass({
       key: 'operation',
       render: (text, record) => (
         <span>
-          <Popconfirm title="是否确认发货?" onConfirm={this.onConfirm(record.id)}>
-            <Button type="ghost" shape="circle" icon="check" size="small" title='确认发货'/>
-          </Popconfirm>
-          <span className="ant-divider"></span>
-          <Button type="ghost" shape="circle" icon="exception" size="small" title='打印发货单'/>
+          <Link to={`order/${record.id}`}>
+            <Button type="ghost" shape="circle" icon="eye-o" size="small" title='查看订单'/>
+          </Link>
+          {record.orderStatusId == 20 && (
+            <span>
+              <span className="ant-divider"></span>
+              <Popconfirm title="是否确认发货?" onConfirm={this.onConfirm.bind(this,record.id)}>
+                <Button type="ghost" shape="circle" icon="check" size="small" title='确认发货'/>
+              </Popconfirm>
+            </span>
+          )}
+          {record.orderStatusId > 20 && (
+            <span>
+              <span className="ant-divider"></span>
+              <Link to={`print/${record.id}`}>
+                <Button type="ghost" shape="circle" icon="exception" size="small" title='打印发货单'/>
+              </Link>
+            </span>
+          )}
         </span>
       )
     }];
