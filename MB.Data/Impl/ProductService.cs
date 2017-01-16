@@ -116,6 +116,7 @@ namespace MB.Data.Impl
             IList<int> manufacturerIds = null,
             int carId = 0,
             int RoleId = 0,
+            bool album = false,
             bool isAgreeActive = false,
             bool? featuredProducts = null,
             decimal? priceMin = null,
@@ -144,9 +145,17 @@ namespace MB.Data.Impl
             //只有审核通过的才可以显示
             if (!showHidden)
             {
-                query = query.Where(p => p.Status > (int)ProductStatus.Published);
+                query = query.Where(p => p.Published);
             }
 
+            if (isAgreeActive) {
+                query = query.Where(p => p.isAgreeActive);
+            }
+
+            if (album)
+            {
+                query = query.Where(p => p.IsVipAlbum);
+            }
 
             //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
 
@@ -205,11 +214,11 @@ namespace MB.Data.Impl
             {
                 query = query.Where(p => manufacturerIds.Contains(p.ManufacturerId));
             }
-       
+
             if (carId > 0)
             {
                 query = from p in query
-                        from pm in p.ProductCarCate.Where(pc => pc.CarCateId == carId)
+                        from pm in p.ProductCarCate.Where(pc => pc.CarCateId == carId || p.IsMatchAllCar)
                         select p;
             }
 

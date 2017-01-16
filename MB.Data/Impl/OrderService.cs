@@ -68,6 +68,22 @@ namespace MB.Data.Impl
             return await _OrderRepository.InsertAsync(entity);
         }
 
+        public void Insert(Order entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException("Order");
+            _OrderRepository.Insert(entity);
+        }
+
+
+        public void Update(Order entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException("Order");
+
+            _OrderRepository.Update(entity);
+        }
+
         public async Task<int> UpdateAsync(Order entity)
         {
             if (entity == null)

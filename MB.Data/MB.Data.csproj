@@ -385,6 +385,10 @@
     <Compile Include="Migrations\201701020528159_AddProductPublished.Designer.cs">
       <DependentUpon>201701020528159_AddProductPublished.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701140820467_AddBannerImageUrl.cs" />
+    <Compile Include="Migrations\201701140820467_AddBannerImageUrl.Designer.cs">
+      <DependentUpon>201701140820467_AddBannerImageUrl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -630,6 +634,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701020528159_AddProductPublished.resx">
       <DependentUpon>201701020528159_AddProductPublished.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701140820467_AddBannerImageUrl.resx">
+      <DependentUpon>201701140820467_AddBannerImageUrl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

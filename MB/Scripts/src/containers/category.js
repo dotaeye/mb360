@@ -307,6 +307,20 @@ var Category = React.createClass({
               </FormItem>
             )}
 
+            {visible && (
+              <FormItem
+                {...formItemLayout}
+                label="VIP专辑封面"
+                >
+                {getFieldDecorator('bannerUrl', {
+                    initialValue: record.bannerUrl
+                  }
+                )(
+                  <UploadFile  origin={true}/>
+                )}
+              </FormItem>
+            )}
+
             <FormItem
               {...formItemLayout}
               label="分类描述"

@@ -24,6 +24,9 @@ namespace MB.Data.Models
 
         public string ImageUrl { get; set; }
 
+
+        public string BannerUrl { get; set; }
+
         public int DisplayOrder { get; set; }
 
         public string Description { get; set; }

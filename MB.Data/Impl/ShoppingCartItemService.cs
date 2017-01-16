@@ -9,6 +9,7 @@ using SQ.Core.Data;
 using MB.Data.Service;
 using MB.Data.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MB.Data.Impl
 {
@@ -66,6 +67,14 @@ namespace MB.Data.Impl
             if (entity == null)
                 throw new ArgumentNullException("ShoppingCartItem");
             return await _ShoppingCartItemRepository.InsertAsync(entity);
+        }
+
+        public void Update(IEnumerable<ShoppingCartItem> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException("ShoppingCartItem");
+
+           _ShoppingCartItemRepository.Update(entities);
         }
 
         public async Task<int> UpdateAsync(ShoppingCartItem entity)

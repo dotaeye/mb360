@@ -10,6 +10,7 @@ using SQ.Core;
 using Newtonsoft.Json.Linq;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
+using Microsoft.Owin;
 
 namespace MB.Helpers
 {
@@ -50,34 +51,49 @@ namespace MB.Helpers
             return true;
         }
 
-        public static JObject GetToken(ApplicationUser user)
+        public static JObject GetToken(ApplicationUser user, IOwinContext context)
         {
             var tokenExpiration = TimeSpan.FromDays(14);
 
             ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
 
             identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+            identity.AddClaim(new Claim("userRoleId", user.UserRoleId.ToString()));
 
-            var props = new AuthenticationProperties()
+            var properties = CreateProperties(user);
+
+            var props = new AuthenticationProperties(properties)
             {
                 IssuedUtc = DateTime.UtcNow,
                 ExpiresUtc = DateTime.UtcNow.Add(tokenExpiration),
             };
 
             var ticket = new AuthenticationTicket(identity, props);
+         
 
             var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
 
             JObject tokenResponse = new JObject(
-                                        new JProperty("userName", user.UserName),
                                         new JProperty("access_token", accessToken),
                                         new JProperty("token_type", "bearer"),
                                         new JProperty("expires_in", tokenExpiration.TotalSeconds.ToString()),
-                                        new JProperty(".issued", ticket.Properties.IssuedUtc.ToString()),
-                                        new JProperty(".expires", ticket.Properties.ExpiresUtc.ToString())
+                                        new JProperty("userName", user.UserName),
+                                        new JProperty("userRoleId", user.UserRoleId.ToString()),
+                                        new JProperty(".issued", ticket.Properties.IssuedUtc),
+                                        new JProperty(".expires", ticket.Properties.ExpiresUtc)
             );
 
             return tokenResponse;
+        }
+
+        public static IDictionary<string, string> CreateProperties(ApplicationUser user)
+        {
+            IDictionary<string, string> data = new Dictionary<string, string>
+            {
+                { "userName", user.UserName },
+                { "userRoleId",user.UserRoleId.ToString()}
+            };
+            return data;
         }
 
         public static int GetUserRoleId(IPrincipal User)

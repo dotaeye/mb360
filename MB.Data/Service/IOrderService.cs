@@ -18,7 +18,11 @@ namespace MB.Data.Service
 
         Task<int> InsertAsync(Order entity);
 
+        void Insert(Order entity);
+
         Task<int> UpdateAsync(Order entity);
+
+        void Update(Order entity);
 
         IQueryable<Order> GetAll();
 

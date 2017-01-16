@@ -24,6 +24,9 @@ namespace MB.Data.DTO
         public int HotOrder { get; set; }
 
         public string ImageUrl { get; set; }
+
+        public string BannerUrl { get; set; }
+
         public string Code { get; set; }
         public int Id { get; set; }
     }

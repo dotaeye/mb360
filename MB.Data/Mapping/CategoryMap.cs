@@ -19,6 +19,8 @@ namespace MB.Data.Mapping
 
             this.Property(x => x.ImageUrl).HasMaxLength(250);
 
+            this.Property(x => x.BannerUrl).HasMaxLength(250);
+
             this.Property(x => x.CreateTime);
 
             this.Property(x => x.CreateUserId);

@@ -234,6 +234,8 @@ namespace MB.Controllers
             int pageIndex = 0,
             int pageSize = 0,
             string location = null,
+            bool isAgreeActive = false,
+            bool album = false,
             int? orderBy = null,
             decimal? minPrice = null,
             decimal? maxPrice = null
@@ -243,8 +245,11 @@ namespace MB.Controllers
             var model = new CategoryModel();
             var categoryIds = new List<int>();
             var manufacturerIds = new List<int>();
+            if (manufacturerId != 0)
+            {
+                manufacturerIds.Add(manufacturerId);
+            }
 
-            manufacturerIds.Add(manufacturerId);
             DbGeography Location = null;
 
             if (!string.IsNullOrEmpty(location))
@@ -288,11 +293,14 @@ namespace MB.Controllers
                 showHidden: true,
                 location: Location,
                 featuredProducts: null,
+                keywords: keywords,
                 //RoleId: MBHelper.GetUserRoleId(User),
                 RoleId: RoleId,
                 priceMin: minPrice,
                 priceMax: maxPrice,
                 filteredSpecs: alreadyFilteredSpecOptionIds,
+                isAgreeActive: isAgreeActive,
+                album: album,
                 //orderBy: (ProductSortingEnum)command.OrderBy,
                 orderBy: orderBy.HasValue ? (ProductSortingEnum)orderBy : ProductSortingEnum.Position,
                 pageIndex: pageIndex,
@@ -317,6 +325,22 @@ namespace MB.Controllers
                    SpecificationAttributeOptionService, CacheManager);
             }
             result.Data = model;
+            return Ok(result);
+        }
+
+
+        [Route("VipAlbum/")]
+        [HttpGet]
+        public IHttpActionResult VipAlbum()
+        {
+
+            var result = new ApiResult<List<CategoryDTO>>();
+            var query = ProductService.GetAll().Where(x => x.Published && x.IsVipAlbum).Select(x => x.CategoryId);
+
+            var categoryIds = query.Distinct().ToList();
+
+            var categories = CategoryService.GetAll().Where(x => categoryIds.Contains(x.Id)).ProjectTo<CategoryDTO>().ToList();
+            result.Data = categories;
             return Ok(result);
         }
 

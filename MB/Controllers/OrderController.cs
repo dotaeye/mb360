@@ -163,13 +163,13 @@ namespace MB.Controllers
                 {
                     try
                     {
-                        var order = await query.SingleOrDefaultAsync();
+                        var order = query.SingleOrDefault();
                         order.OrderStatusId = (int)OrderStatus.Paied;
                         order.PaymentMethodSystemName = notifyData.GetValue("bank_type").ToString();
                         order.PaymentMethodDesction = notifyData.GetValue("openid").ToString() + "|" + transaction_id;
                         order.PaidDate = DateTime.Now;
 
-                        await OrderService.UpdateAsync(order);
+                        OrderService.Update(order);
                         res.SetValue("return_code", "SUCCESS");
                         res.SetValue("return_msg", "OK");
                         Log.Info(this.GetType().ToString(), "order query success : " + res.ToXml());
@@ -388,7 +388,7 @@ namespace MB.Controllers
 
         [Route("")]
         [HttpPost]
-        public async Task<IHttpActionResult> Create([FromBody]OrderDTO OrderDto)
+        public IHttpActionResult Create([FromBody]OrderDTO OrderDto)
         {
             try
             {
@@ -411,32 +411,31 @@ namespace MB.Controllers
                     });
                 }
 
-                var shopCartItems = ShoppingCartItemService.GetAll().Where(x => OrderDto.ShopCartIds.Contains(x.Id)).ToList();
-                decimal orderTotal = 0;
-                foreach (var item in shopCartItems)
-                {
-                    orderTotal += item.UnitPrice * item.Quantity;
-                }
-
-                WxPayData data = new WxPayData();
-                var orderNo = WxPayApi.GenerateOutTradeNo();
-                data.SetValue("body", "麦呗商城-微信收款");
-                data.SetValue("attach", "麦呗商城");
-                data.SetValue("out_trade_no", orderNo);
-                data.SetValue("total_fee", 1);
-                // data.SetValue("total_fee", Convert.ToInt32(entity.OrderTotal*100));
-                data.SetValue("time_start", DateTime.Now.ToString("yyyyMMddHHmmss"));
-                data.SetValue("time_expire", DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss"));
-                data.SetValue("trade_type", "APP");
-
-                WxPayData result = WxPayApi.UnifiedOrder(data);
-
-                WxPayData appData = new WxPayData();
-                appData.SetValue("prepayid", result.GetValue("prepay_id").ToString());
-                WxPayData appResult = WxPayApi.AppOrder(appData);
-
                 using (TransactionScope scope = new TransactionScope())
                 {
+                    var shopCartItems = ShoppingCartItemService.GetAll().Where(x => OrderDto.ShopCartIds.Contains(x.Id)).ToList();
+                    decimal orderTotal = 0;
+                    foreach (var item in shopCartItems)
+                    {
+                        orderTotal += item.UnitPrice * item.Quantity;
+                    }
+
+                    WxPayData data = new WxPayData();
+                    var orderNo = WxPayApi.GenerateOutTradeNo();
+                    data.SetValue("body", "麦呗商城-微信收款");
+                    data.SetValue("attach", "麦呗商城");
+                    data.SetValue("out_trade_no", orderNo);
+                    data.SetValue("total_fee", 1);
+                    // data.SetValue("total_fee", Convert.ToInt32(entity.OrderTotal*100));
+                    data.SetValue("time_start", DateTime.Now.ToString("yyyyMMddHHmmss"));
+                    data.SetValue("time_expire", DateTime.Now.AddMinutes(10).ToString("yyyyMMddHHmmss"));
+                    data.SetValue("trade_type", "APP");
+
+                    WxPayData result = WxPayApi.UnifiedOrder(data);
+
+                    WxPayData appData = new WxPayData();
+                    appData.SetValue("prepayid", result.GetValue("prepay_id").ToString());
+                    WxPayData appResult = WxPayApi.AppOrder(appData);
 
                     var entity = OrderDto.ToEntity();
                     entity.PrePayId = result.GetValue("prepay_id").ToString();
@@ -450,15 +449,17 @@ namespace MB.Controllers
                     entity.CustomerId = User.Identity.GetUserId();
                     entity.CustomerIp = Request.GetOwinContext().Request.RemoteIpAddress;
                     entity.CreateTime = DateTime.Now;
-                    await OrderService.InsertAsync(entity);
+                    OrderService.Insert(entity);
 
                     //更新购物车ItemStatus
                     foreach (var shopCart in shopCartItems)
                     {
                         shopCart.OrderId = entity.Id;
                         shopCart.ShoppingCartStatus = ShoppingCartStatus.Order;
-                        await ShoppingCartItemService.UpdateAsync(shopCart);
+
                     }
+
+                    ShoppingCartItemService.Update(shopCartItems);
 
                     scope.Complete();
                     return Ok(new ApiResult<OrderDTO>()

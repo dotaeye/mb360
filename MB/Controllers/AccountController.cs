@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using System.Net;
 using System.Web;
 using System.Web.Http;
 using System.Linq;
@@ -225,10 +226,9 @@ namespace MB.Controllers
                     Info = ex.Message
                 });
             }
-            return Ok(new ApiResult<JObject>()
+            return Ok(new ApiResult<string>()
             {
-                Info = "密码修改成功",
-                Data = MBHelper.GetToken(user)
+                Info = "密码修改成功"
             });
 
         }
@@ -485,8 +485,7 @@ namespace MB.Controllers
             }
             return Ok(new ApiResult<JObject>()
             {
-                Info = "注册成功",
-                Data = MBHelper.GetToken(user)
+                Info = "注册成功"
             });
         }
 
@@ -680,6 +679,42 @@ namespace MB.Controllers
                 text2 = text2 + textArray.Substring(random.Next() % textArray.Length, 1);
             }
             return text2;
+        }
+
+        public string PostRequestJson(string endpoint, string json)
+        {
+            // Create string to hold JSON response
+            string jsonResponse = string.Empty;
+
+            using (var client = new WebClient())
+            {
+                try
+                {
+                    client.UseDefaultCredentials = true;
+                    client.Headers.Add("Content-Type:application/x-www-form-urlencoded");
+                    client.Headers.Add("Accept:application/json");
+                    var uri = new Uri(endpoint);
+                    var response = client.UploadString(uri, "POST", json);
+                    jsonResponse = response;
+                }
+                catch (WebException ex)
+                {
+                    // Http Error
+                    if (ex.Status == WebExceptionStatus.ProtocolError)
+                    {
+                        HttpWebResponse wrsp = (HttpWebResponse)ex.Response;
+                        var statusCode = (int)wrsp.StatusCode;
+                        var msg = wrsp.StatusDescription;
+                        throw new HttpException(statusCode, msg);
+                    }
+                    else
+                    {
+                        throw new HttpException(500, ex.Message);
+                    }
+                }
+            }
+
+            return jsonResponse;
         }
     }
 }

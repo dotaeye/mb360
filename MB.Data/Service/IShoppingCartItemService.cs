@@ -7,6 +7,7 @@ using System.Linq;
 using SQ.Core.Data;
 using MB.Data.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MB.Data.Service
 {
@@ -19,6 +20,8 @@ namespace MB.Data.Service
         Task<int> InsertAsync(ShoppingCartItem entity);
 
         Task<int> UpdateAsync(ShoppingCartItem entity);
+
+        void Update(IEnumerable<ShoppingCartItem> entities);
 
         IQueryable<ShoppingCartItem> GetAll();
 
