@@ -21,6 +21,13 @@ namespace MB.Helpers
         Member = 1
     }
 
+    public enum UserRoleType
+    {
+        Normal = 1,
+        VIP = 2,
+        Admin = 3
+    }
+
     public class MBHelper
     {
 
@@ -28,8 +35,6 @@ namespace MB.Helpers
 
         public const string SPECS_FILTER_MODEL_KEY = "Mb.pres.filter.specs-{0}";
         public const string SPECS_FILTER_PATTERN_KEY = "Mb.pres.filter.specs";
-
-
 
 
 
@@ -69,7 +74,7 @@ namespace MB.Helpers
             };
 
             var ticket = new AuthenticationTicket(identity, props);
-         
+
 
             var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
 

@@ -50,7 +50,7 @@ var Login = React.createClass({
               label="用户名"
               >
               {getFieldDecorator('username', {
-                  rules: [{required: true, message: '请输入用户名'},{type: 'email', message: '请输入正确的邮箱地址'}]
+                  rules: [{required: true, message: '请输入用户名'}]
                 }
               )(
                 <Input  type="text"/>

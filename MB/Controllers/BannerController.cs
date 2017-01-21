@@ -21,9 +21,11 @@ using MB.Data.Models;
 using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
+using MB.Filters;
 
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/Banner")]
     public class BannerController : ApiController
     {

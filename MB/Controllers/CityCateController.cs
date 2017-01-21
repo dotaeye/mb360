@@ -22,9 +22,11 @@ using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
 using SQ.Core.UI;
+using MB.Filters;
 
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/CityCate")]
     public class CityCateController : ApiController
     {
@@ -76,6 +78,7 @@ namespace MB.Controllers
         }
 
         [Route("cascader/{code?}")]
+        [AllowAnonymous]
         public IHttpActionResult GetCityCateCascader(string code = null)
         {
             var result = new ApiResult<List<Cascader>>();

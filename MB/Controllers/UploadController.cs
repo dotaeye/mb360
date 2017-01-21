@@ -11,8 +11,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
+using MB.Filters;
+
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/Upload")]
     public class UploadController : ApiController
     {

@@ -22,8 +22,11 @@ using AutoMapper.QueryableExtensions;
 using System.Threading.Tasks;
 using SQ.Core.Data;
 
+using MB.Filters;
+
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/ProductAttributeCategoryMapping")]
     public class ProductAttributeCategoryMappingController : ApiController
     {

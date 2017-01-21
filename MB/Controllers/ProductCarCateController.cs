@@ -23,8 +23,11 @@ using System.Threading.Tasks;
 using SQ.Core.Data;
 using MB.Models;
 
+using MB.Filters;
+
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/ProductCarCate")]
     public class ProductCarCateController : ApiController
     {

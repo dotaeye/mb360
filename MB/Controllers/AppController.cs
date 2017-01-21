@@ -87,64 +87,64 @@ namespace MB.Controllers
             return result;
         }
 
-        [Route("key")]
-        [HttpGet]
-        public IHttpActionResult GetKey()
-        {
+        //[Route("key")]
+        //[HttpGet]
+        //public IHttpActionResult GetKey()
+        //{
 
-            string decryptionKey = CreateKey(24);
-            string validationKey = CreateKey(20);
+        //    string decryptionKey = CreateKey(24);
+        //    string validationKey = CreateKey(20);
 
-            return Ok(new
-            {
-                validationKey = validationKey,
-                decryptionKey = decryptionKey
-            });
-        }
-
-
-        [Route("token")]
-        [HttpGet]
-        public IHttpActionResult GetTestToken()
-        {
-            ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
-
-            identity.AddClaim(new Claim(ClaimTypes.Name, "123"));
-
-            var props = new AuthenticationProperties()
-            {
-                IssuedUtc = DateTime.UtcNow,
-                ExpiresUtc = DateTime.UtcNow.AddDays(14),
-            };
-
-            var ticket = new AuthenticationTicket(identity, props);
-
-            var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
-
-            return Ok(accessToken);
-        }
+        //    return Ok(new
+        //    {
+        //        validationKey = validationKey,
+        //        decryptionKey = decryptionKey
+        //    });
+        //}
 
 
+        //[Route("token")]
+        //[HttpGet]
+        //public IHttpActionResult GetTestToken()
+        //{
+        //    ClaimsIdentity identity = new ClaimsIdentity(OAuthDefaults.AuthenticationType);
+
+        //    identity.AddClaim(new Claim(ClaimTypes.Name, "123"));
+
+        //    var props = new AuthenticationProperties()
+        //    {
+        //        IssuedUtc = DateTime.UtcNow,
+        //        ExpiresUtc = DateTime.UtcNow.AddDays(14),
+        //    };
+
+        //    var ticket = new AuthenticationTicket(identity, props);
+
+        //    var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
+
+        //    return Ok(accessToken);
+        //}
 
 
-        private string CreateKey(int numBytes)
-        {
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            byte[] buff = new byte[numBytes];
 
-            rng.GetBytes(buff);
-            return BytesToHexString(buff);
-        }
 
-        private string BytesToHexString(byte[] bytes)
-        {
-            StringBuilder hexString = new StringBuilder(64);
+        //private string CreateKey(int numBytes)
+        //{
+        //    RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+        //    byte[] buff = new byte[numBytes];
 
-            for (int counter = 0; counter < bytes.Length; counter++)
-            {
-                hexString.Append(String.Format("{0:X2}", bytes[counter]));
-            }
-            return hexString.ToString();
-        }
+        //    rng.GetBytes(buff);
+        //    return BytesToHexString(buff);
+        //}
+
+        //private string BytesToHexString(byte[] bytes)
+        //{
+        //    StringBuilder hexString = new StringBuilder(64);
+
+        //    for (int counter = 0; counter < bytes.Length; counter++)
+        //    {
+        //        hexString.Append(String.Format("{0:X2}", bytes[counter]));
+        //    }
+        //    return hexString.ToString();
+        //}
     }
 }

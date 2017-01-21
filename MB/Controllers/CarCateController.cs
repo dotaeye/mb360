@@ -26,9 +26,11 @@ using SQ.Core.Data;
 using SQ.Core.UI;
 using System.Data.OleDb;
 using System.Data;
+using MB.Filters;
 
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/CarCate")]
     public class CarCateController : ApiController
     {
@@ -297,6 +299,7 @@ namespace MB.Controllers
 
         [Route("select")]
         [HttpGet]
+        [AllowAnonymous]
         [ResponseType(typeof(ApiResult<List<CarCateDTO>>))]
         public IHttpActionResult Level([FromUri]int level, [FromUri]int parentId = 0)
         {
@@ -315,6 +318,7 @@ namespace MB.Controllers
 
         [Route("all/{id:int}")]
         [HttpGet]
+        [AllowAnonymous]
         [ResponseType(typeof(ApiResult<List<Cascader>>))]
         public ApiResult<List<Cascader>> All(int id)
         {
@@ -373,6 +377,7 @@ namespace MB.Controllers
 
         [Route("two")]
         [HttpGet]
+        [AllowAnonymous]
         [ResponseType(typeof(ApiResult<List<Cascader>>))]
         public ApiResult<List<Cascader>> Two(int id = 0)
         {

@@ -28,3 +28,5 @@ export Order from './Order'
 export OrderDetail from './OrderDetail'
 export OrderPrint from './OrderPrint'
 export NotFound from './NotFound'
+
+export NoPermission from './NoPermission'

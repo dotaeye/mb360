@@ -14,6 +14,11 @@ using System.Data.Entity;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
 using MB.Data.Service;
 using MB.Data.DTO;
 using MB.Data.AutoMapper;
@@ -33,6 +38,7 @@ namespace MB.Controllers
     public class OrderController : ApiController
     {
         private IOrderService OrderService;
+        private ApplicationUserManager _userManager;
         private IShoppingCartItemService ShoppingCartItemService;
         public OrderController(
             IOrderService _OrderService,
@@ -42,6 +48,27 @@ namespace MB.Controllers
             this.OrderService = _OrderService;
             this.ShoppingCartItemService = _ShoppingCartItemService;
         }
+
+        public OrderController(
+         ApplicationUserManager userManager,
+         ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+        {
+            UserManager = userManager;
+            AccessTokenFormat = accessTokenFormat;
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         private bool QueryOrder(string transaction_id)
         {
@@ -168,8 +195,18 @@ namespace MB.Controllers
                         order.PaymentMethodSystemName = notifyData.GetValue("bank_type").ToString();
                         order.PaymentMethodDesction = notifyData.GetValue("openid").ToString() + "|" + transaction_id;
                         order.PaidDate = DateTime.Now;
-
                         OrderService.Update(order);
+
+                        //当用户不是会员，并且有消费大于500，升级为会员，前端重新获取token
+                        if (order.OrderTotal >= 500)
+                        {
+                            var member = UserManager.FindById(order.CustomerId);
+                            if (member.UserRoleId < 2)
+                            {
+                                member.UserRoleId = 2;
+                            }
+                            UserManager.Update(member);
+                        }
                         res.SetValue("return_code", "SUCCESS");
                         res.SetValue("return_msg", "OK");
                         Log.Info(this.GetType().ToString(), "order query success : " + res.ToXml());

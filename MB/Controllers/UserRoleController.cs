@@ -22,8 +22,11 @@ using System.Threading.Tasks;
 using SQ.Core.Data;
 using MB.Helpers;
 
+using MB.Filters;
+
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/UserRole")]
     public class UserRoleController : ApiController
     {

@@ -26,6 +26,7 @@ using SQ.Core.UI;
 using SQ.Core.Caching;
 using MB.Models;
 using MB.Helpers;
+using MB.Filters;
 
 namespace MB.Controllers
 {
@@ -50,6 +51,7 @@ namespace MB.Controllers
         }
 
         [Route("")]
+        [MbAuthorize]
         public ApiListResult<CategoryDTO> Get([FromUri] AntPageOption option = null)
         {
             var query = CategoryService.GetAll().Where(x => !x.Deleted).ProjectTo<CategoryDTO>();
@@ -171,6 +173,7 @@ namespace MB.Controllers
 
         [Route("")]
         [HttpPost]
+        [MbAuthorize]
         [ResponseType(typeof(CategoryDTO))]
         public async Task<IHttpActionResult> Create([FromBody]CategoryDTO CategoryDto)
         {
@@ -190,6 +193,7 @@ namespace MB.Controllers
 
         [Route("")]
         [HttpPut]
+        [MbAuthorize]
         [ResponseType(typeof(CategoryDTO))]
         public async Task<IHttpActionResult> Update([FromBody]CategoryDTO CategoryDto)
         {
@@ -207,6 +211,7 @@ namespace MB.Controllers
         }
 
         [Route("{id:int}")]
+        [MbAuthorize]
         [HttpDelete]
         [ResponseType(typeof(CategoryDTO))]
         public async Task<IHttpActionResult> Delete(int id)

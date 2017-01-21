@@ -23,8 +23,11 @@ using SQ.Core.Data;
 
 
 
+using MB.Filters;
+
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/UserPermission")]
     public class UserPermissionController : ApiController
     {

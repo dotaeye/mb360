@@ -23,8 +23,11 @@ using AutoMapper.QueryableExtensions;
 using SQ.Core.UI;
 using SQ.Core.Data;
 
+using MB.Filters;
+
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/Department")]
     public class DepartmentController : ApiController
     {

@@ -148,7 +148,7 @@ var Aside = React.createClass({
           selectedKeys={[this.props.current]}
           onOpenChange={this.onToggle}
           >
-          {menus.filter(m=>m.show).map(group=> {
+          {menus.map(group=> {
             return (
               <SubMenu key={group.group}
                        title={
@@ -157,7 +157,7 @@ var Aside = React.createClass({
                             <span className="nav-text">{group.title}</span>
                         </span>
                     }>
-                {group.items.filter(m=>m.show).map(m=> {
+                {group.items.map(m=> {
                   let linkTo= m.controller + (m.action==='index'?'':('/'+m.action));
                   return (
                     <Menu.Item key={linkTo}>

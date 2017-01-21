@@ -23,8 +23,11 @@ using System.Threading.Tasks;
 using SQ.Core.Data;
 using SQ.Core.UI;
 
+using MB.Filters;
+
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/SpecificationAttributeOption")]
     public class SpecificationAttributeOptionController : ApiController
     {

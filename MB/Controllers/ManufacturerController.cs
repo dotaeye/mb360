@@ -23,8 +23,11 @@ using System.Threading.Tasks;
 using SQ.Core.Data;
 using MB.Helpers;
 
+using MB.Filters;
+
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/Manufacturer")]
     public class ManufacturerController : ApiController
     {

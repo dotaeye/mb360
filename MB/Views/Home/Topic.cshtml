@@ -1,6 +1,5 @@
-﻿@model List<MB.Models.ProductOverviewModel>
-@{
-    ViewBag.Title = "产品列表";
+﻿@{
+    ViewBag.Title = "会员权益介绍";
     Layout = null;
 }
 <!DOCTYPE html>
@@ -20,57 +19,40 @@
         box-sizing: border-box;
     }
 
-    a {
-        text-decoration: none;
+    img {
+        width: 100%;
     }
 
-    .product-list {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        align-items: center;
-    }
-
-    .product-item {
-        width: 50%;
-        height: 210px;
-        border-right: 1px solid #ddd;
-        border-bottom: 1px solid #ddd;
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-    }
-
-    .product-image {
-        margin:10px
-    }
-    
-    .product-name {
-        color: #4f4242;
-        line-height: 20px;
-        height:40px;
-        overflow:hidden;
-        text-align:center;
-    }
-
-    .product-price {
-        color: #ce5959;
-        margin:10px 0;
+    button {
+        color: #FFF;
+        background-color: #0095ff;
+        box-shadow: inset 0 1px 0 #66bfff;
+        padding: 10px;
+        width: 260px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-color: #07c;
+        border-radius: 4px;
     }
 </style>
 <body>
     <div class="product-list">
-        @foreach (var item in Model)
-        {
-            <a href="#@item.Id" class="product-item">
-                <img class="product-image" src="http://www.lm123.cc@(item.ImageUrl.Split(',')[0])" title="@item.Name" />
-                <div class="product-name">@item.Name</div>
-                <div class="product-price">￥@item.Price</div>
-            </a>
-        }
+        <img src="@Url.Content("~/Content/images/1.jpg")" />
+        <img src="@Url.Content("~/Content/images/2.jpg")" />
+        <img src="@Url.Content("~/Content/images/3.jpg")" />
+        <img src="@Url.Content("~/Content/images/4.jpg")" />
 
+        <div style="margin:20px;text-align:center">
+            <button type="button" onclick="buttonClick()">单笔订单满500将自动升级为会员，立即加入</button>
+        </div>
     </div>
+    <script type="text/javascript">
+        function buttonClick() {
+            if (WebViewBridge) {
+                WebViewBridge.send('goToVip');
+            }
+        }
+    </script>
 </body>
+
 </html>

@@ -48,32 +48,7 @@ namespace MB.Controllers
 
         public ActionResult Topic()
         {
-            var categoryIds = new List<int>() {
-                22
-            };
-            IList<int> filterableSpecificationAttributeOptionIds;
-            var products = ProductService.SearchProducts(
-                filterableSpecificationAttributeOptionIds: out filterableSpecificationAttributeOptionIds,
-                loadFilterableSpecificationAttributeOptionIds: false,
-                categoryIds: categoryIds,
-                RoleId:2,
-                showHidden: true,
-                pageIndex:0,
-                pageSize:20
-                );
-            var result = products.Select(x => new ProductOverviewModel()
-            {
-                Description = x.Description,
-                Id = x.Id,
-                ImageUrl = x.ImageUrl,
-                Name = x.Name,
-                Price = x.Price,
-                VipPrice = x.VipPrice,
-                Distance = x.Distance
-
-            }).ToList();
-
-            return View(result);
+            return View();
         }
 
 

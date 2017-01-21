@@ -24,9 +24,11 @@ using SQ.Core.Data;
 using SQ.Core.Caching;
 using MB.Models;
 
+using MB.Filters;
+
 namespace MB.Controllers
 {
-
+    [MbAuthorize]
     [RoutePrefix("api/Product")]
     public class ProductController : ApiController
     {

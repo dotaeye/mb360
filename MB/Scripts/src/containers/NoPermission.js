@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import { Alert } from 'antd';
+import { browserHistory } from 'react-router';
+import { Alert, Button } from 'antd';
+import connectStatic from '../utils/connectStatic'
 
-export default class NoPermission extends Component {
+class NoPermission extends Component {
     render() {
         return (
             <div className="container">
@@ -11,7 +13,18 @@ export default class NoPermission extends Component {
                 type="error"
                 showIcon
                 />
+              <Button onClick={()=>{
+                browserHistory.push('login')
+              }}>重新登录</Button>
+
             </div>
         );
     }
 }
+
+const statics = {
+  noLayout: true
+};
+
+export default connectStatic(statics)(NoPermission)
+

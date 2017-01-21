@@ -34,36 +34,29 @@ import {
   SpecificationAttribute,
   SpecificationAttributeOption,
   Manufacturer,
-  NotFound
+  NotFound,
+  NoPermission
+
 } from './containers';
+
 
 export default (store) => {
   const requireLogin = (controller, action, nextState, replace, cb) => {
     function checkAuth() {
-      const { auth: { token, permission }} = store.getState();
-      let hasPermission = permission.find(x=>x.controller == controller && x.action == action);
-      if (!token || !hasPermission) {
-        replace('/login');
+      const { auth: { token}} = store.getState();
+      if (!token || token.userRoleId < 3) {
+        replace('/nopermission');
       }
       cb();
     }
-
     const { auth: { loaded }} = store.getState();
     if (!loaded) {
       const authToken = baseStorage.getStorage(configs.storage).get(configs.authToken);
       if (authToken) {
-        store.dispatch(loadPermission()).then(()=> {
-          store.dispatch(loadAuthToken(authToken));
-          checkAuth();
-        }).catch(err=> {
-          baseStorage.getStorage(configs.storage).remove(configs.authToken);
-        })
-      } else {
-        checkAuth();
+        store.dispatch(loadAuthToken(authToken));
       }
-    } else {
-      checkAuth();
     }
+    checkAuth();
   };
 
   /**
@@ -212,6 +205,7 @@ export default (store) => {
 
       <Route path='profile' component={Profile} onEnter={requireLogin.bind(null,'userpermission','index')}/>
 
+      <Route path='nopermission' component={NoPermission}/>
       { /* Catch all route */ }
       <Route path='*' component={NotFound} status={404}/>
     </Route>

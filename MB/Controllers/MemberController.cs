@@ -26,8 +26,11 @@ using AutoMapper.QueryableExtensions;
 using System.Web.Http.Description;
 using MB.Data.AutoMapper;
 
+using MB.Filters;
+
 namespace MB.Controllers
 {
+    [MbAuthorize]
     [RoutePrefix("api/Member")]
     public class MemberController : ApiController
     {
